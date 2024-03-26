@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="388e16f4-c97c-4ff4-a51d-08ce1b5febf5" name="ktane pi">
+        <fileTransfer rootFolder="/home/jannify" accessType="SFTP" host="ktane.local" port="22" sshConfigId="0920e202-7661-485f-80ef-da883fda04d8" sshConfig="jannify@ktane.local:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
