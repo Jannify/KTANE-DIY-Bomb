@@ -9,8 +9,7 @@
 2: Password  
 3: Simon says  
 4: (Number) Memory  
-5: Morse Code  
-6: Password
+5: Morse Code
 
 ### Arduino Mega Pins
 
@@ -22,8 +21,6 @@
 | A11 - A14 | Buttons        | NumberMemory pressed (left to right)                                        |
 | A15       | Button         | Morse Send pressed                                                          |
 |           |                |                                                                             |
-| D0        | LED            | White LED for Indicator                                                     |
-| D1        | LED            | Yellow LED for Morse                                                        |
 | D2        | WS2812         | BigButton Button Color                                                      |
 | D3        | WS2812         | BigButton Strip Color                                                       |
 | D4        | Register Data  |                                                                             |
@@ -37,6 +34,9 @@
 |           |                |                                                                             |
 | D22 - D32 | LEDs           | 11 Green "Module solved" LEDs (left to right, top to bottom, front to back) |
 | D33       | Reset          | Jump wire to arduino reset pin                                              |
+| D34       | LED            | White LED for Indicator                                                     |
+| D35       | LED            | Yellow LED for Morse                                                        |
+|           |                |                                                                             |
 | D37 - D38 | Input Buttons  | Morse Switch (left + right)                                                 |
 | D39       | Input Button   | Password Send                                                               |
 | D40 - D49 | Input Buttons  | Password Switch Letters (left to right, top to bottom)                      |
@@ -77,21 +77,21 @@ SPI
 
 ## Serial Communication (Arduino to Pi)
 
-| Data |      Title       | Description                                               | Length | Payload Data                                     | 
-|:----:|:----------------:|-----------------------------------------------------------|:------:|--------------------------------------------------|
-| 0x0  |     Reserved     |                                                           |        |                                                  |
-| 0x1  |  BigButton Down  | Reports how long the button was pressed and at which time |   3    | Short(0)/Long(1) + Minutes + Seconds             |
-| 0x2  |     Wire Cut     | Current wire states                                       |   1    | Bitfield with wires disconnected(0)/connected(1) |
-| 0x3  | Password Changes | Password button was pressed                               |   1    | Send + Down(0)/Up(1) + 4 Bit Index of Letter     |
-| 0x4  |    SimonSays     | Reports SimonSays sequence                                |   X    | 1Byte Number of Buttons (á 2Bits) + Data         |
-| 0x5  |      Memory      | Memory button was pressed                                 |   1    | Index of button pressed                          |
-| 0x6  |    Morse Code    | Morse frequency sent                                      |   2    | 2Byte number of frequency                        |
-| 0x7  |                  |                                                           |        |                                                  |
-| 0x8  |                  |                                                           |        |                                                  |
-| 0x9  |                  |                                                           |        |                                                  |
-| 0xA  |                  |                                                           |        |                                                  |
-| 0xB  |                  |                                                           |        |                                                  |
-| 0xC  |                  |                                                           |        |                                                  |
-| 0xD  |                  |                                                           |        |                                                  |
-| 0xE  |                  |                                                           |        |                                                  |
-| 0xF  |                  |                                                           |        |                                                  |
+| Data |      Title       | Description                                               | Length | Payload Data                                                   | 
+|:----:|:----------------:|-----------------------------------------------------------|:------:|----------------------------------------------------------------|
+| 0x0  |     Reserved     |                                                           |        |                                                                |
+| 0x1  |  BigButton Down  | Reports how long the button was pressed and at which time |   3    | Short(0)/Long(1) + Minutes + Seconds                           |
+| 0x2  |     Wire Cut     | Current wire states                                       |   1    | 3 leading 0 + Bitfield with wires disconnected(0)/connected(1) |
+| 0x3  | Password Changes | Password button was pressed                               |   1    | Send (no/yes) + Down(0)/Up(1) + 3 Bit Index of Letter (0-4)    |
+| 0x4  |    SimonSays     | Reports SimonSays sequence                                |   1    | 0=failed, 1=succeed                                            |
+| 0x5  |      Memory      | Memory button was pressed                                 |   1    | Index of button pressed                                        |
+| 0x6  |    Morse Code    | Morse frequency sent                                      |   1    | 0=failed, 1=succeed                                            |
+| 0x7  |                  |                                                           |        |                                                                |
+| 0x8  |                  |                                                           |        |                                                                |
+| 0x9  |                  |                                                           |        |                                                                |
+| 0xA  |                  |                                                           |        |                                                                |
+| 0xB  |                  |                                                           |        |                                                                |
+| 0xC  |                  |                                                           |        |                                                                |
+| 0xD  |                  |                                                           |        |                                                                |
+| 0xE  |                  |                                                           |        |                                                                |
+| 0xF  |                  |                                                           |        |                                                                |
