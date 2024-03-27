@@ -1,15 +1,11 @@
-#include <Adafruit_NeoPixel.h>
-
 #include "common.h"
 #include "modules/base.h"
+#include "modules/big_button.h"
 #include "modules/memory.h"
 #include "modules/morse.h"
 #include "modules/simon.h"
 #include "modules/password.h"
 #include "modules/wires.h"
-
-Adafruit_NeoPixel bigKnob = Adafruit_NeoPixel(7, OUTPUT_BigButton_Color, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel bigKnobStrip = Adafruit_NeoPixel(1, OUTPUT_BigButton_Strip, NEO_GRB + NEO_KHZ800);
 
 void setup()
 {
@@ -39,12 +35,9 @@ void setup()
   pinMode(A15, INPUT);
 
   digitalWrite(OUTPUT_RESET, HIGH);
-      wiresInit();
 
   Serial.begin(9600);
 }
-
-int bigKnobPressedTime = 0;
 
 void loopSerialRead()
 {
@@ -70,40 +63,14 @@ void loopSerialRead()
       }
       digitalWrite(OUTPUT_Indicator, (bool)Serial.read());
 
-      while (Serial.available() < 1)
-      {
-      }
-      morseInit(Serial.read());
-
       while (Serial.available() < 3)
       {
       }
       byte indicatorLetters[3];
       Serial.readBytes(indicatorLetters, 3);
 
-      while (Serial.available() < 3)
-      {
-      }
-      byte bigKnobColor[3];
-      Serial.readBytes(bigKnobColor, 3);
-      for (int i = 0; i <= 7; i++)
-      {
-        bigKnob.setPixelColor(i, bigKnobColor[0], bigKnobColor[1],
-                              bigKnobColor[2]);
-      }
-      bigKnob.show();
-
-      while (Serial.available() < 1)
-      {
-      }
-      byte bigKnobTextLength = Serial.read();
-      while (Serial.available() < bigKnobTextLength)
-      {
-      }
-      byte bigKnobText[10];
-      Serial.readBytes(bigKnobText, bigKnobTextLength);
-      // TODO: Set bigKnobText to screen
-
+      morseInit();
+      bigButtonInit();
       wiresInit();
       break;
     }
@@ -180,13 +147,7 @@ void loopSerialRead()
       }
       byte bigKnobStripColor[3];
       Serial.readBytes(bigKnobStripColor, 3);
-      for (int i = 0; i <= 1; i++)
-      {
-        bigKnobStrip.setPixelColor(i, bigKnobStripColor[0],
-                                   bigKnobStripColor[1],
-                                   bigKnobStripColor[2]);
-      }
-      bigKnobStrip.show();
+      bigButtonUpdateStrip(bigKnobStripColor);
       break;
     }
     case 6: // Password Text
@@ -227,6 +188,13 @@ void loop()
 {
   timer.tick();
 
+  loopSerialRead();
+
+  if (!bombStarted)
+  {
+    // return;
+  }
+
   simonLogicLoop();
   morseLogicLoop();
 
@@ -235,10 +203,9 @@ void loop()
     morseLogicButtonLoop();
   }
 
-  loopSerialRead();
-
   if (!loopSerialWriteCooldown)
   {
+    bigButtonSerialWriteLoop();
     wiresSerialWriteLoop();
     passwordSerialWriteLoop();
     simonSerialWriteLoop();

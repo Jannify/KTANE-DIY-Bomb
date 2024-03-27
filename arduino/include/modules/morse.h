@@ -1,6 +1,6 @@
 #pragma once
 
-void morseInit(int);
+void morseInit();
 void morseLogicLoop();
 void morseLogicButtonLoop();
 void morseSerialWriteLoop();

@@ -50,9 +50,12 @@ bool morseCallNext = false;
 int morseFrequencyIndex = 8;
 bool morseButtonWasPressed = false;
 
-void morseInit(int index) {
-          morseCodeIndex = index;
-          morseWordPtr = (char *)pgm_read_word(&(MORSE_TABLE[index]));
+void morseInit() {
+        while (Serial.available() < 1)
+      {
+      }
+          morseCodeIndex = Serial.read();
+          morseWordPtr = (char *)pgm_read_word(&(MORSE_TABLE[morseCodeIndex]));
 }
 
 void morseLogicLoop() {
