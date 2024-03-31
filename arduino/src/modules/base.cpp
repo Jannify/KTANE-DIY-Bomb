@@ -1,19 +1,47 @@
 #include "modules/base.h"
 
+#include <TM1637Display.h>
+
 bool bombStarted = false;
-byte minutes = 0;
-byte seconds = 0;  //TODO: Implement timer
+
+TM1637Display clock(2, 3); //Currently not working as we need separate pins
+uint8_t clock_data[4];
+long timeAtStart = LONG_MAX;
+unsigned short givenBombTimeSeconds = 0;
+
 bool lastTry = false;
 Timer<>::Task lastTryTask = nullptr;
 
-void baseModuleInit(byte min, byte sec)
+void baseModuleInit(unsigned short sec)
 {
-    minutes = min;
-    seconds = sec;
-    bombStarted = true;
+  givenBombTimeSeconds = sec;
+  timeAtStart = millis();
+  bombStarted = true;
+  clock.setBrightness(0x0f);
 }
 
-bool toggleLastTry(void *) {
+void baseModuleLogicLoop()
+{
+  unsigned short combinedSecondsLeft = givenBombTimeSeconds - ((millis() - timeAtStart) / 1000);
+  if (combinedSecondsLeft >= 0)
+  {
+    unsigned short minutesLeft = combinedSecondsLeft / 60;
+    unsigned short secondsLeft = combinedSecondsLeft - minutesLeft * 60;
+    clock_data[0] = clock.encodeDigit(minutesLeft / 10);
+    clock_data[1] = clock.encodeDigit(minutesLeft % 10);
+    clock_data[2] = clock.encodeDigit(secondsLeft / 10);
+    clock_data[3] = clock.encodeDigit(secondsLeft % 10);
+
+    if (combinedSecondsLeft % 2)
+    {
+      clock_data[1] |= SEG_DP;
+    }
+    clock.setSegments(clock_data);
+  }
+}
+
+bool toggleLastTry(void *)
+{
   digitalWrite(OUTPUT_Tries_1, !digitalRead(OUTPUT_Tries_1));
   digitalWrite(OUTPUT_Tries_2, !digitalRead(OUTPUT_Tries_2));
   return true;

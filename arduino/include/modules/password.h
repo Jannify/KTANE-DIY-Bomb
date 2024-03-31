@@ -1,4 +1,4 @@
 #pragma once
 
-void passwordInit(byte* password);
+void passwordInit(char* password);
 void passwordSerialWriteLoop();

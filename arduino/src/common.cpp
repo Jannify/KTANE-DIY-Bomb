@@ -2,6 +2,8 @@
 
 Timer<20> timer;
 
+TCA9548 multiplexer(0x70);
+
 bool loopLogicButtonCooldown = false;
 bool loopSerialWriteCooldown = false;
 

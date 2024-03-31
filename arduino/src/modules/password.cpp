@@ -1,11 +1,21 @@
 #include "common.h"
 #include "modules/password.h"
 
+#include <U8g2lib.h>
+
+U8X8_SSD1309_128X64_NONAME0_HW_I2C greenDisplay;
+
 bool passwordButtonWasPressed = false;
 
-void passwordInit(byte *password)
+void passwordInit(char *password)
 {
-    // TODO: Set passwordLetters to screen
+    multiplexer.selectChannel(2);
+    greenDisplay.begin();
+    greenDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
+    for (size_t i = 0; i < 5; i++)
+    {
+        greenDisplay.drawGlyph(i * 4, 0, password[i]);
+    }
 }
 
 void passwordSerialWriteLoop()

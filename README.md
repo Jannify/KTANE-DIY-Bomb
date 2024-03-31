@@ -13,7 +13,7 @@
 
 ### Arduino Mega Pins
 
-| Pins      | Hardware       | Funktion                                                                    |
+| Pins      | Hardware       | Function                                                                    |
 |-----------|----------------|-----------------------------------------------------------------------------|
 | A0 - A5   | Wires          | Wire Input                                                                  |
 | A6        | Button         | BigButton pressed                                                           |
@@ -44,23 +44,24 @@
 
 \
 I2C
-  - Main Clock
-  - 0,91" OLED White  - Indikator
-  - 2,40" OLED Yellow - Morse
-  - 2,40" OLED Green  - Password
-  - 0,96" OLED White  - BigButton Text
+
+- 0,96" OLED White  - Multiplex 0 - Indicator
+- 2,40" OLED Yellow - Multiplex 1 - Morse
+- 2,40" OLED Green  - Multiplex 2 - Password
+- 0,91" OLED White  - Multiplex 3 - BigButton Text
 
 \
 SPI
-  - ePaper - SerialNumber
+
+- ePaper - SerialNumber
 
 ## Serial Communication (Pi to Arduino)
 
-| Data |      Title       | Description                                              | Length | Payload Data                                                                                                        | 
+| Data |      Title       | Description                                              | Length | Payload Data                                                                                                        |
 |:----:|:----------------:|----------------------------------------------------------|:------:|---------------------------------------------------------------------------------------------------------------------|
 | 0x0  |      Reset       | Resets all configurations, powers everything down        |   0    |                                                                                                                     |
-| 0x1  |       Init       | Init SerialNumber screen, Indicator LED/Text and BigKnob | 14 + X | [SN: 6 Letters] + [Indicator: LED on/off + 3 Letters] + [Morse: Index] + [BigKnob: RGB values + Text length + Text] |
-| 0x2  |      Start       | Starts bomb with given time                              |   2    | Minutes + Seconds                                                                                                   |
+| 0x1  |       Init       | Init SerialNumber screen, Indicator LED/Text and BigKnob | 14 + X | [SN: 6 Letters] + [Indicator: LED on/off + 3 Letters] + [Morse: Index] + [BigKnob: RGB values + Text (ending on null, max letters: 8)] |
+| 0x2  |      Start       | Starts bomb with given time                              |   2    | Timer in Seconds (ushort)                                                                                                  |
 | 0x3  |    Set Tries     | On/Off X's LEDs                                          |   1    | Number of Xs to display                                                                                             |
 | 0x4  |    Set Solved    | Updated green "Module Solved" LEDs                       |   2    | Bitfield of Modules solved (5 zeros + from 10 to 0)                                                                 |
 | 0x5  |  BigKnob Strip   | Sets color of BigKnob Strip                              |   3    | RGB values                                                                                                          |
@@ -77,7 +78,7 @@ SPI
 
 ## Serial Communication (Arduino to Pi)
 
-| Data |      Title       | Description                                               | Length | Payload Data                                                   | 
+| Data |      Title       | Description                                               | Length | Payload Data                                                   |
 |:----:|:----------------:|-----------------------------------------------------------|:------:|----------------------------------------------------------------|
 | 0x0  |     Reserved     |                                                           |        |                                                                |
 | 0x1  |  BigButton Down  | Reports how long the button was pressed and at which time |   3    | Short(0)/Long(1) + Minutes + Seconds                           |

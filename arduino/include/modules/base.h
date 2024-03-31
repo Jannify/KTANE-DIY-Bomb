@@ -5,5 +5,6 @@
 extern bool bombStarted;
 extern Timer<>::Task lastTryTask;
 
-void baseModuleInit(byte, byte);
+void baseModuleInit(unsigned short);
+void baseModuleLogicLoop();
 bool toggleLastTry(void *);

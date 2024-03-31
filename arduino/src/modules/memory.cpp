@@ -1,6 +1,7 @@
 #include "common.h"
 #include "modules/memory.h"
 
+
 bool memoryButtonWasPressed = false;
 
 void memoryInit(byte data0, byte data1)

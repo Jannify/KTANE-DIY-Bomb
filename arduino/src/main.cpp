@@ -1,5 +1,6 @@
 #include "common.h"
 #include "modules/base.h"
+#include "modules/frame.h"
 #include "modules/big_button.h"
 #include "modules/memory.h"
 #include "modules/morse.h"
@@ -36,7 +37,16 @@ void setup()
 
   digitalWrite(OUTPUT_RESET, HIGH);
 
+  Wire.begin();
+  if (multiplexer.begin() == false)
+  {
+    Serial.println("COULD NOT CONNECT MULTIPLEXER");
+  }
+
   Serial.begin(9600);
+  
+  //baseModuleInit(140);
+  setIndicatorText('C', 'A', 'R');
 }
 
 void loopSerialRead()
@@ -79,9 +89,10 @@ void loopSerialRead()
       while (Serial.available() < 2)
       {
       }
-      byte minutes = Serial.read();
-      byte seconds = Serial.read();
-      baseModuleInit(minutes, seconds);
+      byte upperByte = Serial.read();
+      byte lowerByte = Serial.read();
+      unsigned short seconds = (upperByte << 8) + lowerByte;
+      baseModuleInit(seconds);
       break;
     }
     case 3: // Set Tries
@@ -155,7 +166,7 @@ void loopSerialRead()
       while (Serial.available() < 5)
       {
       }
-      byte passwordLetters[5];
+      char passwordLetters[5];
       Serial.readBytes(passwordLetters, 5);
       passwordInit(passwordLetters);
       break;
@@ -195,6 +206,7 @@ void loop()
     // return;
   }
 
+  baseModuleLogicLoop();
   simonLogicLoop();
   morseLogicLoop();
 

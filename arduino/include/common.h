@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TCA9548.h"
 #include <arduino-timer.h>
 #include <Arduino.h>
 
@@ -73,6 +74,7 @@
 #define SPI_SCK 52
 #define SPI_SS 53
 
+extern TCA9548 multiplexer;
 extern Timer<20> timer;
 
 extern bool loopLogicButtonCooldown;
