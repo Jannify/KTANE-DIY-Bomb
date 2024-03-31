@@ -2,4 +2,5 @@
 
 #include "common.h"
 
-void setIndicatorText(char, char, char);
+void setIndicatorText(char *);
+void setSerialNumber(char *);

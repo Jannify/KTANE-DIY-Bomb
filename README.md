@@ -40,7 +40,6 @@
 | D37 - D38 | Input Buttons  | Morse Switch (left + right)                                                 |
 | D39       | Input Button   | Password Send                                                               |
 | D40 - D49 | Input Buttons  | Password Switch Letters (left to right, top to bottom)                      |
-| D50 - D53 | SPI            |                                                                             |
 
 \
 I2C
@@ -49,11 +48,7 @@ I2C
 - 2,40" OLED Yellow - Multiplex 1 - Morse
 - 2,40" OLED Green  - Multiplex 2 - Password
 - 0,91" OLED White  - Multiplex 3 - BigButton Text
-
-\
-SPI
-
-- ePaper - SerialNumber
+- 1,30" OLED White  - Multiplex 4 - SerialNumber
 
 ## Serial Communication (Pi to Arduino)
 

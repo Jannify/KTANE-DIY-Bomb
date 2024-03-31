@@ -45,8 +45,11 @@ void setup()
 
   Serial.begin(9600);
   
+  //TESTING AREA:
+  
   //baseModuleInit(140);
-  setIndicatorText('C', 'A', 'R');
+  //setIndicatorText("CAR");
+  //setSerialNumber("JJD67T");
 }
 
 void loopSerialRead()
@@ -64,9 +67,9 @@ void loopSerialRead()
       while (Serial.available() < 6)
       {
       }
-      byte serialNumber[6];
+      char serialNumber[6];
       Serial.readBytes(serialNumber, 6);
-      // TODO: Set serialNumber to screen
+      setSerialNumber(serialNumber);
 
       while (Serial.available() < 1)
       {
@@ -76,8 +79,9 @@ void loopSerialRead()
       while (Serial.available() < 3)
       {
       }
-      byte indicatorLetters[3];
+      char indicatorLetters[3];
       Serial.readBytes(indicatorLetters, 3);
+      setIndicatorText(indicatorLetters);
 
       morseInit();
       bigButtonInit();
