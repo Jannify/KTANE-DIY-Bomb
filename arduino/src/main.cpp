@@ -44,12 +44,12 @@ void setup()
   }
 
   Serial.begin(9600);
-  
-  //TESTING AREA:
-  
-  //baseModuleInit(140);
-  //setIndicatorText("CAR");
-  //setSerialNumber("JJD67T");
+
+  // TESTING AREA:
+
+  // baseModuleInit(140);
+  // setIndicatorText("CAR");
+  // setSerialNumber("JJD67T");
 }
 
 void loopSerialRead()
@@ -83,8 +83,8 @@ void loopSerialRead()
       Serial.readBytes(indicatorLetters, 3);
       setIndicatorText(indicatorLetters);
 
-      morseInit();
-      bigButtonInit();
+      morseInitRead();
+      bigButtonInitRead();
       wiresInit();
       break;
     }
@@ -101,31 +101,11 @@ void loopSerialRead()
     }
     case 3: // Set Tries
     {
-      if (lastTryTask != nullptr)
-      {
-        timer.cancel(lastTryTask);
-        lastTryTask = nullptr;
-      }
       while (Serial.available() < 1)
       {
       }
       byte tries = Serial.read();
-      if (tries >= 2)
-      {
-        digitalWrite(OUTPUT_Tries_1, HIGH);
-        digitalWrite(OUTPUT_Tries_2, HIGH);
-        lastTryTask = timer.every(600, toggleLastTry);
-      }
-      else if (tries >= 1)
-      {
-        digitalWrite(OUTPUT_Tries_1, HIGH);
-        digitalWrite(OUTPUT_Tries_2, LOW);
-      }
-      else
-      {
-        digitalWrite(OUTPUT_Tries_1, LOW);
-        digitalWrite(OUTPUT_Tries_2, LOW);
-      }
+      setTries(tries);
       break;
     }
     case 4: // Set Solved

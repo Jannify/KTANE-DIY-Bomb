@@ -7,4 +7,5 @@ extern Timer<>::Task lastTryTask;
 
 void baseModuleInit(unsigned short);
 void baseModuleLogicLoop();
+void setTries(byte);
 bool toggleLastTry(void *);

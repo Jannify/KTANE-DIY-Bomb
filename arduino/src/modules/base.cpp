@@ -4,7 +4,7 @@
 
 bool bombStarted = false;
 
-TM1637Display clock(2, 3); //Currently not working as we need separate pins
+TM1637Display clock(2, 3); // Currently not working as we need separate pins
 uint8_t clock_data[4];
 long timeAtStart = LONG_MAX;
 unsigned short givenBombTimeSeconds = 0;
@@ -37,6 +37,31 @@ void baseModuleLogicLoop()
       clock_data[1] |= SEG_DP;
     }
     clock.setSegments(clock_data);
+  }
+}
+
+void setTries(byte tries)
+{
+  if (lastTryTask != nullptr)
+  {
+    timer.cancel(lastTryTask);
+    lastTryTask = nullptr;
+  }
+  if (tries >= 2)
+  {
+    digitalWrite(OUTPUT_Tries_1, HIGH);
+    digitalWrite(OUTPUT_Tries_2, HIGH);
+    lastTryTask = timer.every(600, toggleLastTry);
+  }
+  else if (tries >= 1)
+  {
+    digitalWrite(OUTPUT_Tries_1, HIGH);
+    digitalWrite(OUTPUT_Tries_2, LOW);
+  }
+  else
+  {
+    digitalWrite(OUTPUT_Tries_1, LOW);
+    digitalWrite(OUTPUT_Tries_2, LOW);
   }
 }
 

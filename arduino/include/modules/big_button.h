@@ -1,5 +1,5 @@
 #pragma once
 
-void bigButtonInit();
+void bigButtonInitRead();
 void bigButtonUpdateStrip(byte*);
 void bigButtonSerialWriteLoop();

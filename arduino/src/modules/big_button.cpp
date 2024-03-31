@@ -12,7 +12,7 @@ bool wasButtonPressed = false;
 unsigned long startPressed = 0;
 unsigned long endPressed = 0;
 
-void bigButtonInit()
+void bigButtonInitRead()
 {
     while (Serial.available() < 3)
     {
