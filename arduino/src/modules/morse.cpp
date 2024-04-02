@@ -1,6 +1,8 @@
 #include "common.h"
 #include "modules/morse.h"
 
+#include <U8g2lib.h>
+
 const char _MORSE_HALLE[] PROGMEM = ".... .- .-.. .-.. .s";
 const char _MORSE_HALLO[] PROGMEM = ".... .- .-.. .-.. ---s";
 const char _MORSE_LOKAL[] PROGMEM = ".-.. --- -.- .- .-..s";
@@ -50,6 +52,22 @@ bool morseCallNext = false;
 int morseFrequencyIndex = 8;
 bool morseButtonWasPressed = false;
 
+U8X8_SSD1309_128X64_NONAME2_HW_I2C yellowDisplay;
+
+void setDisplayText()
+{
+  char phrase[8];
+  strcpy_P(phrase, (char *)pgm_read_word(&(MORSE_FREQUENCY_TABLE[morseFrequencyIndex])));
+  strcat(phrase, " MHz");
+
+  multiplexer.selectChannel(2);
+  yellowDisplay.clearDisplay();
+  for (size_t i = 0; i < 8; i++)
+  {
+    yellowDisplay.drawGlyph(i * 2, 3, phrase[i]);
+  }
+}
+
 void morseInitRead()
 {
   while (Serial.available() < 1)
@@ -57,6 +75,11 @@ void morseInitRead()
   }
   morseCodeIndex = Serial.read();
   morseWordPtr = (char *)pgm_read_word(&(MORSE_TABLE[morseCodeIndex]));
+
+  multiplexer.selectChannel(1);
+  yellowDisplay.begin();
+  yellowDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
+  setDisplayText();
 }
 
 void morseLogicLoop()
@@ -84,10 +107,7 @@ void morseLogicButtonLoop()
       if (morseFrequencyIndex > 0)
       {
         morseFrequencyIndex--;
-        char phrase[10];
-        strcpy_P(phrase, (char *)pgm_read_word(&(MORSE_FREQUENCY_TABLE[morseFrequencyIndex])));
-        strcat(phrase, " MHz");
-        // TODO: Display output
+        setDisplayText();
       }
     }
     else if (digitalRead(INPUT_Morse_Right))
@@ -95,6 +115,7 @@ void morseLogicButtonLoop()
       if (morseFrequencyIndex < 15)
       {
         morseFrequencyIndex++;
+        setDisplayText();
       }
     }
   }

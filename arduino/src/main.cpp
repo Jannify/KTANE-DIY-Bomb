@@ -86,6 +86,7 @@ void loopSerialRead()
       morseInitRead();
       bigButtonInitRead();
       wiresInit();
+      passwordInit();
       break;
     }
     case 2: // Start
@@ -152,7 +153,7 @@ void loopSerialRead()
       }
       char passwordLetters[5];
       Serial.readBytes(passwordLetters, 5);
-      passwordInit(passwordLetters);
+      setPassword(passwordLetters);
       break;
     }
     case 7: // SimonSays

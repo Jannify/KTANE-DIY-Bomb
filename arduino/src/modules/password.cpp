@@ -7,14 +7,21 @@ U8X8_SSD1309_128X64_NONAME0_HW_I2C greenDisplay;
 
 bool passwordButtonWasPressed = false;
 
-void passwordInit(char *password)
+void passwordInit()
 {
     multiplexer.selectChannel(2);
     greenDisplay.begin();
-    greenDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
+    greenDisplay.setFont(u8x8_font_profont29_2x3_r);
+    greenDisplay.setInverseFont(1);
+}
+
+void setPassword(char *password)
+{
+    multiplexer.selectChannel(2);
+    greenDisplay.fillDisplay();
     for (size_t i = 0; i < 5; i++)
     {
-        greenDisplay.drawGlyph(i * 4, 0, password[i]);
+        greenDisplay.drawGlyph(i * 3 + 1, 3, password[i]);
     }
 }
 
