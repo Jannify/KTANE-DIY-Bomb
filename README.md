@@ -36,10 +36,11 @@
 | D33       | Reset          | Jump wire to arduino reset pin                                              |
 | D34       | LED            | White LED for Indicator                                                     |
 | D35       | LED            | Yellow LED for Morse                                                        |
+| D36 - D37 | Front Clock    | Front Clock (not I2C but Data, Clock)                                       |
 |           |                |                                                                             |
-| D37 - D38 | Input Buttons  | Morse Switch (left + right)                                                 |
-| D39       | Input Button   | Password Send                                                               |
-| D40 - D49 | Input Buttons  | Password Switch Letters (left to right, top to bottom)                      |
+| D41 - D42 | Input Buttons  | Morse Switch (left + right)                                                 |
+| D43       | Input Button   | Password Send                                                               |
+| D44 - D53 | Input Buttons  | Password Switch Letters (left to right, top to bottom)                      |
 
 \
 I2C

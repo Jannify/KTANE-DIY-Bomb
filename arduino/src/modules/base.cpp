@@ -4,7 +4,7 @@
 
 bool bombStarted = false;
 
-TM1637Display clock(2, 3); // Currently not working as we need separate pins
+TM1637Display clock(OUTPUT_Clock_Clk, OUTPUT_Clock_Data);
 uint8_t clock_data[4];
 long timeAtStart = LONG_MAX;
 unsigned short givenBombTimeSeconds = 0;

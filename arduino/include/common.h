@@ -20,19 +20,19 @@
 #define INPUT_Memory_3 A13
 #define INPUT_Memory_4 A14
 #define INPUT_Morse_Send A15
-#define INPUT_Morse_Left 37
-#define INPUT_Morse_Right 38
-#define INPUT_Pass_Send 39
-#define INPUT_Pass_1_Up 40
-#define INPUT_Pass_2_Up 41
-#define INPUT_Pass_3_Up 42
-#define INPUT_Pass_4_Up 43
-#define INPUT_Pass_5_Up 44
-#define INPUT_Pass_1_Down 45
-#define INPUT_Pass_2_Down 46
-#define INPUT_Pass_3_Down 47
-#define INPUT_Pass_4_Down 48
-#define INPUT_Pass_5_Down 49
+#define INPUT_Morse_Left 41
+#define INPUT_Morse_Right 42
+#define INPUT_Pass_Send 43
+#define INPUT_Pass_1_Up 44
+#define INPUT_Pass_2_Up 45
+#define INPUT_Pass_3_Up 46
+#define INPUT_Pass_4_Up 47
+#define INPUT_Pass_5_Up 48
+#define INPUT_Pass_1_Down 49
+#define INPUT_Pass_2_Down 50
+#define INPUT_Pass_3_Down 51
+#define INPUT_Pass_4_Down 52
+#define INPUT_Pass_5_Down 53
 
 #define OUTPUT_BigButton_Color 2
 #define OUTPUT_BigButton_Strip 3
@@ -66,13 +66,11 @@
 #define OUTPUT_RESET 33
 #define OUTPUT_Indicator 34
 #define OUTPUT_Morse_LED 35
+#define OUTPUT_Clock_Data 36
+#define OUTPUT_Clock_Clk 37
 
 #define I2C_SDA 20
 #define I2C_SCL 21
-#define SPI_CIPO 50
-#define SPI_COPI 51
-#define SPI_SCK 52
-#define SPI_SS 53
 
 extern TCA9548 multiplexer;
 extern Timer<20> timer;
