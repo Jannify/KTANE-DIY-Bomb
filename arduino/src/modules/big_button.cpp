@@ -1,8 +1,17 @@
 #include "common.h"
+#include "modules/base.h"
 #include "modules/big_button.h"
 
 #include <Adafruit_NeoPixel.h>
 #include <U8g2lib.h>
+
+const unsigned long PRESS_THRESHOLD_MS = 500;
+
+const char _TEXT_ABRECHEN[] PROGMEM = "Abrechen";
+const char _TEXT_HALTEN[] PROGMEM = "Gedrückt\nHalten";
+const char _TEXT_SPRENGEN[] PROGMEM = "Sprengen";
+const char _TEXT_DRUECKEN[] PROGMEM = "Drücken";
+const char *const TEXT_TABLE[] PROGMEM = {_TEXT_ABRECHEN, _TEXT_HALTEN, _TEXT_SPRENGEN, _TEXT_DRUECKEN};
 
 Adafruit_NeoPixel bigKnob = Adafruit_NeoPixel(7, OUTPUT_BigButton_Color, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel bigKnobStrip = Adafruit_NeoPixel(1, OUTPUT_BigButton_Strip, NEO_GRB + NEO_KHZ800);
@@ -17,37 +26,79 @@ void bigButtonInitRead()
     while (Serial.available() < 3)
     {
     }
-    byte bigKnobColor[3];
-    Serial.readBytes(bigKnobColor, 3);
+
+    byte red, green, blue;
+    byte bigKnobColorIndex = Serial.read();
+    switch (bigKnobColorIndex)
+    {
+    case 0: // Red
+        red = 255;
+        green = 0;
+        blue = 0;
+        break;
+    case 1: // Blue
+        red = 0;
+        green = 0;
+        blue = 255;
+        break;
+    case 2: // Yellow
+        red = 255;
+        green = 255;
+        blue = 0;
+        break;
+    case 3: // White
+        red = 255;
+        green = 255;
+        blue = 255;
+        break;
+    }
     for (int i = 0; i <= 7; i++)
     {
-        bigKnob.setPixelColor(i, bigKnobColor[0], bigKnobColor[1],
-                              bigKnobColor[2]);
+        bigKnob.setPixelColor(i, red, green, blue);
     }
     bigKnob.show();
 
     while (Serial.available() < 1)
     {
     }
-    byte bigKnobTextLength = Serial.read(); // TODO: THIS IS NOT UP TO DATE ANYMORE
-    while (Serial.available() < bigKnobTextLength)
-    {
-    }
-    char bigKnobText[10];
-    Serial.readBytes(bigKnobText, bigKnobTextLength);
-    // TODO: Set bigKnobText to screen
+    byte bigKnobTextIndex = Serial.read();
+    char *morseWordPtr = (char *)pgm_read_word(&(TEXT_TABLE[bigKnobTextIndex]));
 
     multiplexer.selectChannel(3);
     buttonDisplay.begin();
     buttonDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
-    buttonDisplay.drawString(0, 2, bigKnobText);
+    buttonDisplay.drawString(0, 2, morseWordPtr);
 }
 
-void bigButtonUpdateStrip(byte *color)
+void bigButtonUpdateStrip(byte bigKnobColorIndex)
 {
+    byte red, green, blue;
+    switch (bigKnobColorIndex)
+    {
+    case 0: // Red
+        red = 255;
+        green = 0;
+        blue = 0;
+        break;
+    case 1: // Blue
+        red = 0;
+        green = 0;
+        blue = 255;
+        break;
+    case 2: // Yellow
+        red = 255;
+        green = 255;
+        blue = 0;
+        break;
+    case 3: // White
+        red = 255;
+        green = 255;
+        blue = 255;
+        break;
+    }
     for (int i = 0; i <= 1; i++)
     {
-        bigKnobStrip.setPixelColor(i, color[0], color[1], color[2]);
+        bigKnobStrip.setPixelColor(i, red, green, blue);
     }
     bigKnobStrip.show();
 }
@@ -65,9 +116,11 @@ void bigButtonSerialWriteLoop()
         endPressed = millis();
         wasButtonPressed = false;
 
-        byte difference = endPressed - startPressed;
+        unsigned long difference = endPressed - startPressed;
         Serial.write(0x1);
-        Serial.write(difference);
+        Serial.write(difference <= PRESS_THRESHOLD_MS ? false : true);
+        Serial.write((byte)(getSecondsLeft() >> 8));
+        Serial.write((byte)getSecondsLeft());
         engageSerialWriteCooldown();
     }
 }

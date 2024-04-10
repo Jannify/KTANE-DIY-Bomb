@@ -5,32 +5,32 @@ const int SIMON_ON_TIME = 500;
 const int SIMON_OFF_TIME = 1000;
 const int SIMON_BETWEEN_TIME = 5000;
 
-int simonSequence[10];
+int simonSequence[6];
 int simonSequenceLength = 0;
 int simonSequenceStep = -1;
 bool simonSequenceCallNext = false;
 bool simonReadWasPressed = false;
-int simonReadStep = -1;
+int simonAcceptButtonInput = false;
 
-void simonInit(byte data0, byte data1, byte data2) {
-              simonSequenceLength = (data0 & 0b11110000) >> 4;
-          simonSequence[0] = (data0 & 0b00001100) >> 2;
-          simonSequence[1] = (data0 & 0b00000011);
-          simonSequence[2] = (data1 & 0b11000000) >> 6;
-          simonSequence[3] = (data1 & 0b00110000) >> 4;
-          simonSequence[4] = (data1 & 0b00001100) >> 2;
-          simonSequence[5] = (data1 & 0b00000011);
-          simonSequence[6] = (data2 & 0b11000000) >> 6;
-          simonSequence[7] = (data2 & 0b00110000) >> 4;
-          simonSequence[8] = (data2 & 0b00001100) >> 2;
-          simonSequence[9] = (data2 & 0b00000011);
+void simonInit(byte data0, byte data1, byte data2)
+{
+  simonSequenceLength = (data0 & 0b11100000) >> 5;
+  simonSequence[0] = (data0 & 0b00001100) >> 2;
+  simonSequence[1] = (data0 & 0b00000011);
+  simonSequence[2] = (data1 & 0b11000000) >> 6;
+  simonSequence[3] = (data1 & 0b00110000) >> 4;
+  simonSequence[4] = (data1 & 0b00001100) >> 2;
+  simonSequence[5] = (data1 & 0b00000011);
 
-          simonSequenceStep = 0;
-          simonSequenceCallNext = true;
+  simonSequenceStep = 0;
+  simonSequenceCallNext = true;
+  simonAcceptButtonInput = false;
 }
 
-void simonLogicLoop() {
-      if (simonSequenceCallNext) {
+void simonLogicLoop()
+{
+  if (simonSequenceCallNext)
+  {
     simonSequenceCallNext = false;
     int ledPin = OUTPUT_Simon_Blue + simonSequence[simonSequenceStep];
     digitalWrite(ledPin, HIGH);
@@ -38,39 +38,61 @@ void simonLogicLoop() {
   }
 }
 
-void simonSerialWriteLoop() {
-    if (simonReadStep != -1) {
+void simonSerialWriteLoop()
+{
+  if (simonAcceptButtonInput)
+  {
     int simonButtonPressed = -1;
-    if (digitalRead(INPUT_Simon_Blue)) {
+    if (digitalRead(INPUT_Simon_Blue))
+    {
       simonButtonPressed = 0;
-    } else if (digitalRead(INPUT_Simon_Red)) {
+    }
+    else if (digitalRead(INPUT_Simon_Red))
+    {
       simonButtonPressed = 1;
-    } else if (digitalRead(INPUT_Simon_Yellow)) {
+    }
+    else if (digitalRead(INPUT_Simon_Yellow))
+    {
       simonButtonPressed = 2;
-    } else if (digitalRead(INPUT_Simon_Green)) {
+    }
+    else if (digitalRead(INPUT_Simon_Green))
+    {
       simonButtonPressed = 3;
     }
 
-    if (simonButtonPressed == -1) {
+    if (simonButtonPressed == -1)
+    {
       simonReadWasPressed = false;
-    } else if (!simonReadWasPressed) {
+    }
+    else if (!simonReadWasPressed)
+    {
       simonReadWasPressed = true;
 
-      if (simonSequence[simonReadStep] == simonButtonPressed) {
-        simonReadStep++;
 
-        if (simonReadStep >= simonSequenceLength) {
-          Serial.write(0x4);
-          Serial.write(0x1);
-          simonReadStep = -1;
-        }
-      } else {
-        Serial.write(0x4);
-        Serial.write(0x0);
-        simonReadStep = 0;
-      }
 
+      // if (simonSequence[simonReadStep] == simonButtonPressed)
+      // {
+      //   simonReadStep++;
+
+      //   if (simonReadStep >= simonSequenceLength)
+      //   {
+      //     Serial.write(0x4); // 3Bit Length + zero + 6 * (2 Bit Button index)
+      //     Serial.write(simonButtonPressed);
+      //     simonReadStep = -1;
+      //   }
+      // }
+      // else
+      // {
+      //   Serial.write(0x4);
+      //   Serial.write(0x0);
+      //   simonReadStep = 0;
+      // }
+
+
+      Serial.write(0x4);
+      Serial.write(simonButtonPressed);
       engageSerialWriteCooldown();
+
       int pin = OUTPUT_Simon_Blue + simonButtonPressed;
       digitalWrite(pin, HIGH);
       timer.in(SIMON_ON_TIME, setPinLow, (void *)pin);
@@ -78,20 +100,23 @@ void simonSerialWriteLoop() {
   }
 }
 
-bool handleSimonSequenceOn(void *argument) {
+bool handleSimonSequenceOn(void *argument)
+{
   digitalWrite((int)argument, LOW);
   timer.in(SIMON_OFF_TIME, handleSimonSequenceOff, argument);
-  return false;  // to repeat the action - false to stop
+  return false; // to repeat the action - false to stop
 }
 
-bool handleSimonSequenceOff(void *) {
-  if (simonSequenceStep >= (simonSequenceLength - 1)) {
+bool handleSimonSequenceOff(void *)
+{
+  if (simonSequenceStep >= (simonSequenceLength - 1))
+  {
     simonSequenceStep = -1;
-    simonReadStep = 0;
+    simonAcceptButtonInput = true;
     return false;
   }
 
   simonSequenceStep++;
   simonSequenceCallNext = true;
-  return false;  // to repeat the action - false to stop
+  return false; // to repeat the action - false to stop
 }

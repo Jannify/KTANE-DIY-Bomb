@@ -11,10 +11,11 @@ void wiresSerialWriteLoop() {
     byte newConnectedWires = PINF & 0b00011111;
 
     if(connectedWires != newConnectedWires) {
+        byte cutWire = connectedWires ^ newConnectedWires;
         connectedWires = newConnectedWires;
 
         Serial.write(0x2);
-        Serial.write(connectedWires);     
+        Serial.write(cutWire << 3);     
         engageSerialWriteCooldown();
     }
 }

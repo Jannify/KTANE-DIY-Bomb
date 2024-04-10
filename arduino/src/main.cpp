@@ -138,12 +138,11 @@ void loopSerialRead()
     }
     case 5: // BigKnob Strip
     {
-      while (Serial.available() < 3)
+      while (Serial.available() < 1)
       {
       }
-      byte bigKnobStripColor[3];
-      Serial.readBytes(bigKnobStripColor, 3);
-      bigButtonUpdateStrip(bigKnobStripColor);
+      byte colorIndex = Serial.read();
+      bigButtonUpdateStrip(colorIndex);
       break;
     }
     case 6: // Password Text

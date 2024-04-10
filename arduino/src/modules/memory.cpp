@@ -74,3 +74,17 @@ void memorySerialWriteLoop()
         engageSerialWriteCooldown();
     }
 }
+
+void setNumber() {
+
+    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_0, LSBFIRST, 0xF);
+    delay(20000);
+    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_0, LSBFIRST, 0x0);
+    delay(20000);
+    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_1, LSBFIRST, 0xF);
+    delay(20000);
+    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_1, LSBFIRST, 0x0);
+    delay(20000);
+    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_0, LSBFIRST, 0xF);
+    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_1, LSBFIRST, 0xF);
+}

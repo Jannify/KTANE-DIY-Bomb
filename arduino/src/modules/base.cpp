@@ -6,7 +6,7 @@ bool bombStarted = false;
 
 TM1637Display clock(OUTPUT_Clock_Clk, OUTPUT_Clock_Data);
 uint8_t clock_data[4];
-long timeAtStart = LONG_MAX;
+unsigned long timeAtStart = LONG_MAX;
 unsigned short givenBombTimeSeconds = 0;
 
 bool lastTry = false;
@@ -22,7 +22,7 @@ void baseModuleInit(unsigned short sec)
 
 void baseModuleLogicLoop()
 {
-  unsigned short combinedSecondsLeft = givenBombTimeSeconds - ((millis() - timeAtStart) / 1000);
+  unsigned short combinedSecondsLeft = getSecondsLeft();
   if (combinedSecondsLeft >= 0)
   {
     unsigned short minutesLeft = combinedSecondsLeft / 60;
@@ -38,6 +38,10 @@ void baseModuleLogicLoop()
     }
     clock.setSegments(clock_data);
   }
+}
+
+unsigned short getSecondsLeft() {
+  return givenBombTimeSeconds - ((millis() - timeAtStart) / 1000);
 }
 
 void setTries(byte tries)
