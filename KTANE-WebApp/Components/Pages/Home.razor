@@ -1,0 +1,164 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@using Blazor.Extensions
+@using Blazor.Extensions.Canvas.Canvas2D
+@using KTANE_WebApp.Backend.Module
+@using KTANE_WebApp.Components.Models
+@rendermode InteractiveServer
+
+<EditForm Model="@model" OnValidSubmit="SubmitForm" FormName="generate-new-bomb">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label class="form-label">
+            Zeit-Timer (in Sek):
+            <InputNumber @bind-Value="model.InitialTime" class="form-control"/>
+        </label>
+    </div>
+    <div class="form-group">
+        <label class="form-label">
+            Maximale Versuche:
+            <InputNumber @bind-Value="model.MaxMistakes" class="form-control"/>
+        </label>
+    </div>
+    <div class="form-group">
+        <label class="form-label">
+            Seed:
+            <InputText @bind-Value="model.Seed" class="form-control"/>
+        </label>
+    </div>
+    <ValidationSummary/>
+    <div>
+        <button type="submit" class="btn btn-primary">Generieren</button>
+    </div>
+</EditForm>
+
+<div style="@(isBombGenerated ? "display:block" : "display:none")">
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <h3>Bitte baue die Bombe so um wie sie auf den folgenden Bildern gezeigt wird. Danach drücke auf START</h3>
+    <br/>
+    <img @ref="wiresBackground" hidden id="wiresBackground" src="images/wiresBackground.png"/>
+    <BECanvas Width="385" Height="364" @ref="wireCanvas"></BECanvas>
+
+        <img @ref="batteryBackground" hidden id="batteryBackground" src="images/batteryBackground.png"/>
+        <img @ref="batteryAA" hidden id="batteryAA" src="images/batteryAA.png"/>
+        <BECanvas Width="600" Height="600" @ref="batteryCanvas"></BECanvas>
+        <BECanvas Width="600" Height="600" @ref="batteryCanvas2"></BECanvas>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <div>
+        <button class="btn btn-primary" @onclick="StartBomb">START</button>
+    </div>
+</div>
+
+@code {
+    private readonly GenerateBombFormModel model = new();
+    private bool isBombGenerated;
+
+    private ElementReference wiresBackground;
+    private Canvas2DContext wireCanvasContext;
+    private BECanvasComponent wireCanvas;
+
+    private ElementReference batteryBackground;
+    private ElementReference batteryAA;
+    private Canvas2DContext batteryCanvasContext;
+    private Canvas2DContext batteryCanvasContext2;
+    private BECanvasComponent batteryCanvas;
+    private BECanvasComponent batteryCanvas2;
+
+    private void StartBomb()
+    {
+        Bomb.Instance.Start();
+    }
+
+    private void SubmitForm()
+    {
+        if (!Arduino.IsConnected)
+        {
+            Console.WriteLine("[ERROR] Arduino not connected");
+            return;
+        }
+
+        BombGenerationInputInfo inputInfo = model.ToStruct();
+        Bomb.Instance.GenerateNewBomb(inputInfo);
+        isBombGenerated = true;
+
+        Console.WriteLine(Bomb.Instance.ToString());
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        wireCanvasContext = await wireCanvas.CreateCanvas2DAsync();
+        await wireCanvasContext.DrawImageAsync(wiresBackground, 0, 0);
+
+        Wires.WireColor[] wires = Bomb.Instance.wires.wires;
+
+        for (int i = 0; i < wires.Length; i++)
+        {
+            string color;
+
+            switch (wires[i])
+            {
+                case Wires.WireColor.BLACK:
+                    color = "black";
+                    break;
+                case Wires.WireColor.BLUE:
+                    color = "blue";
+                    break;
+                case Wires.WireColor.RED:
+                    color = "red";
+                    break;
+                case Wires.WireColor.WHITE:
+                    color = "white";
+                    break;
+                case Wires.WireColor.YELLOW:
+                    color = "yellow";
+                    break;
+                case Wires.WireColor.NONE:
+                case Wires.WireColor.CUT:
+                default:
+                    continue;
+            }
+
+            await wireCanvasContext.SetFillStyleAsync(color);
+            await wireCanvasContext.FillRectAsync(80, 95 + 38.3 * i, 240, 10);
+        }
+
+        List<bool> batteries = new List<bool>();
+        for (int i = 0; i < Bomb.Instance.Frame.NumberOfBatteries; i++)
+        {
+            batteries.Add(true);
+        }
+        for (int i = batteries.Count; i <= 4; i++)
+        {
+            batteries.Add(false);
+        }
+        batteries.Shuffle(new Random());
+
+        batteryCanvasContext = await batteryCanvas.CreateCanvas2DAsync();
+        batteryCanvasContext2 = await batteryCanvas2.CreateCanvas2DAsync();
+        await batteryCanvasContext.DrawImageAsync(batteryBackground, 0, 0);
+        await batteryCanvasContext2.DrawImageAsync(batteryBackground, 0, 0);
+
+        if(batteries[0])
+            await batteryCanvasContext.DrawImageAsync(batteryAA, 245, 120);
+
+        if(batteries[1])
+            await batteryCanvasContext.DrawImageAsync(batteryAA, 245, 190);
+
+        if(batteries[2])
+            await batteryCanvasContext2.DrawImageAsync(batteryAA, 245, 120);
+
+        if(batteries[3])
+            await batteryCanvasContext2.DrawImageAsync(batteryAA, 245, 190);
+    }
+
+}
