@@ -10,11 +10,11 @@
 
 void setup()
 {
-  for (int i = 2; i <= 35; i++)
+  for (int i = 2; i <= 37; i++)
   {
     pinMode(i, OUTPUT);
   }
-  for (int i = 37; i <= 49; i++)
+  for (int i = 41; i <= 49; i++)
   {
     pinMode(i, INPUT);
   }
@@ -54,128 +54,113 @@ void setup()
 
 void loopSerialRead()
 {
-  if (Serial.available())
+  if (!Serial.available())
+    return;
+
+  int type = Serial.read();
+  switch (type)
   {
-    int type = Serial.read();
-    switch (type)
+  case 0: // Reset
+    reset();
+    break;
+  case 1: // Init
+  {
+    while (Serial.available() < 6)
     {
-    case 0: // Reset
-      reset();
-      break;
-    case 1: // Init
-    {
-      while (Serial.available() < 6)
-      {
-      }
-      char serialNumber[6];
-      Serial.readBytes(serialNumber, 6);
-      setSerialNumber(serialNumber);
+    }
+    char serialNumber[6];
+    Serial.readBytes(serialNumber, 6);
+    setSerialNumber(serialNumber);
 
-      while (Serial.available() < 1)
-      {
-      }
-      digitalWrite(OUTPUT_Indicator, (bool)Serial.read());
+    while (Serial.available() < 1)
+    {
+    }
+    digitalWrite(OUTPUT_Indicator, (bool)Serial.read());
 
-      while (Serial.available() < 3)
-      {
-      }
-      char indicatorLetters[3];
-      Serial.readBytes(indicatorLetters, 3);
-      setIndicatorText(indicatorLetters);
+    while (Serial.available() < 3)
+    {
+    }
+    char indicatorLetters[3];
+    Serial.readBytes(indicatorLetters, 3);
+    setIndicatorText(indicatorLetters);
 
-      morseInitRead();
-      bigButtonInitRead();
-      wiresInit();
-      passwordInit();
-      break;
-    }
-    case 2: // Start
+    morseInitRead();
+    bigButtonInitRead();
+    wiresInit();
+    passwordInit();
+    break;
+  }
+  case 2: // Start
+  {
+    while (Serial.available() < 2)
     {
-      while (Serial.available() < 2)
-      {
-      }
-      byte upperByte = Serial.read();
-      byte lowerByte = Serial.read();
-      unsigned short seconds = (upperByte << 8) + lowerByte;
-      baseModuleInit(seconds);
-      break;
     }
-    case 3: // Set Tries
+    byte upperByte = Serial.read();
+    byte lowerByte = Serial.read();
+    unsigned short seconds = (upperByte << 8) + lowerByte;
+    baseModuleInit(seconds);
+    startBomb();
+    break;
+  }
+  case 3: // Set Tries
+  {
+    while (Serial.available() < 1)
     {
-      while (Serial.available() < 1)
-      {
-      }
-      byte tries = Serial.read();
-      setTries(tries);
-      break;
     }
-    case 4: // Set Solved
+    byte tries = Serial.read();
+    setTries(tries);
+    break;
+  }
+  case 4: // Set Solved
+  {
+    while (Serial.available() < 2)
     {
-      while (Serial.available() < 2)
-      {
-      }
-      byte solvedModules1 = Serial.read();
-      byte solvedModules2 = Serial.read();
-
-      PORTA = solvedModules2;
-
-      digitalWrite(OUTPUT_Module_8, LOW);
-      digitalWrite(OUTPUT_Module_9, LOW);
-      digitalWrite(OUTPUT_Module_10, LOW);
-      if (solvedModules1 & B00000100)
-      {
-        digitalWrite(OUTPUT_Module_10, HIGH);
-      }
-      else if (solvedModules1 & B00000010)
-      {
-        digitalWrite(OUTPUT_Module_9, HIGH);
-      }
-      else if (solvedModules1 & B00000001)
-      {
-        digitalWrite(OUTPUT_Module_8, HIGH);
-      }
-      break;
     }
-    case 5: // BigKnob Strip
+    byte data0 = Serial.read();
+    byte data1 = Serial.read();
+    setSolvedModules(data0, data1);
+    setSolvedLEDs(data0, data1);
+    break;
+  }
+  case 5: // BigKnob Strip
+  {
+    while (Serial.available() < 1)
     {
-      while (Serial.available() < 1)
-      {
-      }
-      byte colorIndex = Serial.read();
-      bigButtonUpdateStrip(colorIndex);
-      break;
     }
-    case 6: // Password Text
+    byte colorIndex = Serial.read();
+    bigButtonUpdateStrip(colorIndex);
+    break;
+  }
+  case 6: // Password Text
+  {
+    while (Serial.available() < 5)
     {
-      while (Serial.available() < 5)
-      {
-      }
-      char passwordLetters[5];
-      Serial.readBytes(passwordLetters, 5);
-      setPassword(passwordLetters);
-      break;
     }
-    case 7: // SimonSays
+    char passwordLetters[5];
+    Serial.readBytes(passwordLetters, 5);
+    setPassword(passwordLetters);
+    break;
+  }
+  case 7: // SimonSays
+  {
+    while (Serial.available() < 3)
     {
-      while (Serial.available() < 3)
-      {
-      }
-      byte data[3];
-      Serial.readBytes(data, 3);
-      simonInit(data[0], data[1], data[2]);
-      break;
     }
-    case 8: // Memory
+    byte data[3];
+    Serial.readBytes(data, 3);
+    simonInit(data[0], data[1], data[2]);
+    break;
+  }
+  case 8: // Memory
+  {
+    while (Serial.available() < 2)
     {
-      while (Serial.available() < 2)
-      {
-      }
-      byte data[2];
-      Serial.readBytes(data, 2);
-      memoryInit(data[0], data[1]);
-      break;
     }
-    }
+    byte data[2];
+    Serial.readBytes(data, 2);
+    memoryInit(data[0], data[1]);
+    break;
+  }
   }
 }
 
@@ -187,17 +172,22 @@ void loop()
 
   if (!bombStarted)
   {
-    // return;
+    return;
   }
 
   baseModuleLogicLoop();
+
+  return; //TESTING
+
   simonLogicLoop();
   morseLogicLoop();
 
+  
   if (!loopLogicButtonCooldown)
   {
     morseLogicButtonLoop();
   }
+
 
   if (!loopSerialWriteCooldown)
   {

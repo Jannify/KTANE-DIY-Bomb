@@ -4,3 +4,4 @@
 
 void setIndicatorText(char *);
 void setSerialNumber(char *);
+void setSolvedLEDs(byte, byte);

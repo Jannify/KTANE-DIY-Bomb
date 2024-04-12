@@ -37,6 +37,7 @@
 | D34       | LED            | White LED for Indicator                                                     |
 | D35       | LED            | Yellow LED for Morse                                                        |
 | D36 - D37 | Front Clock    | Front Clock (not I2C but Data, Clock)                                       |
+| D38       | Buzzer         | Front Buzzer                            OLD OLD OLD OLD                     |
 |           |                |                                                                             |
 | D41 - D42 | Input Buttons  | Morse Switch (left + right)                                                 |
 | D43       | Input Button   | Password Send                                                               |
@@ -91,4 +92,4 @@ I2C
 | 0xC  |                  |                                                           |        |                                                             |
 | 0xD  |                  |                                                           |        |                                                             |
 | 0xE  |                  |                                                           |        |                                                             |
-| 0xF  |                  |                                                           |        |                                                             |
+| 0xF  |     Time Up      | Send when the clock reached zero                          |        |                                                             |

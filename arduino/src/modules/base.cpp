@@ -2,12 +2,12 @@
 
 #include <TM1637Display.h>
 
-bool bombStarted = false;
-
 TM1637Display clock(OUTPUT_Clock_Clk, OUTPUT_Clock_Data);
 uint8_t clock_data[4];
 unsigned long timeAtStart = LONG_MAX;
 unsigned short givenBombTimeSeconds = 0;
+
+unsigned short lastSecondsLeft = USHRT_MAX;
 
 bool lastTry = false;
 Timer<>::Task lastTryTask = nullptr;
@@ -16,15 +16,15 @@ void baseModuleInit(unsigned short sec)
 {
   givenBombTimeSeconds = sec;
   timeAtStart = millis();
-  bombStarted = true;
   clock.setBrightness(0x0f);
 }
 
 void baseModuleLogicLoop()
 {
   unsigned short combinedSecondsLeft = getSecondsLeft();
-  if (combinedSecondsLeft >= 0)
+  if (combinedSecondsLeft <= 3500 && combinedSecondsLeft != lastSecondsLeft)
   {
+    lastSecondsLeft = combinedSecondsLeft;
     unsigned short minutesLeft = combinedSecondsLeft / 60;
     unsigned short secondsLeft = combinedSecondsLeft - minutesLeft * 60;
     clock_data[0] = clock.encodeDigit(minutesLeft / 10);
@@ -37,10 +37,19 @@ void baseModuleLogicLoop()
       clock_data[1] |= SEG_DP;
     }
     clock.setSegments(clock_data);
+    tone(OUTPUT_BUZZER, 2000, 75);
+  }
+
+  if (combinedSecondsLeft >= (USHRT_MAX - 10))
+  {
+    Serial.write(0xF);
+    engageLogicCooldown();
+    reset();
   }
 }
 
-unsigned short getSecondsLeft() {
+unsigned short getSecondsLeft()
+{
   return givenBombTimeSeconds - ((millis() - timeAtStart) / 1000);
 }
 

@@ -20,7 +20,7 @@ void setSerialNumber(char *txt)
 {
   multiplexer.selectChannel(4);
   serialNumberText.begin();
-  serialNumberText.setFont(u8g2_font_inb16_mr  );
+  serialNumberText.setFont(u8g2_font_inb16_mr);
   serialNumberText.firstPage();
   do
   {
@@ -32,4 +32,25 @@ void setSerialNumber(char *txt)
       serialNumberText.drawGlyph(22 * i, 55, txt[i]);
     }
   } while (serialNumberText.nextPage());
+}
+
+void setSolvedLEDs(byte data0, byte data1)
+{
+  PORTA = data1;
+
+  digitalWrite(OUTPUT_Module_8, LOW);
+  digitalWrite(OUTPUT_Module_9, LOW);
+  digitalWrite(OUTPUT_Module_10, LOW);
+  if (data0 & B00000100)
+  {
+    digitalWrite(OUTPUT_Module_10, HIGH);
+  }
+  else if (data0 & B00000010)
+  {
+    digitalWrite(OUTPUT_Module_9, HIGH);
+  }
+  else if (data0 & B00000001)
+  {
+    digitalWrite(OUTPUT_Module_8, HIGH);
+  }
 }

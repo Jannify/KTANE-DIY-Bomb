@@ -42,10 +42,18 @@
 #define OUTPUT_7Bit_Clock_2 7
 #define OUTPUT_7Bit_Clock_3 8
 #define OUTPUT_7Bit_Clock_4 9
-#define OUTPUT_Memory_Lvl_1 10
-#define OUTPUT_Memory_Lvl_2 11
-#define OUTPUT_Memory_Lvl_3 12
-#define OUTPUT_Memory_Lvl_4 13
+#define OUTPUT_BUZZER 11                                                                  
+
+#define OUTPUT_Memory_Lvl_1 10 // Should be shift register
+#define OUTPUT_Memory_Lvl_2 10
+#define OUTPUT_Memory_Lvl_3 10
+#define OUTPUT_Memory_Lvl_4 10
+#define OUTPUT_Memory_Lvl_5 10
+// #define OUTPUT_Memory_Lvl_1 10
+// #define OUTPUT_Memory_Lvl_2 11
+// #define OUTPUT_Memory_Lvl_3 12
+// #define OUTPUT_Memory_Lvl_4 13
+
 #define OUTPUT_Simon_Blue 14  // Needs to be in succession
 #define OUTPUT_Simon_Red 15
 #define OUTPUT_Simon_Yellow 16
@@ -75,10 +83,16 @@
 extern TCA9548 multiplexer;
 extern Timer<20> timer;
 
+// BigButton, Wires, Password, SimonSays, Memory, Morse
+extern bool activeModules[];
+extern bool bombStarted;
+
 extern bool loopLogicButtonCooldown;
 extern bool loopSerialWriteCooldown;
 
+void startBomb();
 void engageLogicCooldown();
 void engageSerialWriteCooldown();
+void setSolvedModules(byte, byte);
 bool setPinLow(void *argument);
 void reset();

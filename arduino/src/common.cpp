@@ -4,8 +4,25 @@ Timer<20> timer;
 
 TCA9548 multiplexer(0x70);
 
+bool activeModules[11] = { false };
+bool bombStarted = false;
+
 bool loopLogicButtonCooldown = false;
 bool loopSerialWriteCooldown = false;
+
+void startBomb() {
+  for (size_t i = 0; i < 6; i++)
+  {
+    activeModules[i] = true;
+  }
+
+    for (size_t i = 6; i < 11; i++)
+  {
+    activeModules[i] = false;
+  }
+  
+  bombStarted = true;
+}
 
 void engageLogicCooldown() {
   loopLogicButtonCooldown = true;
@@ -23,6 +40,22 @@ void engageSerialWriteCooldown() {
   });
 }
 
+// Bitfield of Modules solved (5 zeros + from 10 to 0)
+void setSolvedModules(byte data0, byte data1) {
+    activeModules[10] = data0 & B00000100;
+    activeModules[9] = data0 & B00000010;
+    activeModules[8] = data0 & B00000001;
+    
+    activeModules[7] = data1 & B10000000;
+    activeModules[6] = data1 & B01000000;
+    activeModules[5] = data1 & B00100000;
+    activeModules[4] = data1 & B00010000;
+    activeModules[3] = data1 & B00001000;
+    activeModules[2] = data1 & B00000100;
+    activeModules[1] = data1 & B00000010;
+    activeModules[0] = data1 & B00000001;
+}
+
 bool setPinLow(void *argument) {
   digitalWrite((int)argument, LOW);
   return false;
@@ -35,5 +68,6 @@ void reset() {
   //Reset I2C
   //Reset SPI
   timer.cancel();
-  digitalWrite(OUTPUT_RESET, LOW);
+  bombStarted = false;
+  digitalWrite(OUTPUT_RESET, LOW); //TODO: Evaluate need
 }
