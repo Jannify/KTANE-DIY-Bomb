@@ -1,5 +1,11 @@
 * text=auto
 
+# SolidEdge
+SolidEdge/**/*.par filter=lfs diff=lfs merge=lfs -text
+SolidEdge/**/*.asm filter=lfs diff=lfs merge=lfs -text
+SolidEdge/**/*.cfg filter=lfs diff=lfs merge=lfs -text
+SolidEdge/**/*.dft filter=lfs diff=lfs merge=lfs -text
+
 # Images
 *.gif filter=lfs diff=lfs merge=lfs -text
 *.ico filter=lfs diff=lfs merge=lfs -text
