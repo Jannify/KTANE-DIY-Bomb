@@ -1,50 +1,52 @@
 # KTANE DIY Bomb
 
-## Aufbau
+## Assembly
 
 ### Module
 
 0: BigButton  
 1: Wires  
 2: Password  
-3: Simon says  
-4: (Number) Memory  
+3: SimonSays  
+ : Base
+4: Memory  
 5: Morse Code
 
 ### Arduino Mega Pins
 
-| Pins      | Hardware       | Function                                                                    |
-|-----------|----------------|-----------------------------------------------------------------------------|
-| A0 - A5   | Wires          | Wire Input                                                                  |
-| A6        | Button         | BigButton pressed                                                           |
-| A7 - A10  | Buttons        | Simon Says pressed (Blue, Red, Yellow, Green)                               |
-| A11 - A14 | Buttons        | NumberMemory pressed (left to right)                                        |
-| A15       | Button         | Morse Send pressed                                                          |
-|           |                |                                                                             |
-| D2        | WS2812         | BigButton Button Color                                                      |
-| D3        | WS2812         | BigButton Strip Color                                                       |
-| D4        | Register Data  |                                                                             |
-| D5        | Register Clock | 7Bit LEDs Memory Big Number                                                 |
-| D6 - D9   | Register Clock | 7Bit LEDs Memory First to Fourth Button                                     |
-| D10 - D13 | LEDs           | Memory Level Indicator (4x, bottom to top)                                  |
-|           |                |                                                                             |
-| D14 - D17 | LEDs           | Transistors for Simon Says Buttons (4x: Blue, Red, Yellow, Green)           |
-| D18 - D19 | LEDs           | 2 Red LEDs for XX                                                           |
-| D20 - D21 | I2C            |                                                                             |
-|           |                |                                                                             |
-| D22 - D32 | LEDs           | 11 Green "Module solved" LEDs (left to right, top to bottom, front to back) |
-| D33       | Reset          | Jump wire to arduino reset pin                                              |
-| D34       | LED            | White LED for Indicator                                                     |
-| D35       | LED            | Yellow LED for Morse                                                        |
-| D36 - D37 | Front Clock    | Front Clock (not I2C but Data, Clock)                                       |
-| D38       | Buzzer         | Front Buzzer                            OLD OLD OLD OLD                     |
-|           |                |                                                                             |
-| D41 - D42 | Input Buttons  | Morse Switch (left + right)                                                 |
-| D43       | Input Button   | Password Send                                                               |
-| D44 - D53 | Input Buttons  | Password Switch Letters (left to right, top to bottom)                      |
+#### !Currently not updated in code!
 
-\
-I2C
+| Pins      | Hardware       | Function                                                              |
+|-----------|----------------|-----------------------------------------------------------------------|
+| A0  - A4  | Wires          | Wire Input                                                            |
+| A5  - A6  | Input Buttons  | Morse Switch (left + right)                                           |
+| A7        | Input Buttons  | Morse Send                                                            |
+| A8  - A11 | Buttons        | Simon Says pressed (Blue, Red, Yellow, Green)                         |
+| A12 - A15 | Buttons        | NumberMemory pressed (left to right)                                  |
+|           |                |                                                                       |
+| D2        | WS2812         | BigButton Button Color                                                |
+| D3        | WS2812         | BigButton Strip Color                                                 |
+|           |                |                                                                       |
+| D20 - D21 | I2C            |                                                                       |
+|           |                |                                                                       |
+| D30       | LED            | Yellow LED for Morse                                                  |
+|           |                |                                                                       |
+|           |                |                                                                       |
+| D43 - D44 | Register Clock | 7Bit LEDs Memory Fourth to First Number                               |
+| D45       | Register Clock | 7Bit LEDs Memory Big Number                                           |
+| D46       | Register Clock | Memory Level LEDs (4x, bottom to top) + 2 XX + White LED Indicator    |
+| D47       | Register Data  |                                                                       |
+| D48       | Register Clock | Transistors for Simon Says Button LEDs (4x: Blue, Red, Yellow, Green) |
+| D49       | Buzzer         | Front Buzzer                                                          |
+| D50 - D51 | Front Clock    | Front Clock (not I2C but Data, Clock)                                 |
+| D52 - D53 | Register Clock | Module solved LEDs (11x, left to right, top to bottom, front to back) |
+
+|               | Button         | BigButton pressed                                                     |
+| D43           | Input Button   | Password Send                                                         |
+| D44 - D53     | Input Buttons  | Password Switch Letters (left to right, top to bottom)                |
+| D40       | Reset          | Jump wire to arduino reset pin           MAYBE NOT NEEDED?            |
+
+### Arduino Mega I²C Multiplexer
 
 - 0,96" OLED White  - Multiplex 0 - Indicator
 - 2,40" OLED Yellow - Multiplex 1 - Morse
@@ -52,7 +54,9 @@ I2C
 - 0,91" OLED White  - Multiplex 3 - BigButton Text
 - 1,30" OLED White  - Multiplex 4 - SerialNumber
 
-## Serial Communication (Pi to Arduino)
+## Communication
+
+### Serial Communication (Pi to Arduino)
 
 | Data |      Title      | Description                                       | Length | Payload Data                                                                                                       |
 |:----:|:---------------:|---------------------------------------------------|:------:|--------------------------------------------------------------------------------------------------------------------|
@@ -73,7 +77,7 @@ I2C
 | 0xE  |                 |                                                   |        |                                                                                                                    |
 | 0xF  |                 |                                                   |        |                                                                                                                    |
 
-## Serial Communication (Arduino to Pi)
+### Serial Communication (Arduino to Pi)
 
 | Data |      Title       | Description                                               | Length | Payload Data                                                |
 |:----:|:----------------:|-----------------------------------------------------------|:------:|-------------------------------------------------------------|
