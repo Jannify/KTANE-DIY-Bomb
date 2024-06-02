@@ -58,7 +58,10 @@ void setDisplayText()
 {
   char phrase[8];
   strcpy_P(phrase, (char *)pgm_read_word(&(MORSE_FREQUENCY_TABLE[morseFrequencyIndex])));
-  strcat(phrase, " MHz");
+  phrase[4] = ' ';
+  phrase[5] = 'M';
+  phrase[6] = 'H';
+  phrase[7] = 'z';
 
   multiplexer.selectChannel(2);
   yellowDisplay.clearDisplay();
