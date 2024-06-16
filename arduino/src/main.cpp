@@ -10,46 +10,46 @@
 
 void setup()
 {
-  for (int i = 2; i <= 37; i++)
+  for (int i = 2; i <= 53; i++)
   {
     pinMode(i, OUTPUT);
   }
   for (int i = 41; i <= 49; i++)
   {
-    pinMode(i, INPUT);
+    //pinMode(i, INPUT);
   }
-  pinMode(A0, INPUT);
-  pinMode(A1, INPUT);
-  pinMode(A2, INPUT);
-  pinMode(A3, INPUT);
-  pinMode(A4, INPUT);
-  pinMode(A5, INPUT);
-  pinMode(A6, INPUT);
-  pinMode(A7, INPUT);
-  pinMode(A8, INPUT);
-  pinMode(A9, INPUT);
-  pinMode(A10, INPUT);
+  pinMode(A0, INPUT_PULLUP);
+  pinMode(A1, INPUT_PULLUP);
+  pinMode(A2, INPUT_PULLUP);
+  pinMode(A3, INPUT_PULLUP);
+  pinMode(A4, INPUT_PULLUP);
+  pinMode(A5, INPUT_PULLUP);
+  pinMode(A6, INPUT_PULLUP);
+  pinMode(A7, INPUT_PULLUP);
+  pinMode(A8, INPUT_PULLUP);
+  pinMode(A9, INPUT_PULLUP);
+  pinMode(A10, INPUT_PULLUP);
   pinMode(A11, INPUT);
   pinMode(A12, INPUT);
   pinMode(A13, INPUT);
   pinMode(A14, INPUT);
   pinMode(A15, INPUT);
 
-  digitalWrite(OUTPUT_RESET, HIGH);
+
+
+  Serial.begin(9600);
+  //digitalWrite(OUTPUT_RESET, HIGH);
 
   Wire.begin();
   if (multiplexer.begin() == false)
   {
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
   }
-
-  Serial.begin(9600);
-
+  
   // TESTING AREA:
 
-  // baseModuleInit(140);
-  // setIndicatorText("CAR");
-  // setSerialNumber("JJD67T");
+  //baseModuleInit(5);
+  //startBomb();
 }
 
 void loopSerialRead()
@@ -75,7 +75,7 @@ void loopSerialRead()
     while (Serial.available() < 1)
     {
     }
-    digitalWrite(OUTPUT_Indicator, (bool)Serial.read());
+    ///digitalWrite(OUTPUT_Indicator, (bool)Serial.read()); TODO: Fix
 
     while (Serial.available() < 3)
     {
@@ -88,6 +88,7 @@ void loopSerialRead()
     bigButtonInitRead();
     wiresInit();
     passwordInit();
+    memoryInit();
     break;
   }
   case 2: // Start
@@ -158,7 +159,7 @@ void loopSerialRead()
     }
     byte data[2];
     Serial.readBytes(data, 2);
-    memoryInit(data[0], data[1]);
+    memorySetNumber(data[0], data[1]);
     break;
   }
   }

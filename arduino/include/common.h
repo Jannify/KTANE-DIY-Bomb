@@ -4,81 +4,62 @@
 #include <arduino-timer.h>
 #include <Arduino.h>
 
-#define INPUT_WIRE_1 A0
-#define INPUT_WIRE_2 A1
-#define INPUT_WIRE_3 A2
-#define INPUT_WIRE_4 A3
-#define INPUT_WIRE_5 A4
-#define INPUT_WIRE_6 A5
-#define INPUT_BigButton A6
-#define INPUT_Simon_Blue A7
-#define INPUT_Simon_Red A8
-#define INPUT_Simon_Yellow A9
-#define INPUT_Simon_Green A10
-#define INPUT_Memory_1 A11
-#define INPUT_Memory_2 A12
-#define INPUT_Memory_3 A13
-#define INPUT_Memory_4 A14
-#define INPUT_Morse_Send A15
-#define INPUT_Morse_Left 41
-#define INPUT_Morse_Right 42
-#define INPUT_Pass_Send 43
-#define INPUT_Pass_1_Up 44
-#define INPUT_Pass_2_Up 45
-#define INPUT_Pass_3_Up 46
-#define INPUT_Pass_4_Up 47
-#define INPUT_Pass_5_Up 48
-#define INPUT_Pass_1_Down 49
-#define INPUT_Pass_2_Down 50
-#define INPUT_Pass_3_Down 51
-#define INPUT_Pass_4_Down 52
-#define INPUT_Pass_5_Down 53
+#define INPUT_Simon_Blue A0
+#define INPUT_Simon_Red A1
+#define INPUT_Simon_Yellow A2
+#define INPUT_Simon_Green A3
+#define INPUT_Morse_Send A4
+#define INPUT_Morse_Left A5
+#define INPUT_Morse_Right A6
+#define INPUT_Memory_1 A7
+#define INPUT_Memory_2 A8
+#define INPUT_Memory_3 A9
+#define INPUT_Memory_4 A10
+#define INPUT_WIRE_1 A11
+#define INPUT_WIRE_2 A12
+#define INPUT_WIRE_3 A13
+#define INPUT_WIRE_4 A14
+#define INPUT_WIRE_5 A15
 
 #define OUTPUT_BigButton_Color 2
 #define OUTPUT_BigButton_Strip 3
-#define OUTPUT_7Bit_Data 4
-#define OUTPUT_7Bit_Clock_0 5
-#define OUTPUT_7Bit_Clock_1 6
-#define OUTPUT_7Bit_Clock_2 7
-#define OUTPUT_7Bit_Clock_3 8
-#define OUTPUT_7Bit_Clock_4 9
-#define OUTPUT_BUZZER 11                                                                  
 
-#define OUTPUT_Memory_Lvl_1 10 // Should be shift register
-#define OUTPUT_Memory_Lvl_2 10
-#define OUTPUT_Memory_Lvl_3 10
-#define OUTPUT_Memory_Lvl_4 10
-#define OUTPUT_Memory_Lvl_5 10
-// #define OUTPUT_Memory_Lvl_1 10
-// #define OUTPUT_Memory_Lvl_2 11
-// #define OUTPUT_Memory_Lvl_3 12
-// #define OUTPUT_Memory_Lvl_4 13
+#define INPUT_BigButton 22
+#define INPUT_Pass_Send 23
+#define INPUT_Pass_1_Up 24
+#define INPUT_Pass_2_Up 25
+#define INPUT_Pass_3_Up 26
+#define INPUT_Pass_4_Up 27
+#define INPUT_Pass_5_Up 28
+#define INPUT_Pass_1_Down 29
+#define INPUT_Pass_2_Down 30
+#define INPUT_Pass_3_Down 31
+#define INPUT_Pass_4_Down 32
+#define INPUT_Pass_5_Down 33
 
-#define OUTPUT_Simon_Blue 14  // Needs to be in succession
-#define OUTPUT_Simon_Red 15
-#define OUTPUT_Simon_Yellow 16
-#define OUTPUT_Simon_Green 17
-#define OUTPUT_Tries_1 18
-#define OUTPUT_Tries_2 19
-#define OUTPUT_Module_0 22
-#define OUTPUT_Module_1 23
-#define OUTPUT_Module_2 24
-#define OUTPUT_Module_3 25
-#define OUTPUT_Module_4 26
-#define OUTPUT_Module_5 27
-#define OUTPUT_Module_6 28
-#define OUTPUT_Module_7 29
-#define OUTPUT_Module_8 30
-#define OUTPUT_Module_9 31
-#define OUTPUT_Module_10 32
-#define OUTPUT_RESET 33
-#define OUTPUT_Indicator 34
-#define OUTPUT_Morse_LED 35
-#define OUTPUT_Clock_Data 36
-#define OUTPUT_Clock_Clk 37
+#define OUTPUT_Morse_LED 40
+
+#define OUTPUT_Register_Data_Memory 42
+#define OUTPUT_Clock_Memory_Left 43
+#define OUTPUT_Clock_Memory_Right 44
+#define OUTPUT_Clock_Memory_Big 45
+#define OUTPUT_Clock_MemoryTriesIndicator 46
+#define OUTPUT_Register_Data_LED 47
+#define OUTPUT_Clock_SimonSays 48
+#define OUTPUT_BUZZER 49
+#define OUTPUT_ClockDisplay_Data 50
+#define OUTPUT_ClockDisplay_Clk 51
+#define OUTPUT_Clock_ModulesSolved_1 52
+#define OUTPUT_Clock_ModulesSolved_2 53
 
 #define I2C_SDA 20
 #define I2C_SCL 21
+
+#define MULTIPLEXER_Indicator 0
+#define MULTIPLEXER_Morse 1
+#define MULTIPLEXER_Password 2
+#define MULTIPLEXER_BigButton 3
+#define MULTIPLEXER_SerialNumber 4
 
 extern TCA9548 multiplexer;
 extern Timer<20> timer;
@@ -90,9 +71,13 @@ extern bool bombStarted;
 extern bool loopLogicButtonCooldown;
 extern bool loopSerialWriteCooldown;
 
+extern byte memoryTriesBuffer;
+
 void startBomb();
 void engageLogicCooldown();
 void engageSerialWriteCooldown();
-void setSolvedModules(byte, byte);
+void setSolvedModules(byte data0, byte data1);
 bool setPinLow(void *argument);
+void shiftOutLED(byte clockPin, byte val);
+uint8_t pack8Bool(bool *a);
 void reset();

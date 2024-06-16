@@ -1,38 +1,25 @@
 #include "common.h"
 #include "modules/memory.h"
 
-
 bool memoryButtonWasPressed = false;
 
-void memoryInit(byte data0, byte data1)
+void memoryInit()
 {
-    // int bigNumber = (data0 & 0b11000000) >> 6;
-    // int smallNumber1 = (data0 & 0b00110000) >> 4;
-    // int smallNumber2 = (data0 & 0b00001100) >> 2;
-    // int smallNumber3 = (data0 & 0b00000011);
-    // int smallNumber4 = (data1 & 0b11000000) >> 6;
-    int level = (data1 & 0b00111000) >> 3;
+    memoryTriesBuffer &= 0b11100000;
+    shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
+}
 
-    digitalWrite(OUTPUT_Memory_Lvl_1, LOW);
-    digitalWrite(OUTPUT_Memory_Lvl_2, LOW);
-    digitalWrite(OUTPUT_Memory_Lvl_3, LOW);
-    digitalWrite(OUTPUT_Memory_Lvl_4, LOW);
-    if (level >= 4)
-    {
-        digitalWrite(OUTPUT_Memory_Lvl_4, HIGH);
-    }
-    if (level >= 3)
-    {
-        digitalWrite(OUTPUT_Memory_Lvl_3, HIGH);
-    }
-    if (level >= 2)
-    {
-        digitalWrite(OUTPUT_Memory_Lvl_2, HIGH);
-    }
-    if (level >= 1)
-    {
-        digitalWrite(OUTPUT_Memory_Lvl_1, HIGH);
-    }
+void memorySetNumber(byte data0, byte data1)
+{
+    int bigNumber = (data0 & 0b11000000) >> 6;
+    int smallNumber1 = (data0 & 0b00110000) >> 4;
+    int smallNumber2 = (data0 & 0b00001100) >> 2;
+    int smallNumber3 = (data0 & 0b00000011);
+    int smallNumber4 = (data1 & 0b11000000) >> 6;
+    
+    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Big, LSBFIRST, bigNumber);
+    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Left, LSBFIRST, smallNumber1 | (smallNumber2 << 4));
+    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Right, LSBFIRST, smallNumber3 | (smallNumber4 << 4));
 }
 
 void memoryLogicLoop()
@@ -73,18 +60,4 @@ void memorySerialWriteLoop()
         Serial.write(memoryButtonPressed);
         engageSerialWriteCooldown();
     }
-}
-
-void setNumber() {
-
-    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_0, LSBFIRST, 0xF);
-    delay(20000);
-    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_0, LSBFIRST, 0x0);
-    delay(20000);
-    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_1, LSBFIRST, 0xF);
-    delay(20000);
-    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_1, LSBFIRST, 0x0);
-    delay(20000);
-    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_0, LSBFIRST, 0xF);
-    shiftOut(OUTPUT_7Bit_Data, OUTPUT_7Bit_Clock_1, LSBFIRST, 0xF);
 }

@@ -36,21 +36,6 @@ void setSerialNumber(char *txt)
 
 void setSolvedLEDs(byte data0, byte data1)
 {
-  PORTA = data1;
-
-  digitalWrite(OUTPUT_Module_8, LOW);
-  digitalWrite(OUTPUT_Module_9, LOW);
-  digitalWrite(OUTPUT_Module_10, LOW);
-  if (data0 & B00000100)
-  {
-    digitalWrite(OUTPUT_Module_10, HIGH);
-  }
-  else if (data0 & B00000010)
-  {
-    digitalWrite(OUTPUT_Module_9, HIGH);
-  }
-  else if (data0 & B00000001)
-  {
-    digitalWrite(OUTPUT_Module_8, HIGH);
-  }
+  shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data0);
+  shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data1);
 }

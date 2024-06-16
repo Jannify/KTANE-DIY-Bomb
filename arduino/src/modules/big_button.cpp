@@ -7,7 +7,7 @@
 
 const unsigned long PRESS_THRESHOLD_MS = 500;
 
-const char _TEXT_ABRECHEN[] PROGMEM = "Abrechen";
+const char _TEXT_ABRECHEN[] PROGMEM = "Abbrechn";
 const char _TEXT_HALTEN[] PROGMEM = "Gedrückt\nHalten";
 const char _TEXT_SPRENGEN[] PROGMEM = "Sprengen";
 const char _TEXT_DRUECKEN[] PROGMEM = "Drücken";

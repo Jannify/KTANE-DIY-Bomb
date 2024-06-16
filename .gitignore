@@ -47,3 +47,5 @@ $RECYCLE.BIN/
 SolidEdge/**/*.gcode
 SolidEdge/**/*.stl
 
+datasheet/*.*
+

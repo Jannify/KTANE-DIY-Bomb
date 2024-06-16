@@ -32,9 +32,8 @@ void simonLogicLoop()
   if (simonSequenceCallNext)
   {
     simonSequenceCallNext = false;
-    int ledPin = OUTPUT_Simon_Blue + simonSequence[simonSequenceStep];
-    digitalWrite(ledPin, HIGH);
-    timer.in(SIMON_ON_TIME, handleSimonSequenceOn, (void *)ledPin);
+    shiftOutLED(OUTPUT_Clock_SimonSays, simonSequence[simonSequenceStep]);
+    timer.in(SIMON_ON_TIME, handleSimonSequenceOn, (void *)nullptr);
   }
 }
 
@@ -68,8 +67,6 @@ void simonSerialWriteLoop()
     {
       simonReadWasPressed = true;
 
-
-
       // if (simonSequence[simonReadStep] == simonButtonPressed)
       // {
       //   simonReadStep++;
@@ -88,22 +85,20 @@ void simonSerialWriteLoop()
       //   simonReadStep = 0;
       // }
 
-
       Serial.write(0x4);
       Serial.write(simonButtonPressed);
       engageSerialWriteCooldown();
 
-      int pin = OUTPUT_Simon_Blue + simonButtonPressed;
-      digitalWrite(pin, HIGH);
-      timer.in(SIMON_ON_TIME, setPinLow, (void *)pin);
+      shiftOutLED(OUTPUT_Clock_SimonSays, simonButtonPressed);
+      timer.in(SIMON_ON_TIME, handleSimonAllOff, (void *)nullptr);
     }
   }
 }
 
-bool handleSimonSequenceOn(void *argument)
+bool handleSimonSequenceOn(void *)
 {
-  digitalWrite((int)argument, LOW);
-  timer.in(SIMON_OFF_TIME, handleSimonSequenceOff, argument);
+  shiftOutLED(OUTPUT_Clock_SimonSays, 0x00);
+  timer.in(SIMON_OFF_TIME, handleSimonSequenceOff, (void *)nullptr);
   return false; // to repeat the action - false to stop
 }
 
@@ -118,5 +113,11 @@ bool handleSimonSequenceOff(void *)
 
   simonSequenceStep++;
   simonSequenceCallNext = true;
+  return false; // to repeat the action - false to stop
+}
+
+bool handleSimonAllOff(void *)
+{
+  shiftOutLED(OUTPUT_Clock_SimonSays, 0x00);
   return false; // to repeat the action - false to stop
 }

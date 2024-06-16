@@ -14,28 +14,27 @@
 
 ### Arduino Mega Pins
 
-#### !Currently not updated in code!
-
 | Pins      | Hardware       | Function                                                              |
 |-----------|----------------|-----------------------------------------------------------------------|
-| A0  - A4  | Wires          | Wire Input                                                            |
+| A0  - A3  | Buttons        | Simon Says pressed (Blue, Red, Yellow, Green)                         |
+| A4        | Input Buttons  | Morse Send                                                            |
 | A5  - A6  | Input Buttons  | Morse Switch (left + right)                                           |
-| A7        | Input Buttons  | Morse Send                                                            |
-| A8  - A11 | Buttons        | Simon Says pressed (Blue, Red, Yellow, Green)                         |
-| A12 - A15 | Buttons        | NumberMemory pressed (left to right)                                  |
+| A7  - A10 | Buttons        | NumberMemory pressed (left to right)                                  |
+| A11 - A15 | Wires          | Wire Input                                                            |
 |           |                |                                                                       |
 | D2        | WS2812         | BigButton Button Color                                                |
 | D3        | WS2812         | BigButton Strip Color                                                 |
 |           |                |                                                                       |
 | D20 - D21 | I2C            |                                                                       |
 |           |                |                                                                       |
-| D30       | LED            | Yellow LED for Morse                                                  |
+| D40       | LED            | Yellow LED for Morse                                                  |
 |           |                |                                                                       |
 |           |                |                                                                       |
+| D42       | Register Data  | Data line for Memory 7-Segment                                        |
 | D43 - D44 | Register Clock | 7Bit LEDs Memory Fourth to First Number                               |
 | D45       | Register Clock | 7Bit LEDs Memory Big Number                                           |
 | D46       | Register Clock | Memory Level LEDs (4x, bottom to top) + 2 XX + White LED Indicator    |
-| D47       | Register Data  |                                                                       |
+| D47       | Register Data  | Data line for LED Controllers                                         |
 | D48       | Register Clock | Transistors for Simon Says Button LEDs (4x: Blue, Red, Yellow, Green) |
 | D49       | Buzzer         | Front Buzzer                                                          |
 | D50 - D51 | Front Clock    | Front Clock (not I2C but Data, Clock)                                 |
@@ -45,6 +44,8 @@
 | D43           | Input Button   | Password Send                                                         |
 | D44 - D53     | Input Buttons  | Password Switch Letters (left to right, top to bottom)                |
 | D40       | Reset          | Jump wire to arduino reset pin           MAYBE NOT NEEDED?            |
+
+A11 & A15 no pullup
 
 ### Arduino Mega I²C Multiplexer
 

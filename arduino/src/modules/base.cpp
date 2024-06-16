@@ -2,7 +2,7 @@
 
 #include <TM1637Display.h>
 
-TM1637Display clock(OUTPUT_Clock_Clk, OUTPUT_Clock_Data);
+TM1637Display clock(OUTPUT_ClockDisplay_Clk, OUTPUT_ClockDisplay_Data);
 uint8_t clock_data[4];
 unsigned long timeAtStart = LONG_MAX;
 unsigned short givenBombTimeSeconds = 0;
@@ -62,25 +62,24 @@ void setTries(byte tries)
   }
   if (tries >= 2)
   {
-    digitalWrite(OUTPUT_Tries_1, HIGH);
-    digitalWrite(OUTPUT_Tries_2, HIGH);
+    memoryTriesBuffer |= 0b01100000;
     lastTryTask = timer.every(600, toggleLastTry);
   }
   else if (tries >= 1)
   {
-    digitalWrite(OUTPUT_Tries_1, HIGH);
-    digitalWrite(OUTPUT_Tries_2, LOW);
+    memoryTriesBuffer |= 0b01100000;
+    memoryTriesBuffer &= 0b11011111;
   }
   else
   {
-    digitalWrite(OUTPUT_Tries_1, LOW);
-    digitalWrite(OUTPUT_Tries_2, LOW);
+    memoryTriesBuffer &= 0b10011111;
   }
+
+  shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
 }
 
 bool toggleLastTry(void *)
 {
-  digitalWrite(OUTPUT_Tries_1, !digitalRead(OUTPUT_Tries_1));
-  digitalWrite(OUTPUT_Tries_2, !digitalRead(OUTPUT_Tries_2));
+  memoryTriesBuffer ^= 0b01100000;
   return true;
 }

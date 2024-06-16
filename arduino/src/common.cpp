@@ -10,6 +10,8 @@ bool bombStarted = false;
 bool loopLogicButtonCooldown = false;
 bool loopSerialWriteCooldown = false;
 
+byte memoryTriesBuffer = 0x00;
+
 void startBomb() {
   for (size_t i = 0; i < 6; i++)
   {
@@ -61,6 +63,19 @@ bool setPinLow(void *argument) {
   return false;
 }
 
+void shiftOutLED(byte clockPin, byte val)
+{
+    for (byte i = 0; i < 8; i++)
+    {
+        digitalWrite(27, (val & 128) != 0);
+        val <<= 1;
+
+        digitalWrite(clockPin, HIGH);
+        digitalWrite(clockPin, LOW);
+        delay(2);
+    }
+    delay(3);
+}
 
 void reset() {
   //Reset BigButton
@@ -69,5 +84,5 @@ void reset() {
   //Reset SPI
   timer.cancel();
   bombStarted = false;
-  digitalWrite(OUTPUT_RESET, LOW); //TODO: Evaluate need
+  //digitalWrite(OUTPUT_RESET, LOW); //TODO: Evaluate need
 }
