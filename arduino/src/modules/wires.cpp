@@ -14,8 +14,8 @@ void wiresSerialWriteLoop() {
         byte cutWire = connectedWires ^ newConnectedWires;
         connectedWires = newConnectedWires;
 
-        Serial.write(0x2);
-        Serial.write(cutWire << 3);     
+        Serial.write((byte)0x2);
+        Serial.write((byte)(cutWire << 3));     
         engageSerialWriteCooldown();
     }
 }

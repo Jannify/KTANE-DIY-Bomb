@@ -32,7 +32,7 @@ void memoryLogicButtonLoop()
 
 void memorySerialWriteLoop()
 {
-    int memoryButtonPressed = -1;
+    byte memoryButtonPressed = -1;
     if (digitalRead(INPUT_Memory_1))
     {
         memoryButtonPressed = 0;
@@ -56,7 +56,7 @@ void memorySerialWriteLoop()
     else if (!memoryButtonWasPressed)
     {
         memoryButtonWasPressed = true;
-        Serial.write(0x5);
+        Serial.write((byte)0x5);
         Serial.write(memoryButtonPressed);
         engageSerialWriteCooldown();
     }

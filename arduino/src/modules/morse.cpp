@@ -129,8 +129,8 @@ void morseSerialWriteLoop()
   if (!morseButtonWasPressed && digitalRead(INPUT_Morse_Send))
   {
     morseButtonWasPressed = true; // Reset is in loopLogic()
-    Serial.write(0x6);
-    Serial.write(morseCodeIndex == morseFrequencyIndex);
+    Serial.write((byte)0x6);
+    Serial.write((byte)(morseCodeIndex == morseFrequencyIndex));
     engageLogicCooldown();
   }
 }

@@ -87,15 +87,15 @@ void passwordSerialWriteLoop()
 
         if (pressedSend)
         {
-            Serial.write(0x3);
-            Serial.write(0b10000000);
+            Serial.write((byte)0x3);
+            Serial.write((byte)0b10000000);
             engageSerialWriteCooldown();
         }
         else if (buttonIndex != -1)
         {
             byte data = wasButtonUp ? 0b01000000 : 0x0;
             data = data | buttonIndex << 3;
-            Serial.write(0x3);
+            Serial.write((byte)0x3);
             Serial.write(data);
             engageSerialWriteCooldown();
         }

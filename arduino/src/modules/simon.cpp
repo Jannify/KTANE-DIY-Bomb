@@ -41,7 +41,7 @@ void simonSerialWriteLoop()
 {
   if (simonAcceptButtonInput)
   {
-    int simonButtonPressed = -1;
+    byte simonButtonPressed = -1;
     if (digitalRead(INPUT_Simon_Blue))
     {
       simonButtonPressed = 0;
@@ -85,7 +85,7 @@ void simonSerialWriteLoop()
       //   simonReadStep = 0;
       // }
 
-      Serial.write(0x4);
+      Serial.write((byte)0x4);
       Serial.write(simonButtonPressed);
       engageSerialWriteCooldown();
 

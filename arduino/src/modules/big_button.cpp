@@ -117,8 +117,8 @@ void bigButtonSerialWriteLoop()
         wasButtonPressed = false;
 
         unsigned long difference = endPressed - startPressed;
-        Serial.write(0x1);
-        Serial.write(difference <= PRESS_THRESHOLD_MS ? false : true);
+        Serial.write((byte)0x1);
+        Serial.write((byte)(difference <= PRESS_THRESHOLD_MS ? false : true));
         Serial.write((byte)(getSecondsLeft() >> 8));
         Serial.write((byte)getSecondsLeft());
         engageSerialWriteCooldown();

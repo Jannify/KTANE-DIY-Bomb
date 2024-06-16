@@ -43,6 +43,7 @@ void setup()
   Wire.begin();
   if (multiplexer.begin() == false)
   {
+    Serial.write((byte)0xF);
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
   }
   

@@ -42,7 +42,7 @@ void baseModuleLogicLoop()
 
   if (combinedSecondsLeft >= (USHRT_MAX - 10))
   {
-    Serial.write(0xF);
+    Serial.write((byte)0xE);
     engageLogicCooldown();
     reset();
   }

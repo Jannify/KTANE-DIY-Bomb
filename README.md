@@ -40,6 +40,8 @@
 | D50 - D51 | Front Clock    | Front Clock (not I2C but Data, Clock)                                 |
 | D52 - D53 | Register Clock | Module solved LEDs (11x, left to right, top to bottom, front to back) |
 
+Not yet assigned  
+
 |               | Button         | BigButton pressed                                                     |
 | D43           | Input Button   | Password Send                                                         |
 | D44 - D53     | Input Buttons  | Password Switch Letters (left to right, top to bottom)                |
@@ -96,5 +98,5 @@ A11 & A15 no pullup
 | 0xB  |                  |                                                           |        |                                                             |
 | 0xC  |                  |                                                           |        |                                                             |
 | 0xD  |                  |                                                           |        |                                                             |
-| 0xE  |                  |                                                           |        |                                                             |
-| 0xF  |     Time Up      | Send when the clock reached zero                          |        |                                                             |
+| 0xE  |     Time Up      | Send when the clock reached zero                          |        |                                                             |
+| 0xF  |     Logging      | Writes a logging message to the pi                        |   X    | Message with NULL ending                                    |
