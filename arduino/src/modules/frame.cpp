@@ -7,7 +7,7 @@ U8G2_SH1107_64X128_1_HW_I2C serialNumberText(U8G2_R1);
 
 void setIndicatorText(char *txt)
 {
-  multiplexer.selectChannel(0);
+  multiplexer.selectChannel(MULTIPLEXER_Indicator);
   indicatorText.begin();
   indicatorText.setFont(u8x8_font_inr46_4x8_r);
   for (size_t i = 0; i < 3; i++)
@@ -18,7 +18,7 @@ void setIndicatorText(char *txt)
 
 void setSerialNumber(char *txt)
 {
-  multiplexer.selectChannel(4);
+  multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
   serialNumberText.begin();
   serialNumberText.setFont(u8g2_font_inb16_mr);
   serialNumberText.firstPage();
