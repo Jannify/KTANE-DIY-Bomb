@@ -36,9 +36,9 @@
 | D46       | Register Clock | Memory Level LEDs (4x, bottom to top) + 2 XX + White LED Indicator    |
 | D47       | Register Data  | Data line for LED Controllers                                         |
 | D48       | Register Clock | Transistors for Simon Says Button LEDs (4x: Blue, Red, Yellow, Green) |
-| D49       | Buzzer         | Front Buzzer                                                          |
-| D50 - D51 | Front Clock    | Front Clock (not I2C but Data, Clock)                                 |
-| D52 - D53 | Register Clock | Module solved LEDs (11x, left to right, top to bottom, front to back) |
+| D49 - D50 | Register Clock | Module solved LEDs (11x, left to right, top to bottom, front to back) |
+| D51       | Buzzer         | Front Buzzer                                                          |
+| D52 - D53 | Front Clock    | Front Clock (not I2C but Data, Clock)                                 |
 
 Not yet assigned  
 
