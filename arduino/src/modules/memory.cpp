@@ -11,15 +11,15 @@ void memoryInit()
 
 void memorySetNumber(byte data0, byte data1)
 {
-    int bigNumber = (data0 & 0b11000000) >> 6;
-    int smallNumber1 = (data0 & 0b00110000) >> 4;
-    int smallNumber2 = (data0 & 0b00001100) >> 2;
-    int smallNumber3 = (data0 & 0b00000011);
-    int smallNumber4 = (data1 & 0b11000000) >> 6;
-    
-    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Big, LSBFIRST, bigNumber);
-    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Left, LSBFIRST, smallNumber1 | (smallNumber2 << 4));
-    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Right, LSBFIRST, smallNumber3 | (smallNumber4 << 4));
+    int bigNumber = 1 + ((data0 & 0b11000000) >> 6);
+    int smallNumber1 = 1 + ((data0 & 0b00110000) >> 4);
+    int smallNumber2 = 1 + ((data0 & 0b00001100) >> 2);
+    int smallNumber3 = 1 + (data0 & 0b00000011);
+    int smallNumber4 = 1 + ((data1 & 0b11000000) >> 6);
+
+    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Big, MSBFIRST, bigNumber);
+    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Left, MSBFIRST, smallNumber2 | (smallNumber1 << 4));
+    shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Right, MSBFIRST, smallNumber4 | (smallNumber3 << 4));
 }
 
 void memoryLogicLoop()
@@ -32,24 +32,25 @@ void memoryLogicButtonLoop()
 
 void memorySerialWriteLoop()
 {
-    byte memoryButtonPressed = -1;
-    if (digitalRead(INPUT_Memory_1))
+    byte memoryButtonPressed = 255;
+    if (!digitalRead(INPUT_Memory_1))
     {
         memoryButtonPressed = 0;
     }
-    else if (digitalRead(INPUT_Memory_2))
+    else if (!digitalRead(INPUT_Memory_2))
     {
         memoryButtonPressed = 1;
     }
-    else if (digitalRead(INPUT_Memory_3))
+    else if (!digitalRead(INPUT_Memory_3))
     {
         memoryButtonPressed = 2;
     }
-    else if (digitalRead(INPUT_Memory_4))
+    else if (!digitalRead(INPUT_Memory_4))
     {
         memoryButtonPressed = 3;
     }
-    if (memoryButtonPressed == -1)
+    
+    if (memoryButtonPressed == 255)
     {
         memoryButtonWasPressed = false;
     }
