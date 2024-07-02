@@ -8,13 +8,14 @@
 const unsigned long PRESS_THRESHOLD_MS = 500;
 
 const char _TEXT_ABRECHEN[] PROGMEM = "Abbrechn";
-const char _TEXT_HALTEN[] PROGMEM = "Gedrückt\nHalten";
+const char _TEXT_HALTEN[] PROGMEM = "Gedruekt";
 const char _TEXT_SPRENGEN[] PROGMEM = "Sprengen";
-const char _TEXT_DRUECKEN[] PROGMEM = "Drücken";
-const char *const TEXT_TABLE[] PROGMEM = {_TEXT_ABRECHEN, _TEXT_HALTEN, _TEXT_SPRENGEN, _TEXT_DRUECKEN};
+const char _TEXT_DRUECKEN[] PROGMEM = "Druecken";
+const char _TEXT_HALTEN2[] PROGMEM = "Halten";
+const char *const TEXT_TABLE[] PROGMEM = {_TEXT_ABRECHEN, _TEXT_HALTEN, _TEXT_SPRENGEN, _TEXT_DRUECKEN, _TEXT_HALTEN2};
 
 Adafruit_NeoPixel bigKnob = Adafruit_NeoPixel(7, OUTPUT_BigButton_Color, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel bigKnobStrip = Adafruit_NeoPixel(1, OUTPUT_BigButton_Strip, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel bigKnobStrip = Adafruit_NeoPixel(8, OUTPUT_BigButton_Strip, NEO_GRB + NEO_KHZ800);
 U8X8_SSD1306_128X32_UNIVISION_HW_I2C buttonDisplay;
 
 bool wasButtonPressed = false;
@@ -52,6 +53,7 @@ void bigButtonInitRead()
         blue = 255;
         break;
     }
+    bigKnob.begin();
     for (int i = 0; i <= 7; i++)
     {
         bigKnob.setPixelColor(i, red, green, blue);
@@ -62,12 +64,21 @@ void bigButtonInitRead()
     {
     }
     byte bigKnobTextIndex = Serial.read();
-    char *morseWordPtr = (char *)pgm_read_word(&(TEXT_TABLE[bigKnobTextIndex]));
 
     multiplexer.selectChannel(3);
     buttonDisplay.begin();
     buttonDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
-    buttonDisplay.drawString(0, 2, morseWordPtr);
+
+    char txt[8];
+    if(bigKnobTextIndex == 1) {
+        strcpy_P(txt, (TEXT_TABLE[1]));
+        buttonDisplay.drawString(0, 0, txt);
+        strcpy_P(txt, (TEXT_TABLE[4]));
+        buttonDisplay.drawString(0, 2, txt);
+    } else {
+        strcpy_P(txt, (TEXT_TABLE[bigKnobTextIndex]));
+        buttonDisplay.drawString(0, 2, txt);
+    }
 }
 
 void bigButtonUpdateStrip(byte bigKnobColorIndex)
@@ -96,7 +107,8 @@ void bigButtonUpdateStrip(byte bigKnobColorIndex)
         blue = 255;
         break;
     }
-    for (int i = 0; i <= 1; i++)
+    bigKnobStrip.begin();
+    for (int i = 0; i <= 8; i++)
     {
         bigKnobStrip.setPixelColor(i, red, green, blue);
     }
@@ -105,13 +117,13 @@ void bigButtonUpdateStrip(byte bigKnobColorIndex)
 
 void bigButtonSerialWriteLoop()
 {
-    if (!wasButtonPressed && digitalRead(INPUT_BigButton))
+    if (!wasButtonPressed && !digitalRead(INPUT_BigButton))
     {
         startPressed = millis();
         wasButtonPressed = true;
     }
 
-    if (wasButtonPressed && !digitalRead(INPUT_BigButton))
+    if (wasButtonPressed && digitalRead(INPUT_BigButton))
     {
         endPressed = millis();
         wasButtonPressed = false;

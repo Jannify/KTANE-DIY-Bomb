@@ -21,8 +21,8 @@
 #define INPUT_WIRE_4 A14
 #define INPUT_WIRE_5 A15
 
-#define OUTPUT_BigButton_Color 2
-#define OUTPUT_BigButton_Strip 3
+#define OUTPUT_BigButton_Strip 2
+#define OUTPUT_BigButton_Color 3
 
 #define INPUT_BigButton 22
 #define INPUT_Pass_Send 23
