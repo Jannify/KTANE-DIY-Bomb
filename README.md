@@ -25,6 +25,10 @@
 | D2        | WS2812         | BigButton Button Color                                                |
 | D3        | WS2812         | BigButton Strip Color                                                 |
 |           |                |                                                                       |
+| D4 - D13  | Input Buttons  | Password Switch Letters (left to right, top to bottom)                |
+| D14       | Input Button   | Password Send                                                         |
+| D15       | Button         | BigButton pressed                                                     |
+|           |                |                                                                       |
 | D20 - D21 | I2C            |                                                                       |
 |           |                |                                                                       |
 | D40       | LED            | Yellow LED for Morse                                                  |
@@ -39,15 +43,6 @@
 | D49 - D50 | Register Clock | Module solved LEDs (11x, left to right, top to bottom, front to back) |
 | D51       | Buzzer         | Front Buzzer                                                          |
 | D52 - D53 | Front Clock    | Front Clock (not I2C but Data, Clock)                                 |
-
-Not yet assigned  
-
-|               | Button         | BigButton pressed                                                     |
-| D43           | Input Button   | Password Send                                                         |
-| D44 - D53     | Input Buttons  | Password Switch Letters (left to right, top to bottom)                |
-| D40       | Reset          | Jump wire to arduino reset pin           MAYBE NOT NEEDED?            |
-
-A11 & A15 no pullup
 
 ### Arduino Mega I²C Multiplexer
 

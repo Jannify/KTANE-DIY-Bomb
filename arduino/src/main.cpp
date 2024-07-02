@@ -10,13 +10,13 @@
 
 void setup()
 {
-  for (int i = 2; i <= 53; i++)
+  for (int i = 4; i <= 15; i++)
+  {
+    pinMode(i, INPUT_PULLUP);
+  }
+  for (int i = 40; i <= 51; i++)
   {
     pinMode(i, OUTPUT);
-  }
-  for (int i = 41; i <= 49; i++)
-  {
-    //pinMode(i, INPUT);
   }
   pinMode(A0, INPUT_PULLUP);
   pinMode(A1, INPUT_PULLUP);

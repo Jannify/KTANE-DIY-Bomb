@@ -24,18 +24,18 @@
 #define OUTPUT_BigButton_Strip 2
 #define OUTPUT_BigButton_Color 3
 
-#define INPUT_BigButton 22
-#define INPUT_Pass_Send 23
-#define INPUT_Pass_1_Up 24
-#define INPUT_Pass_2_Up 25
-#define INPUT_Pass_3_Up 26
-#define INPUT_Pass_4_Up 27
-#define INPUT_Pass_5_Up 28
-#define INPUT_Pass_1_Down 29
-#define INPUT_Pass_2_Down 30
-#define INPUT_Pass_3_Down 31
-#define INPUT_Pass_4_Down 32
-#define INPUT_Pass_5_Down 33
+#define INPUT_Pass_1_Up 4
+#define INPUT_Pass_2_Up 5
+#define INPUT_Pass_3_Up 6
+#define INPUT_Pass_4_Up 7
+#define INPUT_Pass_5_Up 8
+#define INPUT_Pass_1_Down 9
+#define INPUT_Pass_2_Down 10
+#define INPUT_Pass_3_Down 11
+#define INPUT_Pass_4_Down 12
+#define INPUT_Pass_5_Down 13
+#define INPUT_Pass_Send 14
+#define INPUT_BigButton 15
 
 #define OUTPUT_Morse_LED 40
 
