@@ -7,16 +7,17 @@
 
 const unsigned long PRESS_THRESHOLD_MS = 500;
 
-const char _TEXT_ABRECHEN[] PROGMEM = "Abbrechn";
-const char _TEXT_HALTEN[] PROGMEM = "Gedruekt";
+const char _TEXT_ABRECHEN[] PROGMEM = "Abbrechen";
+const char _TEXT_HALTEN[] PROGMEM = "Gedrückt";
 const char _TEXT_SPRENGEN[] PROGMEM = "Sprengen";
-const char _TEXT_DRUECKEN[] PROGMEM = "Druecken";
+const char _TEXT_DRUECKEN[] PROGMEM = "Drücken";
 const char _TEXT_HALTEN2[] PROGMEM = "Halten";
-const char *const TEXT_TABLE[] PROGMEM = {_TEXT_ABRECHEN, _TEXT_HALTEN, _TEXT_SPRENGEN, _TEXT_DRUECKEN, _TEXT_HALTEN2};
+const char *TEXT_TABLE[] = {_TEXT_ABRECHEN, _TEXT_HALTEN, _TEXT_SPRENGEN, _TEXT_DRUECKEN, _TEXT_HALTEN2};
+const u8g2_uint_t _TEXT_X_OFFSET[] = {12, 20, 19, 23, 32}; // (display_width - txt_width) / 2
 
 Adafruit_NeoPixel bigKnob = Adafruit_NeoPixel(7, OUTPUT_BigButton_Color, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel bigKnobStrip = Adafruit_NeoPixel(8, OUTPUT_BigButton_Strip, NEO_GRB + NEO_KHZ800);
-U8X8_SSD1306_128X32_UNIVISION_HW_I2C buttonDisplay;
+U8G2_SSD1306_128X32_UNIVISION_1_HW_I2C buttonDisplay(U8G2_R0);
 
 bool wasButtonPressed = false;
 unsigned long startPressed = 0;
@@ -65,20 +66,27 @@ void bigButtonInitRead()
     }
     byte bigKnobTextIndex = Serial.read();
 
-    multiplexer.selectChannel(3);
+    multiplexer.selectChannel(MULTIPLEXER_BigButton);
     buttonDisplay.begin();
-    buttonDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
+    buttonDisplay.enableUTF8Print();
+    buttonDisplay.setFont(u8g2_font_luRS14_tf);
 
-    char txt[8];
-    if(bigKnobTextIndex == 1) {
-        strcpy_P(txt, (TEXT_TABLE[1]));
-        buttonDisplay.drawString(0, 0, txt);
-        strcpy_P(txt, (TEXT_TABLE[4]));
-        buttonDisplay.drawString(0, 2, txt);
-    } else {
-        strcpy_P(txt, (TEXT_TABLE[bigKnobTextIndex]));
-        buttonDisplay.drawString(0, 2, txt);
-    }
+    buttonDisplay.firstPage();
+    do
+    {
+        if (bigKnobTextIndex == 1)
+        {
+            buttonDisplay.setCursor(_TEXT_X_OFFSET[1], 14);
+            buttonDisplay.print((class __FlashStringHelper *)TEXT_TABLE[1]);
+            buttonDisplay.setCursor(_TEXT_X_OFFSET[4], 32);
+            buttonDisplay.print((class __FlashStringHelper *)TEXT_TABLE[4]);
+        }
+        else
+        {
+            buttonDisplay.setCursor(_TEXT_X_OFFSET[bigKnobTextIndex], 25);
+            buttonDisplay.print((class __FlashStringHelper *)TEXT_TABLE[bigKnobTextIndex]);
+        }
+    } while (buttonDisplay.nextPage());
 }
 
 void bigButtonUpdateStrip(byte bigKnobColorIndex)
