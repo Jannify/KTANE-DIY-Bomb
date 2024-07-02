@@ -35,10 +35,7 @@ void setup()
   pinMode(A14, INPUT);
   pinMode(A15, INPUT);
 
-
-
   Serial.begin(9600);
-  //digitalWrite(OUTPUT_RESET, HIGH);
 
   Wire.begin();
   if (multiplexer.begin() == false)
@@ -46,11 +43,6 @@ void setup()
     Serial.write((byte)0xF);
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
   }
-  
-  // TESTING AREA:
-
-  //baseModuleInit(5);
-  //startBomb();
 }
 
 void loopSerialRead()
@@ -76,7 +68,7 @@ void loopSerialRead()
     while (Serial.available() < 1)
     {
     }
-    ///digitalWrite(OUTPUT_Indicator, (bool)Serial.read()); TODO: Fix
+    /// digitalWrite(OUTPUT_Indicator, (bool)Serial.read()); TODO: Fix
 
     while (Serial.available() < 3)
     {
@@ -179,17 +171,15 @@ void loop()
 
   baseModuleLogicLoop();
 
-  return; //TESTING
+  return; // TESTING
 
   simonLogicLoop();
   morseLogicLoop();
 
-  
   if (!loopLogicButtonCooldown)
   {
     morseLogicButtonLoop();
   }
-
 
   if (!loopSerialWriteCooldown)
   {
