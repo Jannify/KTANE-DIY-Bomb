@@ -55,16 +55,16 @@
 #define I2C_SDA 20
 #define I2C_SCL 21
 
-#define MULTIPLEXER_Indicator 0
+#define MULTIPLEXER_SerialNumber 0
 #define MULTIPLEXER_Morse 1
-#define MULTIPLEXER_Password 2
+#define MULTIPLEXER_Indicator 2
 #define MULTIPLEXER_BigButton 3
-#define MULTIPLEXER_SerialNumber 4
+#define MULTIPLEXER_Password 4
 
 extern TCA9548 multiplexer;
 extern Timer<20> timer;
 
-// BigButton, Wires, Password, SimonSays, Memory, Morse
+// BigButton, Wires, Morse, Password, SimonSays, Memory
 extern bool activeModules[];
 extern bool bombStarted;
 

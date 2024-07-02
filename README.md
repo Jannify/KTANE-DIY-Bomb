@@ -6,11 +6,11 @@
 
 0: BigButton  
 1: Wires  
-2: Password  
+2: MorseCode  
 3: SimonSays  
- : Base
+ : Base  
 4: Memory  
-5: Morse Code
+5: Password  
 
 ### Arduino Mega Pins
 
