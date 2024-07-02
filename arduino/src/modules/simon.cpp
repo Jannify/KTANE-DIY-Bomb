@@ -1,16 +1,16 @@
 #include "common.h"
 #include "modules/simon.h"
 
-const int SIMON_ON_TIME = 500;
-const int SIMON_OFF_TIME = 1000;
-const int SIMON_BETWEEN_TIME = 5000;
+const unsigned short SIMON_ON_TIME = 500;
+const unsigned short SIMON_OFF_TIME = 1000;
+//const int SIMON_BETWEEN_TIME = 5000;
 
-int simonSequence[6];
-int simonSequenceLength = 0;
-int simonSequenceStep = -1;
+byte simonSequence[6];
+byte simonSequenceLength = 0;
+byte simonSequenceStep = -1;
 bool simonSequenceCallNext = false;
 bool simonReadWasPressed = false;
-int simonAcceptButtonInput = false;
+bool simonAcceptButtonInput = false;
 
 void simonInit(byte data0, byte data1, byte data2)
 {
@@ -42,19 +42,19 @@ void simonSerialWriteLoop()
   if (simonAcceptButtonInput)
   {
     byte simonButtonPressed = -1;
-    if (digitalRead(INPUT_Simon_Blue))
+    if (!digitalRead(INPUT_Simon_Blue))
     {
       simonButtonPressed = 0;
     }
-    else if (digitalRead(INPUT_Simon_Red))
+    else if (!digitalRead(INPUT_Simon_Red))
     {
       simonButtonPressed = 1;
     }
-    else if (digitalRead(INPUT_Simon_Yellow))
+    else if (!digitalRead(INPUT_Simon_Yellow))
     {
       simonButtonPressed = 2;
     }
-    else if (digitalRead(INPUT_Simon_Green))
+    else if (!digitalRead(INPUT_Simon_Green))
     {
       simonButtonPressed = 3;
     }
