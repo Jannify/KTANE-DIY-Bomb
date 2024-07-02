@@ -36,6 +36,6 @@ void setSerialNumber(char *txt)
 
 void setSolvedLEDs(byte data0, byte data1)
 {
-  shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data0);
-  shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data1);
+  shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data0);
+  shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data1);
 }
