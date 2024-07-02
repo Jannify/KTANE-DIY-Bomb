@@ -71,7 +71,7 @@ A11 & A15 no pullup
 | 0x5  | BigButton Strip | Sets color of BigButton Strip                     |   1    | ColorIndex (Red, Blue, Yellow, White) values                                                                       |
 | 0x6  |  Password Text  | Sets Text of Password LCD                         |   5    | 5 Letters (Encoding TBD)                                                                                           |
 | 0x7  |    SimonSays    | Runs SimonSays sequence (length 3-6)              |   2    | 3Bit Length + zero + 6 * (2 Bit Button index)                                                                      |
-| 0x8  |     Memory      | Displays number on 7Bit segments and level        |   2    | 2bits per number: BigNumber + 4*Buttons                                                                            |
+| 0x8  |     Memory      | Displays number on 7Bit segments and level        |   2    | 2bits per number: BigNumber + 4*Buttons + 4bit LevelLED                                                            |
 | 0x9  |                 |                                                   |        |                                                                                                                    |
 | 0xA  |                 |                                                   |        |                                                                                                                    |
 | 0xB  |                 |                                                   |        |                                                                                                                    |

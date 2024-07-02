@@ -62,17 +62,17 @@ void setTries(byte tries)
   }
   if (tries >= 2)
   {
-    memoryTriesBuffer |= 0b01100000;
+    memoryTriesBuffer |= 0b00000110;
     lastTryTask = timer.every(600, toggleLastTry);
   }
   else if (tries >= 1)
   {
-    memoryTriesBuffer |= 0b01100000;
-    memoryTriesBuffer &= 0b11011111;
+    memoryTriesBuffer |= 0b00000110;
+    memoryTriesBuffer &= 0b11111011;
   }
   else
   {
-    memoryTriesBuffer &= 0b10011111;
+    memoryTriesBuffer &= 0b11111001;
   }
 
   shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
@@ -80,6 +80,7 @@ void setTries(byte tries)
 
 bool toggleLastTry(void *)
 {
-  memoryTriesBuffer ^= 0b01100000;
+  memoryTriesBuffer ^= 0b00000110;
+  shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
   return true;
 }

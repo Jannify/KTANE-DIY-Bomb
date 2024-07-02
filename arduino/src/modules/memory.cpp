@@ -5,7 +5,7 @@ bool memoryButtonWasPressed = false;
 
 void memoryInit()
 {
-    memoryTriesBuffer &= 0b11100000;
+    memoryTriesBuffer &= 0b00000111;
     shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
 }
 
@@ -16,6 +16,8 @@ void memorySetNumber(byte data0, byte data1)
     int smallNumber2 = 1 + ((data0 & 0b00001100) >> 2);
     int smallNumber3 = 1 + (data0 & 0b00000011);
     int smallNumber4 = 1 + ((data1 & 0b11000000) >> 6);
+    memoryTriesBuffer |= ((data1 & 0b00111100) << 1);
+    shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
 
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Big, MSBFIRST, bigNumber);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Left, MSBFIRST, smallNumber2 | (smallNumber1 << 4));
