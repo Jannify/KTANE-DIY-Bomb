@@ -37,7 +37,7 @@
 #define INPUT_Pass_Send 14
 #define INPUT_BigButton 15
 
-#define OUTPUT_Morse_LED 40
+#define OUTPUT_Morse_LED 16
 
 #define OUTPUT_Register_Data_Memory 42
 #define OUTPUT_Clock_Memory_Left 43

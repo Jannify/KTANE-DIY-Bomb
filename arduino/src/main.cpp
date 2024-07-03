@@ -14,6 +14,8 @@ void setup()
   {
     pinMode(i, INPUT_PULLUP);
   }
+  
+  pinMode(16, OUTPUT);
   for (int i = 40; i <= 51; i++)
   {
     pinMode(i, OUTPUT);
@@ -94,6 +96,7 @@ void loopSerialRead()
     unsigned short seconds = (upperByte << 8) + lowerByte;
     baseModuleInit(seconds);
     startBomb();
+    morseStart();
     break;
   }
   case 3: // Set Tries

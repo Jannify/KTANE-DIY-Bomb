@@ -29,10 +29,9 @@
 | D14       | Input Button   | Password Send                                                         |
 | D15       | Button         | BigButton pressed                                                     |
 |           |                |                                                                       |
+| D16       | LED            | Yellow LED for Morse                                                  |
+|           |                |                                                                       |
 | D20 - D21 | I2C            |                                                                       |
-|           |                |                                                                       |
-| D40       | LED            | Yellow LED for Morse                                                  |
-|           |                |                                                                       |
 |           |                |                                                                       |
 | D42       | Register Data  | Data line for Memory 7-Segment                                        |
 | D43 - D44 | Register Clock | 7Bit LEDs Memory Fourth to First Number                               |

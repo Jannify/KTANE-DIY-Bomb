@@ -63,7 +63,7 @@ void setDisplayText()
   phrase[6] = 'H';
   phrase[7] = 'z';
 
-  multiplexer.selectChannel(2);
+  multiplexer.selectChannel(MULTIPLEXER_Morse);
   yellowDisplay.clearDisplay();
   for (size_t i = 0; i < 8; i++)
   {
@@ -79,10 +79,15 @@ void morseInitRead()
   morseCodeIndex = Serial.read();
   morseWordPtr = (char *)pgm_read_word(&(MORSE_TABLE[morseCodeIndex]));
 
-  multiplexer.selectChannel(1);
+  multiplexer.selectChannel(MULTIPLEXER_Morse);
   yellowDisplay.begin();
   yellowDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
   setDisplayText();
+}
+
+void morseStart() {
+  morseCallNext = true;
+  morseCodeStep = 0;
 }
 
 void morseLogicLoop()
@@ -96,7 +101,7 @@ void morseLogicLoop()
 
 void morseLogicButtonLoop()
 {
-  if (!digitalRead(INPUT_Morse_Left) && !digitalRead(INPUT_Morse_Right) && !digitalRead(INPUT_Morse_Send))
+  if (digitalRead(INPUT_Morse_Left) && digitalRead(INPUT_Morse_Right) && digitalRead(INPUT_Morse_Send))
   {
     morseButtonWasPressed = false;
   }
@@ -105,7 +110,7 @@ void morseLogicButtonLoop()
     morseButtonWasPressed = true;
     engageLogicCooldown();
 
-    if (digitalRead(INPUT_Morse_Left))
+    if (!digitalRead(INPUT_Morse_Left))
     {
       if (morseFrequencyIndex > 0)
       {
@@ -113,7 +118,7 @@ void morseLogicButtonLoop()
         setDisplayText();
       }
     }
-    else if (digitalRead(INPUT_Morse_Right))
+    else if (!digitalRead(INPUT_Morse_Right))
     {
       if (morseFrequencyIndex < 15)
       {
@@ -121,17 +126,12 @@ void morseLogicButtonLoop()
         setDisplayText();
       }
     }
-  }
-}
-
-void morseSerialWriteLoop()
-{
-  if (!morseButtonWasPressed && digitalRead(INPUT_Morse_Send))
-  {
-    morseButtonWasPressed = true; // Reset is in loopLogic()
-    Serial.write((byte)0x6);
-    Serial.write((byte)(morseCodeIndex == morseFrequencyIndex));
-    engageLogicCooldown();
+    else if (!loopSerialWriteCooldown && !digitalRead(INPUT_Morse_Send))
+    {
+      Serial.write((byte)0x6);
+      Serial.write((byte)(morseCodeIndex == morseFrequencyIndex));
+      engageSerialWriteCooldown();
+    }
   }
 }
 
