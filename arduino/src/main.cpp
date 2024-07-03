@@ -70,7 +70,7 @@ void loopSerialRead()
     while (Serial.available() < 1)
     {
     }
-    /// digitalWrite(OUTPUT_Indicator, (bool)Serial.read()); TODO: Fix
+    setIndicatorLED(Serial.read());
 
     while (Serial.available() < 3)
     {

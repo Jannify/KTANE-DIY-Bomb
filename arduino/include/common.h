@@ -39,6 +39,7 @@
 
 #define OUTPUT_Morse_LED 16
 
+#define OUTPUT_Indicator_LED 41
 #define OUTPUT_Register_Data_Memory 42
 #define OUTPUT_Clock_Memory_Left 43
 #define OUTPUT_Clock_Memory_Right 44

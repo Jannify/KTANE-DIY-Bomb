@@ -33,6 +33,7 @@
 |           |                |                                                                       |
 | D20 - D21 | I2C            |                                                                       |
 |           |                |                                                                       |
+| D41       | LED            | White LED for Indicator                                               |
 | D42       | Register Data  | Data line for Memory 7-Segment                                        |
 | D43 - D44 | Register Clock | 7Bit LEDs Memory Fourth to First Number                               |
 | D45       | Register Clock | 7Bit LEDs Memory Big Number                                           |

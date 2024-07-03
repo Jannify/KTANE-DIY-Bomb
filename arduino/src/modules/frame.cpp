@@ -5,6 +5,11 @@
 U8X8_SSD1306_128X64_NONAME_HW_I2C indicatorText;
 U8G2_SH1107_64X128_1_HW_I2C serialNumberText(U8G2_R1);
 
+void setIndicatorLED(bool value)
+{
+  digitalWrite(OUTPUT_Indicator_LED, value);
+}
+
 void setIndicatorText(char *txt)
 {
   multiplexer.selectChannel(MULTIPLEXER_Indicator);
