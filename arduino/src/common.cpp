@@ -45,21 +45,24 @@ void engageSerialWriteCooldown()
     });
 }
 
-// Bitfield of Modules solved (5 zeros + from 10 to 0)
+
 void setSolvedModules(byte data0, byte data1)
 {
-  activeModules[10] = data0 & B00000100;
-  activeModules[9] = data0 & B00000010;
-  activeModules[8] = data0 & B00000001;
+  activeModules[0] = data0 & 0b01000000;
+  activeModules[1] = data0 & 0b00100000;
+  activeModules[2] = data0 & 0b00010000;
+  activeModules[3] = data0 & 0b00001000;
+  activeModules[4] = data0 & 0b00000100;
+  activeModules[5] = data0 & 0b00000010;
+  activeModules[6] = data0 & 0b00000001;
 
-  activeModules[7] = data1 & B10000000;
-  activeModules[6] = data1 & B01000000;
-  activeModules[5] = data1 & B00100000;
-  activeModules[4] = data1 & B00010000;
-  activeModules[3] = data1 & B00001000;
-  activeModules[2] = data1 & B00000100;
-  activeModules[1] = data1 & B00000010;
-  activeModules[0] = data1 & B00000001;
+  // activeModules[7] = data1 & 0b01000000;
+  // activeModules[8] = data1 & 0b00100000;
+  // activeModules[9] = data1 & 0b00010000;
+  // activeModules[10] = data1 & 0b00001000;
+
+  shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data0);
+  //shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data0);
 }
 
 bool setPinLow(void *argument)
@@ -80,15 +83,4 @@ void shiftOutLED(byte clockPin, byte val)
   }
   digitalWrite(OUTPUT_Register_Data_LED, 0);
   delay(2);
-}
-
-void reset()
-{
-  // Reset BigButton
-  // Reset 7Bit
-  // Reset I2C
-  // Reset SPI
-  timer.cancel();
-  bombStarted = false;
-  // digitalWrite(OUTPUT_RESET, LOW); //TODO: Evaluate need
 }

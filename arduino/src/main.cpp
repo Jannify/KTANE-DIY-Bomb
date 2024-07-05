@@ -8,13 +8,28 @@
 #include "modules/password.h"
 #include "modules/wires.h"
 
+void resetAndPowerOffModules()
+{
+  timer.cancel();
+  bombStarted = false;
+  setSolvedModules(0, 0);
+
+  basePowerOff();
+  bigButtonPowerOff();
+  framePowerOff();
+  memoryPowerOff();
+  morsePowerOff();
+  passwordPowerOff();
+  simonPowerOff();
+}
+
 void setup()
 {
   for (int i = 4; i <= 15; i++)
   {
     pinMode(i, INPUT_PULLUP);
   }
-  
+
   pinMode(16, OUTPUT);
   for (int i = 40; i <= 51; i++)
   {
@@ -40,11 +55,13 @@ void setup()
   Serial.begin(9600);
 
   Wire.begin();
-  if (multiplexer.begin() == false)
+  if (!multiplexer.begin())
   {
     Serial.write((byte)0xF);
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
   }
+
+  resetAndPowerOffModules();
 }
 
 void loopSerialRead()
@@ -55,10 +72,10 @@ void loopSerialRead()
   int type = Serial.read();
   switch (type)
   {
-  case 0: // Reset
-    reset();
+  case 0x0: // Reset
+    resetAndPowerOffModules();
     break;
-  case 1: // Init
+  case 0x1: // Init frame
   {
     while (Serial.available() < 6)
     {
@@ -78,15 +95,28 @@ void loopSerialRead()
     char indicatorLetters[3];
     Serial.readBytes(indicatorLetters, 3);
     setIndicatorText(indicatorLetters);
+    break;
+  }
+  case 0x2: // Init static modules
+  {
+    while (Serial.available() < 1)
+    {
+    }
+    byte morseCodeIndex = Serial.read();
+    morseInitRead(morseCodeIndex);
 
-    morseInitRead();
-    bigButtonInitRead();
+    while (Serial.available() < 2)
+    {
+    }
+    byte bigKnobColorIndex = Serial.read();
+    byte bigKnobTextIndex = Serial.read();
+    bigButtonInit(bigKnobColorIndex, bigKnobTextIndex);
     wiresInit();
     passwordInit();
     memoryInit();
     break;
   }
-  case 2: // Start
+  case 0x3: // Start
   {
     while (Serial.available() < 2)
     {
@@ -94,12 +124,17 @@ void loopSerialRead()
     byte upperByte = Serial.read();
     byte lowerByte = Serial.read();
     unsigned short seconds = (upperByte << 8) + lowerByte;
+
     baseModuleInit(seconds);
+    bigButtonStart();
+    memoryStart();
+    frameStart();
+
     startBomb();
     morseStart();
     break;
   }
-  case 3: // Set Tries
+  case 0x4: // Set Tries
   {
     while (Serial.available() < 1)
     {
@@ -108,27 +143,26 @@ void loopSerialRead()
     setTries(tries);
     break;
   }
-  case 4: // Set Solved
+  case 0x5: // Set Solved
   {
-    while (Serial.available() < 2)
+    while (Serial.available() < 1) //2)
     {
     }
     byte data0 = Serial.read();
-    byte data1 = Serial.read();
-    setSolvedModules(data0, data1);
-    setSolvedLEDs(data0, data1);
+    //byte data1 = Serial.read();
+    setSolvedModules(data0, 0);
     break;
   }
-  case 5: // BigKnob Strip
+  case 0x6: // BigKnob Strip
   {
     while (Serial.available() < 1)
     {
     }
     byte colorIndex = Serial.read();
-    bigButtonUpdateStrip(colorIndex);
+    bigButtonSetStripColor(colorIndex);
     break;
   }
-  case 6: // Password Text
+  case 0x7: // Password Text
   {
     while (Serial.available() < 5)
     {
@@ -138,7 +172,7 @@ void loopSerialRead()
     setPassword(passwordLetters);
     break;
   }
-  case 7: // SimonSays
+  case 0x8: // SimonSays
   {
     while (Serial.available() < 3)
     {
@@ -148,7 +182,7 @@ void loopSerialRead()
     simonInit(data[0], data[1], data[2]);
     break;
   }
-  case 8: // Memory
+  case 0x9: // Memory
   {
     while (Serial.available() < 2)
     {
@@ -174,8 +208,6 @@ void loop()
 
   baseModuleLogicLoop();
 
-  return; // TESTING
-
   simonLogicLoop();
   morseLogicLoop();
 
@@ -191,6 +223,5 @@ void loop()
     passwordSerialWriteLoop();
     simonSerialWriteLoop();
     memorySerialWriteLoop();
-    morseSerialWriteLoop();
   }
 }

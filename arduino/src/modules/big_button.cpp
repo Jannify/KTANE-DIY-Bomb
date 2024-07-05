@@ -19,62 +19,41 @@ Adafruit_NeoPixel bigKnob = Adafruit_NeoPixel(7, OUTPUT_BigButton_Color, NEO_GRB
 Adafruit_NeoPixel bigKnobStrip = Adafruit_NeoPixel(8, OUTPUT_BigButton_Strip, NEO_GRB + NEO_KHZ800);
 U8G2_SSD1306_128X32_UNIVISION_1_HW_I2C buttonDisplay(U8G2_R0);
 
+uint32_t bigKnobColor;
+uint32_t bigKnobStripColor;
+
 bool wasButtonPressed = false;
 unsigned long startPressed = 0;
 unsigned long endPressed = 0;
 
-void bigButtonInitRead()
+void bigButtonInit(byte bigKnobColorIndex, byte textIndex)
 {
-    while (Serial.available() < 3)
-    {
-    }
-
-    byte red, green, blue;
-    byte bigKnobColorIndex = Serial.read();
     switch (bigKnobColorIndex)
     {
     case 0: // Red
-        red = 255;
-        green = 0;
-        blue = 0;
+        bigKnobColor = 0xFF0000;
         break;
     case 1: // Blue
-        red = 0;
-        green = 0;
-        blue = 255;
+        bigKnobColor = 0x0000FF;
         break;
     case 2: // Yellow
-        red = 255;
-        green = 255;
-        blue = 0;
+        bigKnobColor = 0xFFFF00;
         break;
     case 3: // White
-        red = 255;
-        green = 255;
-        blue = 255;
+        bigKnobColor = 0xFFFFFF;
         break;
     }
-    bigKnob.begin();
-    for (int i = 0; i <= 7; i++)
-    {
-        bigKnob.setPixelColor(i, red, green, blue);
-    }
-    bigKnob.show();
-
-    while (Serial.available() < 1)
-    {
-    }
-    byte bigKnobTextIndex = Serial.read();
 
     multiplexer.selectChannel(MULTIPLEXER_BigButton);
     buttonDisplay.begin();
     buttonDisplay.enableUTF8Print();
     buttonDisplay.setFont(u8g2_font_luRS14_tf);
+    buttonDisplay.setPowerSave(1);
 
     buttonDisplay.firstPage();
     do
     {
-        if (bigKnobTextIndex == 1)
+        if (textIndex == 1)
         {
             buttonDisplay.setCursor(_TEXT_X_OFFSET[1], 14);
             buttonDisplay.print((class __FlashStringHelper *)TEXT_TABLE[1]);
@@ -83,44 +62,41 @@ void bigButtonInitRead()
         }
         else
         {
-            buttonDisplay.setCursor(_TEXT_X_OFFSET[bigKnobTextIndex], 25);
-            buttonDisplay.print((class __FlashStringHelper *)TEXT_TABLE[bigKnobTextIndex]);
+            buttonDisplay.setCursor(_TEXT_X_OFFSET[textIndex], 25);
+            buttonDisplay.print((class __FlashStringHelper *)TEXT_TABLE[textIndex]);
         }
     } while (buttonDisplay.nextPage());
 }
 
-void bigButtonUpdateStrip(byte bigKnobColorIndex)
+void bigButtonStart()
 {
-    byte red, green, blue;
+    multiplexer.selectChannel(MULTIPLEXER_BigButton);
+    buttonDisplay.setPowerSave(0);
+
+    bigKnob.begin();
+    bigKnob.fill(bigKnobColor, 0, 7);
+    bigKnob.show();
+
+    bigKnobStrip.begin();
+}
+
+void bigButtonSetStripColor(byte bigKnobColorIndex)
+{
     switch (bigKnobColorIndex)
     {
     case 0: // Red
-        red = 255;
-        green = 0;
-        blue = 0;
+        bigKnobStripColor = 0xFF0000;
         break;
     case 1: // Blue
-        red = 0;
-        green = 0;
-        blue = 255;
+        bigKnobStripColor = 0x0000FF;
         break;
     case 2: // Yellow
-        red = 255;
-        green = 255;
-        blue = 0;
+        bigKnobStripColor = 0xFFFF00;
         break;
     case 3: // White
-        red = 255;
-        green = 255;
-        blue = 255;
+        bigKnobStripColor = 0xFFFFFF;
         break;
     }
-    bigKnobStrip.begin();
-    for (int i = 0; i <= 8; i++)
-    {
-        bigKnobStrip.setPixelColor(i, red, green, blue);
-    }
-    bigKnobStrip.show();
 }
 
 void bigButtonSerialWriteLoop()
@@ -129,12 +105,18 @@ void bigButtonSerialWriteLoop()
     {
         startPressed = millis();
         wasButtonPressed = true;
+
+        bigKnobStrip.fill(bigKnobStripColor, 0, 8);
+        bigKnobStrip.show();
     }
 
     if (wasButtonPressed && digitalRead(INPUT_BigButton))
     {
         endPressed = millis();
         wasButtonPressed = false;
+
+        bigKnobStrip.clear();
+        bigKnobStrip.show();
 
         unsigned long difference = endPressed - startPressed;
         Serial.write((byte)0x1);
@@ -143,4 +125,18 @@ void bigButtonSerialWriteLoop()
         Serial.write((byte)getSecondsLeft());
         engageSerialWriteCooldown();
     }
+}
+
+void bigButtonPowerOff()
+{
+    bigKnob.begin();
+    bigKnob.clear();
+    bigKnob.show();
+
+    bigKnobStrip.begin();
+    bigKnobStrip.clear();
+    bigKnobStrip.show();
+
+    multiplexer.selectChannel(MULTIPLEXER_BigButton);
+    buttonDisplay.clearDisplay();
 }

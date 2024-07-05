@@ -42,9 +42,9 @@ void baseModuleLogicLoop()
 
   if (combinedSecondsLeft >= (USHRT_MAX - 10))
   {
+    return; // TODO: For testing only
     Serial.write((byte)0xE);
-    engageLogicCooldown();
-    reset();
+    engageLogicCooldown(); // TODO: Set Bomb peripheral
   }
 }
 
@@ -83,4 +83,10 @@ bool toggleLastTry(void *)
   memoryTriesBuffer ^= 0b00000110;
   shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
   return true;
+}
+
+void basePowerOff()
+{
+  setTries(0);
+  clock.setBrightness(0x0f, false);
 }

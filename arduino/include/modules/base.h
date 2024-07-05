@@ -9,3 +9,4 @@ void baseModuleLogicLoop();
 unsigned short getSecondsLeft();
 void setTries(byte);
 bool toggleLastTry(void *);
+void basePowerOff();

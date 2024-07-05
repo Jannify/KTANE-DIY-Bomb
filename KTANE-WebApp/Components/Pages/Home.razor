@@ -32,6 +32,10 @@
     </div>
 </EditForm>
 
+<div>
+    <button type="submit" class="btn btn-primary" @onclick="ResetBomb">Reset</button>
+</div>
+
 <div style="@(isBombGenerated ? "display:block" : "display:none")">
     <br/>
     <br/>
@@ -76,6 +80,11 @@
     private void StartBomb()
     {
         Bomb.Instance.Start();
+    }
+
+    private void ResetBomb()
+    {
+        Arduino.ResetState();
     }
 
     private void SubmitForm()

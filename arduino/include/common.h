@@ -81,4 +81,3 @@ void setSolvedModules(byte data0, byte data1);
 bool setPinLow(void *argument);
 void shiftOutLED(byte clockPin, byte val);
 uint8_t pack8Bool(bool *a);
-void reset();

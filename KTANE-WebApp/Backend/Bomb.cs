@@ -5,13 +5,13 @@ namespace KTANE_WebApp.Backend;
 
 public class Bomb
 {
-    public static Bomb Instance = new();
+    public static readonly Bomb Instance = new();
 
     private ushort initialTime;
     public int MaxMistakes;
     public int Mistakes;
 
-    private IModule[] modules;
+    private IModule[] modules = [];
     public readonly Frame Frame = new();
     private readonly BigButton bigButton = new();
     public readonly Wires wires = new();
@@ -19,6 +19,11 @@ public class Bomb
     private readonly SimonSays simonSays = new();
     private readonly Memory memory = new();
     private readonly Morse morse = new();
+
+    private Bomb()
+    {
+        Arduino.OnMessageReceived += HandleSerialInput;
+    }
 
 
     public void GenerateNewBomb(BombGenerationInputInfo info)
@@ -28,7 +33,7 @@ public class Bomb
         MaxMistakes = info.MaxMistakes;
         Mistakes = 0;
 
-        modules = [bigButton, wires, password, simonSays, memory, morse];
+        modules = [bigButton, wires, morse, simonSays, memory, password];
         Frame.Generate(random);
         bigButton.Generate(random);
         wires.Generate(Frame, random);
@@ -38,12 +43,23 @@ public class Bomb
         morse.Generate(random);
 
         Arduino.ResetState();
-        Arduino.Init(Frame.SerialNumber, Frame.IndicatorLight, Frame.IndicatorText,
-            morse.MorseIndex, (byte)bigButton.ButtonColor, (byte)bigButton.Text);
+        Thread.Sleep(10);
+
+        Arduino.InitFrame(Frame.SerialNumber, Frame.IndicatorLight, Frame.IndicatorText);
+        Thread.Sleep(10);
+
+        Arduino.InitStaticModules(morse.MorseIndex, (byte)bigButton.ButtonColor, (byte)bigButton.Text);
+        Thread.Sleep(10);
 
         Arduino.SetBigButtonStrip((byte)bigButton.StripColor);
+        Thread.Sleep(10);
+
         Arduino.SetPasswordText(password.GetCurrentWord());
+        Thread.Sleep(10);
         memory.StartRandomState();
+
+        bool[] data = [true, false, false, false, false, false, false, false, false, false, false];
+        Arduino.SetSolved(data);
     }
 
     public void Start()
@@ -80,10 +96,13 @@ public class Bomb
                 break;
             case 0x6: // Morse
                 morse.IsSolved = data[1] > 0;
-                if (simonSays.IsSolved)
+                if (morse.IsSolved)
                     UpdateSolvedModules();
                 else
                     IncrementTries();
+                break;
+            case 0xE: // Time Up
+                Explode();
                 break;
         }
     }
@@ -91,6 +110,8 @@ public class Bomb
     public void IncrementTries()
     {
         Mistakes++;
+
+        return; // TODO: Remove after test
 
         if (Mistakes >= MaxMistakes)
         {
@@ -101,7 +122,7 @@ public class Bomb
 
     public void UpdateSolvedModules()
     {
-        bool[] solved = new bool[11];
+        bool[] solved = new bool[14];
         for (int i = 0; i < modules.Length; i++)
         {
             solved[i] = modules[i].IsSolved;
@@ -113,6 +134,7 @@ public class Bomb
     private void Explode()
     {
         // Play explosion Sound
+        Console.WriteLine("BOMB EXPLODE");
     }
 
     public override string ToString()

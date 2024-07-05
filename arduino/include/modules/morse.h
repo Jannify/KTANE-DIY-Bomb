@@ -1,10 +1,10 @@
 #pragma once
 
-void morseInitRead();
+void morseInitRead(byte index);
 void morseStart();
 void morseLogicLoop();
 void morseLogicButtonLoop();
-void morseSerialWriteLoop();
+void morsePowerOff();
 
 void handleMorseCodeStep();
 bool handleMorseOff(void *);

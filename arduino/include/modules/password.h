@@ -3,3 +3,4 @@
 void passwordInit();
 void setPassword(char* password);
 void passwordSerialWriteLoop();
+void passwordPowerOff();

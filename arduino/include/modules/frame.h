@@ -5,4 +5,5 @@
 void setIndicatorLED(bool);
 void setIndicatorText(char *);
 void setSerialNumber(char *);
-void setSolvedLEDs(byte, byte);
+void frameStart();
+void framePowerOff();

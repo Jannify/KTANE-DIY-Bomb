@@ -160,7 +160,7 @@ public class Memory : IModule
         return $"Solved: {IsSolved}, CurrentStage: {currentStage}, CurrentBigNumber {displaySequence[currentStage]}, CurrentButtons ({string.Join(",", currentButtons)})";
     }
 
-    public enum MemoryDigit
+    public enum MemoryDigit : byte
     {
         ONE = 0,
         TWO = 1,

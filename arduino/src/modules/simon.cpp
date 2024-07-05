@@ -7,7 +7,7 @@ const unsigned short SIMON_OFF_TIME = 1000;
 
 byte simonSequence[6];
 byte simonSequenceLength = 0;
-byte simonSequenceStep = -1;
+short simonSequenceStep = -1;
 bool simonSequenceCallNext = false;
 bool simonReadWasPressed = false;
 bool simonAcceptButtonInput = false;
@@ -93,6 +93,11 @@ void simonSerialWriteLoop()
       timer.in(SIMON_ON_TIME, handleSimonAllOff, (void *)nullptr);
     }
   }
+}
+
+
+void simonPowerOff() {
+  shiftOutLED(OUTPUT_Clock_SimonSays, 0x00);
 }
 
 bool handleSimonSequenceOn(void *)

@@ -85,7 +85,7 @@ public class SimonSays : IModule
         Task.Run(() =>
         {
             Thread.Sleep(delay);
-            Arduino.StartSimonSays(sequence.Take(currentSequenceLength + 1).ToArray());
+            //Arduino.StartSimonSays(sequence.Take(currentSequenceLength + 1).ToArray());
         });
     }
 

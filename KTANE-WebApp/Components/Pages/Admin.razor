@@ -1,0 +1,31 @@
+﻿@page "/admin"
+@using System.ComponentModel.DataAnnotations
+@using Blazor.Extensions
+@using Blazor.Extensions.Canvas.Canvas2D
+@using KTANE_WebApp.Backend.Module
+@using KTANE_WebApp.Components.Models
+@rendermode InteractiveServer
+
+<button type="submit" class="btn btn-primary" @onclick="ConnectArduino">Connect Arduino</button>
+<button type="submit" class="btn btn-primary" @onclick="DisconnectArduino">Disconnect Arduino</button>
+
+@code {
+
+    private void ConnectArduino()
+    {
+        try
+        {
+            Arduino.Open();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    private void DisconnectArduino()
+    {
+        Arduino.Close();
+    }
+
+}

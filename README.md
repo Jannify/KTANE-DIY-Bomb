@@ -56,24 +56,24 @@
 
 ### Serial Communication (Pi to Arduino)
 
-| Data |      Title      | Description                                       | Length | Payload Data                                                                                                       |
-|:----:|:---------------:|---------------------------------------------------|:------:|--------------------------------------------------------------------------------------------------------------------|
-| 0x0  |      Reset      | Resets all configurations, powers everything down |   0    |                                                                                                                    |
-| 0x1  |      Init       | Init SerialNumber screen, Indicator and BigButton |   13   | [SN: 6 Letters] + [Indicator: LED on/off + 3 Letters] + [Morse: Index] + [BigButton: ButtonColorIndex + TextIndex] |
-| 0x2  |      Start      | Starts bomb with given time                       |   2    | Timer in Seconds (ushort)                                                                                          |
-| 0x3  |    Set Tries    | On/Off X's LEDs                                   |   1    | Number of Xs to display                                                                                            |
-| 0x4  |   Set Solved    | Updated green "Module Solved" LEDs                |   2    | Bitfield of Modules solved (5 zeros + from 10 to 0)                                                                |
-| 0x5  | BigButton Strip | Sets color of BigButton Strip                     |   1    | ColorIndex (Red, Blue, Yellow, White) values                                                                       |
-| 0x6  |  Password Text  | Sets Text of Password LCD                         |   5    | 5 Letters (Encoding TBD)                                                                                           |
-| 0x7  |    SimonSays    | Runs SimonSays sequence (length 3-6)              |   2    | 3Bit Length + zero + 6 * (2 Bit Button index)                                                                      |
-| 0x8  |     Memory      | Displays number on 7Bit segments and level        |   2    | 2bits per number: BigNumber + 4*Buttons + 4bit LevelLED                                                            |
-| 0x9  |                 |                                                   |        |                                                                                                                    |
-| 0xA  |                 |                                                   |        |                                                                                                                    |
-| 0xB  |                 |                                                   |        |                                                                                                                    |
-| 0xC  |                 |                                                   |        |                                                                                                                    |
-| 0xD  |                 |                                                   |        |                                                                                                                    |
-| 0xE  |                 |                                                   |        |                                                                                                                    |
-| 0xF  |                 |                                                   |        |                                                                                                                    |
+| Data |        Title        | Description                                | Length | Payload Data                                               |
+|:----:|:-------------------:|--------------------------------------------|:------:|------------------------------------------------------------|
+| 0x0  |        Reset        | Powers everything down                     |   0    |                                                            |
+| 0x1  |      Init Bomb      | Init SerialNumber screen and Indicator     |   10   | [SN: 6 Letters] + [Indicator: LED + 3 Letters]             |
+| 0x2  | Init static Modules | Init Morse BigButton                       |   3    | [Morse: Index] + [BigButton: ButtonColorIndex + TextIndex] |
+| 0x3  |        Start        | Starts bomb with given time                |   2    | Timer in Seconds (ushort)                                  |
+| 0x4  |      Set Tries      | On/Off X's LEDs                            |   1    | Number of Xs to display                                    |
+| 0x5  |     Set Solved      | Updated green "Module Solved" LEDs         |   1    | BigButton -> Password (leading zero + 7Bit)                |
+| 0x6  |   BigButton Strip   | Sets color of BigButton Strip              |   1    | ColorIndex (Red, Blue, Yellow, White) values               |
+| 0x7  |    Password Text    | Sets Text of Password LCD                  |   5    | 5 Letters (Encoding TBD)                                   |
+| 0x8  |      SimonSays      | Runs SimonSays sequence (length 3-6)       |   2    | 3Bit Length + zero + 6 * (2 Bit Button index)              |
+| 0x9  |       Memory        | Displays number on 7Bit segments and level |   2    | 2bits per number: BigNumber + 4*Buttons + 4bit LevelLED    |
+| 0xA  |                     |                                            |        |                                                            |
+| 0xB  |                     |                                            |        |                                                            |
+| 0xC  |                     |                                            |        |                                                            |
+| 0xD  |                     |                                            |        |                                                            |
+| 0xE  |                     |                                            |        |                                                            |
+| 0xF  |                     |                                            |        |                                                            |
 
 ### Serial Communication (Arduino to Pi)
 

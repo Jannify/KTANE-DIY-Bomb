@@ -9,7 +9,8 @@ bool passwordButtonWasPressed = false;
 
 void passwordInit()
 {
-    multiplexer.selectChannel(2);
+    return;
+    multiplexer.selectChannel(MULTIPLEXER_Password);
     greenDisplay.begin();
     greenDisplay.setFont(u8x8_font_profont29_2x3_r);
     greenDisplay.setInverseFont(1);
@@ -17,7 +18,8 @@ void passwordInit()
 
 void setPassword(char *password)
 {
-    multiplexer.selectChannel(2);
+    return;
+    multiplexer.selectChannel(MULTIPLEXER_Password);
     greenDisplay.fillDisplay();
     for (size_t i = 0; i < 5; i++)
     {
@@ -27,6 +29,7 @@ void setPassword(char *password)
 
 void passwordSerialWriteLoop()
 {
+    return;
     bool pressedSend = digitalRead(INPUT_Pass_Send);
 
     bool wasButtonUp = false;
@@ -100,4 +103,11 @@ void passwordSerialWriteLoop()
             engageSerialWriteCooldown();
         }
     }
+}
+
+void passwordPowerOff()
+{
+    return;
+    multiplexer.selectChannel(MULTIPLEXER_Password);
+    greenDisplay.clearDisplay();
 }

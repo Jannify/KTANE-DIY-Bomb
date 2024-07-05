@@ -1,19 +1,29 @@
 using System.IO.Ports;
+using System.Runtime.InteropServices;
 using KTANE_WebApp.Backend.Module;
 
 namespace KTANE_WebApp.Backend;
 
 public static class Arduino
 {
+    public delegate void OnMessageReceivedHandler(byte[] data);
+
+    public static event OnMessageReceivedHandler? OnMessageReceived;
+
+
     private static readonly SerialPort port = new();
 
     public static bool IsConnected => port.IsOpen;
 
-    public static void Open(string portName)
+    public static void Open()
     {
+        string portName = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/dev/ttyACM0" : "COM3";
         port.PortName = portName;
         port.BaudRate = 9600;
+        port.DataReceived += OnDataReceived;
         port.Open();
+        port.DiscardOutBuffer();
+        port.DiscardInBuffer();
     }
 
     public static void Close() => port.Close();
@@ -21,7 +31,51 @@ public static class Arduino
 
     private static void Write(byte[] data)
     {
+        Console.WriteLine($"Send: {Utils.BytesToHexString(data)}");
         port.Write(data, 0, data.Length);
+    }
+
+    private static void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+    {
+        try
+        {
+            int type = port.ReadByte();
+
+            byte[] data;
+            switch (type)
+            {
+                case 0x1: // BigButton Down
+                    data = [(byte)type, 0, 0, 0];
+                    port.Read(data, 1, 3);
+                    break;
+                case 0x2: // Wire Cut
+                case 0x3: // Password Changes
+                case 0x4: // SimonSays
+                case 0x5: // Memory
+                case 0x6: // Morse Code
+                    data = [(byte)type, 0];
+                    port.Read(data, 1, 1);
+                    break;
+                case 0xE: // Time Up
+                    data = [(byte)type];
+                    break;
+                case 0xF: //Logging
+                    //string msg = port.ReadTo("\0");
+                    string msg = port.ReadLine();
+                    Console.WriteLine("[Arduino] " + msg);
+                    return;
+                default:
+                    throw new Exception($"Serial data type was not in expected range (0x1-0x6 + 0xE + 0xF, was {type}");
+            }
+
+
+            Console.WriteLine($"Received: {Utils.BytesToHexString(data)}");
+            OnMessageReceived?.Invoke(data);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
     }
 
     /// <summary>
@@ -33,29 +87,42 @@ public static class Arduino
     }
 
     /// <summary>
-    /// Init bomb with parameters
+    /// Init bomb frame with parameters
     /// </summary>
-    public static void Init(string serialNumber, bool indicatorLight, string indicatorText, int morseIndex,
-        byte bigButtonColorIndex, byte bigButtonTextIndex)
+    public static void InitFrame(string serialNumber, bool indicatorLight, string indicatorText)
     {
-        byte[] data = new byte[14];
-        data[0] = 0x1;
-        data[1] = (byte)serialNumber[0];
-        data[2] = (byte)serialNumber[1];
-        data[3] = (byte)serialNumber[2];
-        data[4] = (byte)serialNumber[3];
-        data[5] = (byte)serialNumber[4];
-        data[6] = (byte)serialNumber[5];
+        byte[] data =
+        [
+            0x1,
+            (byte)serialNumber[0],
+            (byte)serialNumber[1],
+            (byte)serialNumber[2],
+            (byte)serialNumber[3],
+            (byte)serialNumber[4],
+            (byte)serialNumber[5],
 
-        data[7] = (byte)(indicatorLight ? 1 : 0);
-        data[8] = (byte)indicatorText[0];
-        data[9] = (byte)indicatorText[1];
-        data[10] = (byte)indicatorText[2];
+            (byte)(indicatorLight ? 1 : 0),
+            (byte)indicatorText[0],
+            (byte)indicatorText[1],
+            (byte)indicatorText[2],
+        ];
+        Write(data);
+    }
 
-        data[11] = (byte)morseIndex;
+    /// <summary>
+    /// Init bomb static modules with parameters
+    /// </summary>
+    public static void InitStaticModules(int morseIndex, byte bigButtonColorIndex, byte bigButtonTextIndex)
+    {
+        byte[] data =
+        [
+            0x2,
+            (byte)morseIndex,
+            bigButtonColorIndex,
+            bigButtonTextIndex
+        ];
 
-        data[12] = bigButtonColorIndex;
-        data[13] = bigButtonTextIndex;
+        Write(data);
     }
 
     /// <summary>
@@ -63,7 +130,7 @@ public static class Arduino
     /// </summary>
     public static void Start(ushort timeSeconds)
     {
-        byte[] data = [0x2, (byte)(timeSeconds >> 8), (byte)timeSeconds];
+        byte[] data = [0x3, (byte)(timeSeconds >> 8), (byte)timeSeconds];
         Write(data);
     }
 
@@ -72,7 +139,7 @@ public static class Arduino
     /// </summary>
     public static void SetTries(byte newTriesCount)
     {
-        byte[] data = [0x3, newTriesCount];
+        byte[] data = [0x4, newTriesCount];
         Write(data);
     }
 
@@ -81,15 +148,12 @@ public static class Arduino
     /// </summary>
     public static void SetSolved(bool[] modules)
     {
-        byte[] data = new byte[3];
-        data[0] = 0x4;
-        data[1] = (byte)(modules[10] ? 0b00000100 : 0x00);
-        data[1] &= (byte)(modules[9] ? 0b00000010 : 0x00);
-        data[1] &= (byte)(modules[8] ? 0b00000001 : 0x00);
+        byte[] data = new byte[2];
+        data[0] = 0x5;
 
-        for (int i = 7; i >= 0; i--)
+        for (int i = 0; i < 7; i++)
         {
-            data[2] &= (byte)(modules[i] ? 1 << i : 0x00);
+            data[1] |= (byte)(modules[i] ? 0b01000000 >> i : 0x00);
         }
 
         Write(data);
@@ -100,7 +164,7 @@ public static class Arduino
     /// </summary>
     public static void SetBigButtonStrip(byte colorIndex)
     {
-        byte[] data = [0x5, colorIndex];
+        byte[] data = [0x6, colorIndex];
         Write(data);
     }
 
@@ -109,7 +173,7 @@ public static class Arduino
     /// </summary>
     public static void SetPasswordText(char[] text)
     {
-        byte[] data = [0x6, (byte)text[0], (byte)text[1], (byte)text[2], (byte)text[3], (byte)text[4]];
+        byte[] data = [0x7, (byte)text[0], (byte)text[1], (byte)text[2], (byte)text[3], (byte)text[4]];
         Write(data);
     }
 
@@ -119,15 +183,19 @@ public static class Arduino
     public static void StartSimonSays(SimonSays.SimonSaysEntry[] sequence)
     {
         byte[] data = new byte[3];
-        data[0] = 0x7;
+        data[0] = 0x8;
         data[1] = (byte)((sequence.Length - 3) << 4);
-        data[1] &= (byte)((byte)sequence[0] << 2);
-        data[1] &= (byte)sequence[1];
+        data[1] |= (byte)((byte)sequence[0] << 2);
+
+        if (sequence.Length > 1)
+        {
+            data[1] |= (byte)sequence[1];
+        }
 
         int offset = 6;
         for (int i = 2; i < sequence.Length; i++)
         {
-            data[2] &= (byte)((byte)sequence[i] << offset);
+            data[2] |= (byte)((byte)sequence[i] << offset);
             offset -= 2;
         }
 
@@ -141,13 +209,32 @@ public static class Arduino
     public static void SetMemory(Memory.MemoryDigit bigNumber, Memory.MemoryDigit[] smallNumbers, int level)
     {
         byte[] data = new byte[3];
-        data[0] = 0x8;
+        data[0] = 0x9;
         data[1] = (byte)((int)bigNumber << 6);
-        data[1] &= (byte)((int)smallNumbers[0] << 4);
-        data[1] &= (byte)((int)smallNumbers[1] << 2);
-        data[1] &= (byte)((int)smallNumbers[2]);
+        data[1] |= (byte)((int)smallNumbers[0] << 4);
+        data[1] |= (byte)((int)smallNumbers[1] << 2);
+        data[1] |= (byte)((int)smallNumbers[2]);
         data[2] = (byte)((int)smallNumbers[3] << 6);
-        data[2] &= (byte)(level << 3);
+
+        switch (level)
+        {
+            case 0:
+                break;
+            case 1:
+                data[2] |= 0b00000100;
+                break;
+            case 2:
+                data[2] |= 0b00001000;
+                break;
+            case 3:
+                data[2] |= 0b00010000;
+                break;
+            case 4:
+                data[2] |= 0b00100000;
+                break;
+            default:
+                throw new ArgumentException("level was not in ragne of 0-4");
+        }
 
         Write(data);
     }

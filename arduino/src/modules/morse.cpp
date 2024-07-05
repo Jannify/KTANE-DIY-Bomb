@@ -71,23 +71,22 @@ void setDisplayText()
   }
 }
 
-void morseInitRead()
+void morseInitRead(byte index)
 {
-  while (Serial.available() < 1)
-  {
-  }
-  morseCodeIndex = Serial.read();
+  morseCodeIndex = index;
   morseWordPtr = (char *)pgm_read_word(&(MORSE_TABLE[morseCodeIndex]));
 
   multiplexer.selectChannel(MULTIPLEXER_Morse);
   yellowDisplay.begin();
   yellowDisplay.setFont(u8x8_font_px437wyse700a_2x2_r);
-  setDisplayText();
 }
 
-void morseStart() {
+void morseStart()
+{
   morseCallNext = true;
   morseCodeStep = 0;
+
+  setDisplayText();
 }
 
 void morseLogicLoop()
@@ -129,7 +128,7 @@ void morseLogicButtonLoop()
     else if (!loopSerialWriteCooldown && !digitalRead(INPUT_Morse_Send))
     {
       Serial.write((byte)0x6);
-      Serial.write((byte)(morseCodeIndex == morseFrequencyIndex));
+      Serial.write((byte)(morseCodeIndex == morseFrequencyIndex ? 1 : 0));
       engageSerialWriteCooldown();
     }
   }
@@ -174,4 +173,13 @@ bool handleMorseNextLetter(void *)
 {
   morseCallNext = true;
   return false; // to repeat the action - false to stop
+}
+
+void morsePowerOff()
+{
+  multiplexer.selectChannel(MULTIPLEXER_Morse);
+  yellowDisplay.clearDisplay();
+  digitalWrite(OUTPUT_Morse_LED, LOW);
+  morseCallNext = false;
+  morseCodeStep = -1;
 }

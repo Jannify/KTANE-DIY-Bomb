@@ -10,8 +10,7 @@ public class Program
     {
         try
         {
-            string serialPortName = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/dev/ttyACM0" : "COM3";
-            Arduino.Open(serialPortName);
+            Arduino.Open();
         }
         catch (Exception ex)
         {
