@@ -61,6 +61,8 @@ void setup()
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
   }
 
+  delay(10);
+
   resetAndPowerOffModules();
 }
 

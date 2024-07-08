@@ -10,7 +10,8 @@ bool valueIndicatorLED;
 void setIndicatorLED(bool value)
 {
   valueIndicatorLED = value;
-  if(bombStarted) {
+  if (bombStarted)
+  {
     digitalWrite(OUTPUT_Indicator_LED, value);
   }
 }
@@ -65,4 +66,5 @@ void framePowerOff()
   // multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
   // serialNumberText.clearDisplay();
   setIndicatorLED(false);
+  digitalWrite(OUTPUT_Indicator_LED, LOW);
 }
