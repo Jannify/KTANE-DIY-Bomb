@@ -46,7 +46,9 @@ public static class Arduino
             {
                 case 0x1: // BigButton Down
                     data = [(byte)type, 0, 0, 0];
-                    port.Read(data, 1, 3);
+                    data[1] = (byte) port.ReadByte();
+                    data[2] = (byte) port.ReadByte();
+                    data[3] = (byte) port.ReadByte();
                     break;
                 case 0x2: // Wire Cut
                 case 0x3: // Password Changes
@@ -54,7 +56,7 @@ public static class Arduino
                 case 0x5: // Memory
                 case 0x6: // Morse Code
                     data = [(byte)type, 0];
-                    port.Read(data, 1, 1);
+                    data[1] = (byte) port.ReadByte();
                     break;
                 case 0xE: // Time Up
                     data = [(byte)type];
