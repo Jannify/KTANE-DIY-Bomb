@@ -33,7 +33,7 @@ public class Bomb
         MaxMistakes = info.MaxMistakes;
         Mistakes = 0;
 
-        modules = [bigButton, wires, morse, simonSays, memory, password];
+        modules = [bigButton, wires, morse, memory, simonSays, password];
         Frame.Generate(random);
         bigButton.Generate(random);
         wires.Generate(Frame, random);
@@ -51,6 +51,9 @@ public class Bomb
         Arduino.InitStaticModules(morse.MorseIndex, (byte)bigButton.ButtonColor, (byte)bigButton.Text);
         Thread.Sleep(10);
 
+        UpdateSolvedModules();
+        Thread.Sleep(10);
+
         Arduino.SetBigButtonStrip((byte)bigButton.StripColor);
         Thread.Sleep(10);
 
@@ -58,8 +61,6 @@ public class Bomb
         Thread.Sleep(10);
         memory.StartRandomState();
 
-        bool[] data = [true, false, false, false, false, false, false, false, false, false, false];
-        Arduino.SetSolved(data);
     }
 
     public void Start()

@@ -7,9 +7,9 @@
 0: BigButton  
 1: Wires  
 2: MorseCode  
-3: SimonSays  
+3: Memory  
  : Base  
-4: Memory  
+4: SimonSays  
 5: Password  
 
 ### Arduino Mega Pins
@@ -63,7 +63,7 @@
 | 0x2  | Init static Modules | Init Morse BigButton                       |   3    | [Morse: Index] + [BigButton: ButtonColorIndex + TextIndex] |
 | 0x3  |        Start        | Starts bomb with given time                |   2    | Timer in Seconds (ushort)                                  |
 | 0x4  |      Set Tries      | On/Off X's LEDs                            |   1    | Number of Xs to display                                    |
-| 0x5  |     Set Solved      | Updated green "Module Solved" LEDs         |   1    | BigButton -> Password (leading zero + 7Bit)                |
+| 0x5  |     Set Solved      | Updated green "Module Solved" LEDs         |   1    | Password -> BigButton (leading zero + 7Bit)                |
 | 0x6  |   BigButton Strip   | Sets color of BigButton Strip              |   1    | ColorIndex (Red, Blue, Yellow, White) values               |
 | 0x7  |    Password Text    | Sets Text of Password LCD                  |   5    | 5 Letters (Encoding TBD)                                   |
 | 0x8  |      SimonSays      | Runs SimonSays sequence (length 3-6)       |   2    | 3Bit Length + zero + 6 * (2 Bit Button index)              |

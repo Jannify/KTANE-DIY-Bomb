@@ -48,21 +48,22 @@ void engageSerialWriteCooldown()
 
 void setSolvedModules(byte data0, byte data1)
 {
-  activeModules[0] = data0 & 0b01000000;
-  activeModules[1] = data0 & 0b00100000;
-  activeModules[2] = data0 & 0b00010000;
+  activeModules[0] = data0 & 0b00000001;
+  activeModules[1] = data0 & 0b00000010;
+  activeModules[2] = data0 & 0b00000100;
   activeModules[3] = data0 & 0b00001000;
-  activeModules[4] = data0 & 0b00000100;
-  activeModules[5] = data0 & 0b00000010;
-  activeModules[6] = data0 & 0b00000001;
+  activeModules[4] = data0 & 0b00010000;
+  activeModules[5] = data0 & 0b00100000;
+  activeModules[6] = data0 & 0b01000000;
 
-  // activeModules[7] = data1 & 0b01000000;
-  // activeModules[8] = data1 & 0b00100000;
-  // activeModules[9] = data1 & 0b00010000;
+  // activeModules[7] = data1 & 0b00000001;
+  // activeModules[8] = data1 & 0b00000010;
+  // activeModules[9] = data1 & 0b00000100;
   // activeModules[10] = data1 & 0b00001000;
+  // activeModules[11] = data1 & 0b00010000;
 
   shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data0);
-  //shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data0);
+  //shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data1);
 }
 
 bool setPinLow(void *argument)

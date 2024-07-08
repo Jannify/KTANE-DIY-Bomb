@@ -145,11 +145,11 @@ void loopSerialRead()
   }
   case 0x5: // Set Solved
   {
-    while (Serial.available() < 1) //2)
+    while (Serial.available() < 1) // 2)
     {
     }
     byte data0 = Serial.read();
-    //byte data1 = Serial.read();
+    // byte data1 = Serial.read();
     setSolvedModules(data0, 0);
     break;
   }

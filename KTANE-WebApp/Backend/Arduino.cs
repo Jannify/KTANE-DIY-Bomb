@@ -153,7 +153,7 @@ public static class Arduino
 
         for (int i = 0; i < 7; i++)
         {
-            data[1] |= (byte)(modules[i] ? 0b01000000 >> i : 0x00);
+            data[1] |= (byte)(modules[i] ? 0b000000001 << i : 0x00);
         }
 
         Write(data);
