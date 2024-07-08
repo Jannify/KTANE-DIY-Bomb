@@ -1,9 +1,8 @@
 #include "modules/base.h"
 
-#include <TM1637Display.h>
+#include <TM1637.h>
 
-TM1637Display clock(OUTPUT_ClockDisplay_Clk, OUTPUT_ClockDisplay_Data);
-uint8_t clock_data[4];
+TM1637 clock(OUTPUT_ClockDisplay_Data, OUTPUT_ClockDisplay_Clk);
 unsigned long timeAtStart = LONG_MAX;
 unsigned short givenBombTimeSeconds = 0;
 
@@ -16,7 +15,7 @@ void baseModuleInit(unsigned short sec)
 {
   givenBombTimeSeconds = sec;
   timeAtStart = millis();
-  clock.setBrightness(0x0f);
+  clock.setupDisplay(true, 7);
 }
 
 void baseModuleLogicLoop()
@@ -27,17 +26,15 @@ void baseModuleLogicLoop()
     lastSecondsLeft = combinedSecondsLeft;
     unsigned short minutesLeft = combinedSecondsLeft / 60;
     unsigned short secondsLeft = combinedSecondsLeft - minutesLeft * 60;
-    clock_data[0] = clock.encodeDigit(minutesLeft / 10);
-    clock_data[1] = clock.encodeDigit(minutesLeft % 10);
-    clock_data[2] = clock.encodeDigit(secondsLeft / 10);
-    clock_data[3] = clock.encodeDigit(secondsLeft % 10);
 
-    if (combinedSecondsLeft % 2)
+    byte dot = _BV(4);
+    if (secondsLeft % 2)
     {
-      clock_data[1] |= SEG_DP;
+      dot = _BV(3);
     }
-    clock.setSegments(clock_data);
-    tone(OUTPUT_BUZZER, 2000, 75);
+
+    clock.setDisplayToDecNumber(minutesLeft * 100 + secondsLeft, dot);
+    //tone(OUTPUT_BUZZER, 2000, 75);
   }
 
   if (combinedSecondsLeft >= (USHRT_MAX - 10))
@@ -88,5 +85,5 @@ bool toggleLastTry(void *)
 void basePowerOff()
 {
   setTries(0);
-  clock.setBrightness(0x0f, false);
+  clock.setupDisplay(false, 7);
 }

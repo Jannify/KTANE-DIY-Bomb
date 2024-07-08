@@ -49,9 +49,9 @@
 #define OUTPUT_Clock_SimonSays 48
 #define OUTPUT_Clock_ModulesSolved_1 49
 #define OUTPUT_Clock_ModulesSolved_2 50
-#define OUTPUT_BUZZER 51
-#define OUTPUT_ClockDisplay_Data 52
-#define OUTPUT_ClockDisplay_Clk 53
+#define OUTPUT_BUZZER 40
+#define OUTPUT_ClockDisplay_Data 39
+#define OUTPUT_ClockDisplay_Clk 38
 
 #define I2C_SDA 20
 #define I2C_SCL 21
