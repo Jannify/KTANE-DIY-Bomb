@@ -5,6 +5,7 @@ Timer<20> timer;
 TCA9548 multiplexer(0x70);
 
 bool activeModules[11] = {false};
+bool solvedModules[11] = {false};
 bool bombStarted = false;
 
 bool loopLogicButtonCooldown = false;
@@ -30,7 +31,7 @@ void startBomb()
 void engageLogicCooldown()
 {
   loopLogicButtonCooldown = true;
-  timer.in(50, [](void *) -> bool {
+  timer.in(75, [](void *) -> bool {
       loopLogicButtonCooldown = false;
       return false; 
     });
@@ -48,19 +49,19 @@ void engageSerialWriteCooldown()
 
 void setSolvedModules(byte data0, byte data1)
 {
-  activeModules[0] = data0 & 0b00000001;
-  activeModules[1] = data0 & 0b00000010;
-  activeModules[2] = data0 & 0b00000100;
-  activeModules[3] = data0 & 0b00001000;
-  activeModules[4] = data0 & 0b00010000;
-  activeModules[5] = data0 & 0b00100000;
-  activeModules[6] = data0 & 0b01000000;
+  solvedModules[0] = data0 & 0b00000001;
+  solvedModules[1] = data0 & 0b00000010;
+  solvedModules[2] = data0 & 0b00000100;
+  solvedModules[3] = data0 & 0b00001000;
+  solvedModules[4] = data0 & 0b00010000;
+  solvedModules[5] = data0 & 0b00100000;
+  solvedModules[6] = data0 & 0b01000000;
 
-  // activeModules[7] = data1 & 0b00000001;
-  // activeModules[8] = data1 & 0b00000010;
-  // activeModules[9] = data1 & 0b00000100;
-  // activeModules[10] = data1 & 0b00001000;
-  // activeModules[11] = data1 & 0b00010000;
+  // solvedModules[7] = data1 & 0b00000001;
+  // solvedModules[8] = data1 & 0b00000010;
+  // solvedModules[9] = data1 & 0b00000100;
+  // solvedModules[10] = data1 & 0b00001000;
+  // solvedModules[11] = data1 & 0b00010000;
 
   shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data0);
   //shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data1);

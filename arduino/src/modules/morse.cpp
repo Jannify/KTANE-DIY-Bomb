@@ -91,7 +91,7 @@ void morseStart()
 
 void morseLogicLoop()
 {
-  if (morseCallNext && morseCodeStep != -1)
+  if (activeModules[2] && !solvedModules[2] && morseCallNext && morseCodeStep != -1)
   {
     morseCallNext = false;
     handleMorseCodeStep();

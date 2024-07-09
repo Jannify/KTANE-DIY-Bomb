@@ -65,8 +65,8 @@
 extern TCA9548 multiplexer;
 extern Timer<20> timer;
 
-// BigButton, Wires, Morse, Password, SimonSays, Memory
 extern bool activeModules[];
+extern bool solvedModules[];
 extern bool bombStarted;
 
 extern bool loopLogicButtonCooldown;
