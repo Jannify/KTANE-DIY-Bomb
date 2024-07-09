@@ -14,13 +14,13 @@ public class Bomb
     private IModule[] modules = [];
     public readonly Frame Frame = new();
     private readonly BigButton bigButton = new();
-    public readonly Wires wires = new();
+    private readonly Wires wires = new();
     private readonly Password password = new();
     private readonly SimonSays simonSays = new();
     private readonly Memory memory = new();
     private readonly Morse morse = new();
 
-    public Bomb() => Arduino.OnMessageReceived += HandleSerialInput;
+    private Bomb() => Arduino.OnMessageReceived += HandleSerialInput;
 
     ~Bomb() => Arduino.OnMessageReceived -= HandleSerialInput;
 
@@ -74,7 +74,7 @@ public class Bomb
     }
 
 
-    public void HandleSerialInput(byte[] data)
+    private void HandleSerialInput(byte[] data)
     {
         switch (data[0])
         {
@@ -140,6 +140,8 @@ public class Bomb
         // Play explosion Sound
         Console.WriteLine("BOMB EXPLODE");
     }
+
+    public Wires GetWiresModule() => wires;
 
     public void ResetState()
     {

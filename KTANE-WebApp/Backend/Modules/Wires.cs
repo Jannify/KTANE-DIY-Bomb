@@ -4,7 +4,7 @@ public class Wires : IModule
 {
     public bool IsSolved { get; private set; }
 
-    public readonly WireColor[] wires = new WireColor[6];
+    private readonly WireColor[] wires = new WireColor[6];
     private readonly WireColor[] desiredState = new WireColor[6];
 
     public void Generate(Frame frame, Random random)
@@ -109,6 +109,8 @@ public class Wires : IModule
             bomb.UpdateSolvedModules();
         }
     }
+
+    public WireColor[] GetWires() => wires;
 
     public void Reset()
     {

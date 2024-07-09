@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace KTANE_WebApp.Backend;
 
 public static class Extensions
@@ -52,5 +54,16 @@ public static class Extensions
                 }
             }
         }
+    }
+
+    public static string BytesToHexString(this byte[] data)
+    {
+        StringBuilder sb = new();
+        foreach (byte b in data)
+        {
+            sb.Append($"0x{b:X2} ");
+        }
+
+        return sb.ToString().TrimEnd();
     }
 }

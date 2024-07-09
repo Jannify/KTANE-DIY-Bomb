@@ -18,8 +18,8 @@ public class Password : IModule
 
     public bool IsSolved { get; private set; }
 
-    private string correctWord;
-    private List<List<char>> possibleCharacters;
+    private string correctWord = string.Empty;
+    private List<List<char>> possibleCharacters = [];
     private readonly int[] selectedCharacters = new int[5];
 
     public void Generate(Random random)

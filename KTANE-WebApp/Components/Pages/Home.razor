@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using System.ComponentModel.DataAnnotations
 @using Blazor.Extensions
 @using Blazor.Extensions.Canvas.Canvas2D
 @using KTANE_WebApp.Backend.Module
@@ -109,7 +108,7 @@
         wireCanvasContext = await wireCanvas.CreateCanvas2DAsync();
         await wireCanvasContext.DrawImageAsync(wiresBackground, 0, 0);
 
-        Wires.WireColor[] wires = Bomb.Instance.wires.wires;
+        Wires.WireColor[] wires = Bomb.Instance.GetWiresModule().GetWires();
 
         for (int i = 0; i < wires.Length; i++)
         {

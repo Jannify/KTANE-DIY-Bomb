@@ -11,8 +11,8 @@ public class Frame
 
     public int NumberOfBatteries { get; private set; }
     public bool IndicatorLight { get; private set; }
-    public string IndicatorText { get; private set; }
-    public string SerialNumber { get; private set; }
+    public string IndicatorText { get; private set; } = string.Empty;
+    public string SerialNumber { get; private set; } = string.Empty;
 
     public void Generate(Random random)
     {

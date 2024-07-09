@@ -42,7 +42,7 @@ public static class Arduino
 
     private static void Write(byte[] data)
     {
-        Console.WriteLine($"Send: {Utils.BytesToHexString(data)}");
+        Console.WriteLine($"Send: {data.BytesToHexString()}");
         port.Write(data, 0, data.Length);
     }
 
@@ -85,7 +85,7 @@ public static class Arduino
             }
 
 
-            Console.WriteLine($"Received: {Utils.BytesToHexString(data)}");
+            Console.WriteLine($"Received: {data.BytesToHexString()}");
             OnMessageReceived?.Invoke(data);
         }
         catch (Exception exception)

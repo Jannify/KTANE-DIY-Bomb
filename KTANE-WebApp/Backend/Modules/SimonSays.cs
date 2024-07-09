@@ -8,7 +8,7 @@ public class SimonSays : IModule
     public bool IsSolved { get; private set; }
 
     private Timer restartTimer;
-    private SimonSaysEntry[] sequence;
+    private SimonSaysEntry[] sequence = [];
 
     private bool hasVowel;
     private int currentSequenceLength;
@@ -208,7 +208,6 @@ public class SimonSays : IModule
     {
         IsSolved = false;
     }
-
 
     public override string ToString()
     {
