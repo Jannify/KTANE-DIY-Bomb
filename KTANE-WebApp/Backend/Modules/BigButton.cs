@@ -20,6 +20,8 @@ public class BigButton : IModule
         if(IsSolved)
             return;
 
+        Console.WriteLine($"[HandleBigButtonPress] Long:{pressedLong} SecondsLeft:{secondsLeft}");
+
         if (Text == TextOption.ABRECHEN && ButtonColor == ColorOption.BLUE)
             HandleShouldHold(bomb, secondsLeft);
         else if (Text == TextOption.SPRENGEN && bomb.Frame.NumberOfBatteries > 1)

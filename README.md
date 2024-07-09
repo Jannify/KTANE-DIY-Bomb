@@ -77,21 +77,21 @@
 
 ### Serial Communication (Arduino to Pi)
 
-| Data |      Title       | Description                                               | Length | Payload Data                                                |
-|:----:|:----------------:|-----------------------------------------------------------|:------:|-------------------------------------------------------------|
-| 0x0  |     Reserved     |                                                           |        |                                                             |
-| 0x1  |  BigButton Down  | Reports how long the button was pressed and at which time |   3    | TimePressed (0=short, 1=long) + Seconds on Timer (ushort)   |
-| 0x2  |     Wire Cut     | Current wire states                                       |   1    | Bitfield with which wire was cut                            |
-| 0x3  | Password Changes | Password button was pressed                               |   1    | Send (no/yes) + Down(0)/Up(1) + 3 Bit Index of Letter (0-4) |
-| 0x4  |    SimonSays     | Reports pressed SimonSays button                          |   1    | Index of button pressed                                     |
-| 0x5  |      Memory      | Memory button was pressed                                 |   1    | Index of button pressed                                     |
-| 0x6  |    Morse Code    | Morse code answer send                                    |   1    | 0=failed, 1=succeed                                         |
-| 0x7  |                  |                                                           |        |                                                             |
-| 0x8  |                  |                                                           |        |                                                             |
-| 0x9  |                  |                                                           |        |                                                             |
-| 0xA  |                  |                                                           |        |                                                             |
-| 0xB  |                  |                                                           |        |                                                             |
-| 0xC  |                  |                                                           |        |                                                             |
-| 0xD  |                  |                                                           |        |                                                             |
-| 0xE  |     Time Up      | Send when the clock reached zero                          |        |                                                             |
-| 0xF  |     Logging      | Writes a logging message to the pi                        |   X    | Message with NULL ending                                    |
+| Data |      Title       | Description                                               | Length | Payload Data                                                    |
+|:----:|:----------------:|-----------------------------------------------------------|:------:|-----------------------------------------------------------------|
+| 0x0  |     Reserved     |                                                           |        |                                                                 |
+| 0x1  |  BigButton Down  | Reports how long the button was pressed and at which time |   3    | WasLongPressed (bool) + Seconds on Timer (ushort little endian) |
+| 0x2  |     Wire Cut     | Current wire states                                       |   1    | Bitfield with which wire was cut                                |
+| 0x3  | Password Changes | Password button was pressed                               |   1    | Send (no/yes) + Down(0)/Up(1) + 3 Bit Index of Letter (0-4)     |
+| 0x4  |    SimonSays     | Reports pressed SimonSays button                          |   1    | Index of button pressed                                         |
+| 0x5  |      Memory      | Memory button was pressed                                 |   1    | Index of button pressed                                         |
+| 0x6  |    Morse Code    | Morse code answer send                                    |   1    | 0=failed, 1=succeed                                             |
+| 0x7  |                  |                                                           |        |                                                                 |
+| 0x8  |                  |                                                           |        |                                                                 |
+| 0x9  |                  |                                                           |        |                                                                 |
+| 0xA  |                  |                                                           |        |                                                                 |
+| 0xB  |                  |                                                           |        |                                                                 |
+| 0xC  |                  |                                                           |        |                                                                 |
+| 0xD  |                  |                                                           |        |                                                                 |
+| 0xE  |     Time Up      | Send when the clock reached zero                          |        |                                                                 |
+| 0xF  |     Logging      | Writes a logging message to the pi                        |   X    | Message with line  ending                                       |

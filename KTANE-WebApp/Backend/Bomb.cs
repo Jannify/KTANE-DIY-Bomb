@@ -75,10 +75,9 @@ public class Bomb
         switch (data[0])
         {
             case 0x1: // BigButton
-                bool timeDown = data[1] > 0;
-                ushort secondsLeft = data[3];
-                secondsLeft &= (ushort)(data[2] << 8);
-                bigButton.HandleButtonPress(this, timeDown, secondsLeft);
+                bool pressedLong = data[1] > 0;
+                ushort secondsLeft = BitConverter.ToUInt16(data, 2);
+                bigButton.HandleButtonPress(this, pressedLong, secondsLeft);
                 break;
             case 0x2: //Wire
                 wires.HandleWireCut(this, data[1]);

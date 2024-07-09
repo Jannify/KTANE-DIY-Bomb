@@ -3,10 +3,10 @@
 #include "common.h"
 
 extern Timer<>::Task lastTryTask;
+extern unsigned short lastSecondsLeft;
 
 void baseModuleInit(unsigned short);
 void baseModuleLogicLoop();
-unsigned short getSecondsLeft();
 void setTries(byte);
 bool toggleLastTry(void *);
 void basePowerOff();

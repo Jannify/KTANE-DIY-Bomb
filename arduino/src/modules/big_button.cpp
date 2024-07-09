@@ -101,6 +101,11 @@ void bigButtonSetStripColor(byte bigKnobColorIndex)
 
 void bigButtonSerialWriteLoop()
 {
+    if (!activeModules[0] || solvedModules[0])
+    {
+        return;
+    }
+
     if (!wasButtonPressed && !digitalRead(INPUT_BigButton))
     {
         startPressed = millis();
@@ -121,8 +126,8 @@ void bigButtonSerialWriteLoop()
         unsigned long difference = endPressed - startPressed;
         Serial.write((byte)0x1);
         Serial.write((byte)(difference <= PRESS_THRESHOLD_MS ? false : true));
-        Serial.write((byte)(getSecondsLeft() >> 8));
-        Serial.write((byte)getSecondsLeft());
+        Serial.write((byte)lastSecondsLeft);
+        Serial.write((byte)(lastSecondsLeft >> 8));
         engageSerialWriteCooldown();
     }
 }

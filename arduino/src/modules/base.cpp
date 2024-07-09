@@ -18,6 +18,11 @@ void baseModuleInit(unsigned short sec)
   clock.setupDisplay(true, 7);
 }
 
+unsigned short getSecondsLeft()
+{
+  return givenBombTimeSeconds - ((millis() - timeAtStart) / 1000);
+}
+
 void baseModuleLogicLoop()
 {
   unsigned short combinedSecondsLeft = getSecondsLeft();
@@ -43,11 +48,6 @@ void baseModuleLogicLoop()
     Serial.write((byte)0xE);
     engageLogicCooldown(); // TODO: Set Bomb peripheral
   }
-}
-
-unsigned short getSecondsLeft()
-{
-  return givenBombTimeSeconds - ((millis() - timeAtStart) / 1000);
 }
 
 void setTries(byte tries)
