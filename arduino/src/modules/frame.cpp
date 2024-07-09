@@ -61,10 +61,14 @@ void frameStart()
 void framePowerOff()
 {
   multiplexer.selectChannel(MULTIPLEXER_Indicator);
+  indicatorText.begin();
   indicatorText.clearDisplay();
+  indicatorText.setPowerSave(1);
 
   // multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
+  // serialNumberText.begin();
   // serialNumberText.clearDisplay();
+  // serialNumberText.setPowerSave(1);
   setIndicatorLED(false);
   digitalWrite(OUTPUT_Indicator_LED, LOW);
 }

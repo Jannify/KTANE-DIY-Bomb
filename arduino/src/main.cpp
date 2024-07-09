@@ -59,6 +59,7 @@ void setup()
   {
     Serial.write((byte)0xF);
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
+    engageSerialWriteCooldown();
   }
 
   delay(10);

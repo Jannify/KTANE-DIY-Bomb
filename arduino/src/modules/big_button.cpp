@@ -143,5 +143,7 @@ void bigButtonPowerOff()
     bigKnobStrip.show();
 
     multiplexer.selectChannel(MULTIPLEXER_BigButton);
+    buttonDisplay.begin();
     buttonDisplay.clearDisplay();
+    buttonDisplay.setPowerSave(1);
 }

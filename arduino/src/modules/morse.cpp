@@ -178,7 +178,9 @@ bool handleMorseNextLetter(void *)
 void morsePowerOff()
 {
   multiplexer.selectChannel(MULTIPLEXER_Morse);
+  yellowDisplay.begin();
   yellowDisplay.clearDisplay();
+  yellowDisplay.setPowerSave(1);
   digitalWrite(OUTPUT_Morse_LED, LOW);
   morseCallNext = false;
   morseCodeStep = -1;

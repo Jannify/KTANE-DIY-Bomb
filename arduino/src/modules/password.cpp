@@ -97,7 +97,7 @@ void passwordSerialWriteLoop()
         else if (buttonIndex != -1)
         {
             byte data = wasButtonUp ? 0b01000000 : 0x0;
-            data = data | buttonIndex << 3;
+            data |= buttonIndex << 3;
             Serial.write((byte)0x3);
             Serial.write(data);
             engageSerialWriteCooldown();
@@ -109,5 +109,7 @@ void passwordPowerOff()
 {
     return;
     multiplexer.selectChannel(MULTIPLEXER_Password);
+    greenDisplay.begin();
     greenDisplay.clearDisplay();
+    greenDisplay.setPowerSave(1);
 }
