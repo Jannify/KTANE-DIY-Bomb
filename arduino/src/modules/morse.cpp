@@ -127,9 +127,7 @@ void morseLogicButtonLoop()
     }
     else if (!loopSerialWriteCooldown && !digitalRead(INPUT_Morse_Send))
     {
-      Serial.write((byte)0x6);
-      Serial.write((byte)(morseCodeIndex == morseFrequencyIndex ? 1 : 0));
-      engageSerialWriteCooldown();
+      sendSerialData(0x6, morseCodeIndex == morseFrequencyIndex ? 1 : 0);
     }
   }
 }

@@ -67,27 +67,7 @@ void simonSerialWriteLoop()
     {
       simonReadWasPressed = true;
 
-      // if (simonSequence[simonReadStep] == simonButtonPressed)
-      // {
-      //   simonReadStep++;
-
-      //   if (simonReadStep >= simonSequenceLength)
-      //   {
-      //     Serial.write(0x4); // 3Bit Length + zero + 6 * (2 Bit Button index)
-      //     Serial.write(simonButtonPressed);
-      //     simonReadStep = -1;
-      //   }
-      // }
-      // else
-      // {
-      //   Serial.write(0x4);
-      //   Serial.write(0x0);
-      //   simonReadStep = 0;
-      // }
-
-      Serial.write((byte)0x4);
-      Serial.write(simonButtonPressed);
-      engageSerialWriteCooldown();
+      sendSerialData(0x4, simonButtonPressed);
 
       shiftOutLED(OUTPUT_Clock_SimonSays, simonButtonPressed);
       timer.in(SIMON_ON_TIME, handleSimonAllOff, (void *)nullptr);

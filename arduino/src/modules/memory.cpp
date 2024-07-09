@@ -73,9 +73,7 @@ void memorySerialWriteLoop()
     else if (!memoryButtonWasPressed)
     {
         memoryButtonWasPressed = true;
-        Serial.write((byte)0x5);
-        Serial.write(memoryButtonPressed);
-        engageSerialWriteCooldown();
+        sendSerialData(0x5, memoryButtonPressed);
     }
 }
 

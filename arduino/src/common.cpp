@@ -12,6 +12,8 @@ bool loopLogicButtonCooldown = false;
 bool loopSerialWriteCooldown = false;
 
 byte memoryTriesBuffer = 0x00;
+byte lastSendLength = 0;
+byte lastSendData[4] = {0x0};
 
 void startBomb()
 {
@@ -31,21 +33,20 @@ void startBomb()
 void engageLogicCooldown()
 {
   loopLogicButtonCooldown = true;
-  timer.in(75, [](void *) -> bool {
+  timer.in(200, [](void *) -> bool
+           {
       loopLogicButtonCooldown = false;
-      return false; 
-    });
+      return false; });
 }
 
 void engageSerialWriteCooldown()
 {
   loopSerialWriteCooldown = true;
-  timer.in(50, [](void *) -> bool {
+  timer.in(200, [](void *) -> bool
+           {
       loopSerialWriteCooldown = false;
-      return false; 
-    });
+      return false; });
 }
-
 
 void setSolvedModules(byte data0, byte data1)
 {
@@ -64,7 +65,7 @@ void setSolvedModules(byte data0, byte data1)
   // solvedModules[11] = data1 & 0b00010000;
 
   shiftOutLED(OUTPUT_Clock_ModulesSolved_1, data0);
-  //shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data1);
+  // shiftOutLED(OUTPUT_Clock_ModulesSolved_2, data1);
 }
 
 bool setPinLow(void *argument)
@@ -85,4 +86,61 @@ void shiftOutLED(byte clockPin, byte val)
   }
   digitalWrite(OUTPUT_Register_Data_LED, 0);
   delay(2);
+}
+
+void sendSerialData(byte type)
+{
+  lastSendLength = 1;
+  lastSendData[0] = type;
+
+  Serial.write(type);
+  engageSerialWriteCooldown();
+}
+
+void sendSerialData(byte type, byte data)
+{
+  lastSendLength = 2;
+  lastSendData[0] = type;
+  lastSendData[1] = data;
+
+  Serial.write(type);
+  Serial.write(data);
+  engageSerialWriteCooldown();
+}
+
+void sendSerialData(byte type, byte data0, byte data1)
+{
+  lastSendLength = 3;
+  lastSendData[0] = type;
+  lastSendData[1] = data0;
+  lastSendData[2] = data1;
+
+  Serial.write(type);
+  Serial.write(data0);
+  Serial.write(data1);
+  engageSerialWriteCooldown();
+}
+
+void sendSerialData(byte type, byte data0, byte data1, byte data2)
+{
+  lastSendLength = 4;
+  lastSendData[0] = type;
+  lastSendData[1] = data0;
+  lastSendData[2] = data1;
+  lastSendData[3] = data2;
+
+  Serial.write(type);
+  Serial.write(data0);
+  Serial.write(data1);
+  Serial.write(data2);
+  engageSerialWriteCooldown();
+}
+
+void resendSerialData()
+{
+  for (size_t i = 0; i < lastSendLength; i++)
+  {
+    Serial.write(lastSendData[i]);
+  }
+  engageSerialWriteCooldown();
 }

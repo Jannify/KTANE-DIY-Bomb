@@ -54,6 +54,10 @@ void setup()
 
   Serial.begin(9600);
 
+  while (!Serial)
+  { // wait for serial port to connect. Needed for native USB port only
+  }
+
   Wire.begin();
   if (!multiplexer.begin())
   {
@@ -193,6 +197,11 @@ void loopSerialRead()
     byte data[2];
     Serial.readBytes(data, 2);
     memorySetNumber(data[0], data[1]);
+    break;
+  }
+  case 0xE: // Resend serial data
+  {
+    resendSerialData();
     break;
   }
   }

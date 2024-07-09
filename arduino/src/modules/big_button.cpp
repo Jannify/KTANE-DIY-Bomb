@@ -124,11 +124,8 @@ void bigButtonSerialWriteLoop()
         bigKnobStrip.show();
 
         unsigned long difference = endPressed - startPressed;
-        Serial.write((byte)0x1);
-        Serial.write((byte)(difference <= PRESS_THRESHOLD_MS ? false : true));
-        Serial.write((byte)lastSecondsLeft);
-        Serial.write((byte)(lastSecondsLeft >> 8));
-        engageSerialWriteCooldown();
+        bool wasLongPress = difference <= PRESS_THRESHOLD_MS ? false : true;
+        sendSerialData(0x1, wasLongPress, lastSecondsLeft, lastSecondsLeft >> 8);
     }
 }
 

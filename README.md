@@ -72,7 +72,7 @@
 | 0xB  |                     |                                            |        |                                                            |
 | 0xC  |                     |                                            |        |                                                            |
 | 0xD  |                     |                                            |        |                                                            |
-| 0xE  |                     |                                            |        |                                                            |
+| 0xE  |   Resend last msg   | Informs the arduino to resend the last msg |   0    |                                                            |
 | 0xF  |                     |                                            |        |                                                            |
 
 ### Serial Communication (Arduino to Pi)

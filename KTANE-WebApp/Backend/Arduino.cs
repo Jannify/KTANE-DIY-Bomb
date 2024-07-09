@@ -78,7 +78,10 @@ public static class Arduino
                     Console.WriteLine("[Arduino] " + msg);
                     return;
                 default:
-                    throw new Exception($"Serial data type ({type}) was not in expected range (0x1-0x6 + 0xE + 0xF)");
+                    port.DiscardInBuffer();
+                    Write([0xE]);
+                    Console.WriteLine($"[ERR] Serial data type ({type}) was not in expected range (0x1-0x6 + 0xE + 0xF). Requesting resend");
+                    return;
             }
 
 

@@ -45,8 +45,8 @@ void baseModuleLogicLoop()
   if (combinedSecondsLeft >= (USHRT_MAX - 10))
   {
     return; // TODO: For testing only
-    Serial.write((byte)0xE);
-    engageLogicCooldown(); // TODO: Set Bomb peripheral
+    sendSerialData(0xE);
+    // TODO: Set Bomb peripheral
   }
 }
 

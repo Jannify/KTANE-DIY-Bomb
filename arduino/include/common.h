@@ -80,4 +80,9 @@ void engageSerialWriteCooldown();
 void setSolvedModules(byte data0, byte data1);
 bool setPinLow(void *argument);
 void shiftOutLED(byte clockPin, byte val);
-uint8_t pack8Bool(bool *a);
+
+void sendSerialData(byte type);
+void sendSerialData(byte type, byte data);
+void sendSerialData(byte type, byte data0, byte data1);
+void sendSerialData(byte type, byte data0, byte data1, byte data2);
+void resendSerialData();
