@@ -155,6 +155,14 @@ public class Memory : IModule
         Arduino.SetMemory(displaySequence[currentStage], currentButtons, currentStage);
     }
 
+    public void Reset()
+    {
+        IsSolved = false;
+        currentStage = 0;
+        buttonIndicesPressed.Clear();
+        buttonLabelsPressed.Clear();
+    }
+
     public override string ToString()
     {
         return $"Solved: {IsSolved}, CurrentStage: {currentStage}, CurrentBigNumber {displaySequence[currentStage]}, CurrentButtons ({string.Join(",", currentButtons)})";

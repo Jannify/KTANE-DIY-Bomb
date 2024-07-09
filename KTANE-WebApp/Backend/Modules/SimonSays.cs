@@ -204,6 +204,12 @@ public class SimonSays : IModule
         throw new Exception($"Reached end of {nameof(GetCorrectButtonPress)} without entering a switch statement");
     }
 
+    public void Reset()
+    {
+        IsSolved = false;
+    }
+
+
     public override string ToString()
     {
         return $"Solved: {IsSolved}, CurrentSequence ({string.Join(" | ", sequence)}), AlreadyPressedButtonCount: {pressedButtonCount}";

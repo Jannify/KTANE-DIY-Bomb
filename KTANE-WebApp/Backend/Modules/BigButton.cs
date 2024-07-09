@@ -81,6 +81,11 @@ public class BigButton : IModule
         bomb.UpdateSolvedModules();
     }
 
+    public void Reset()
+    {
+        IsSolved = false;
+    }
+
     public override string ToString()
     {
         return $"Solved: {IsSolved}, ButtonColor {ButtonColor}, StripColor {StripColor}, Text: {Text}";

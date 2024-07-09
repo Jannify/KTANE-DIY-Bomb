@@ -110,6 +110,11 @@ public class Wires : IModule
         }
     }
 
+    public void Reset()
+    {
+        IsSolved = false;
+    }
+
     public override string ToString()
     {
         return $"Solved: {IsSolved}, CurrentState ({string.Join(" | ", wires)}), CorrectState: ({string.Join(" | ", desiredState)})";

@@ -20,10 +20,9 @@ public class Bomb
     private readonly Memory memory = new();
     private readonly Morse morse = new();
 
-    private Bomb()
-    {
-        Arduino.OnMessageReceived += HandleSerialInput;
-    }
+    public Bomb() => Arduino.OnMessageReceived += HandleSerialInput;
+
+    ~Bomb() => Arduino.OnMessageReceived -= HandleSerialInput;
 
 
     public void GenerateNewBomb(BombGenerationInputInfo info)
@@ -34,6 +33,11 @@ public class Bomb
         Mistakes = 0;
 
         modules = [bigButton, wires, morse, memory, simonSays, password];
+        foreach (IModule module in modules)
+        {
+            module.Reset();
+        }
+
         Frame.Generate(random);
         bigButton.Generate(random);
         wires.Generate(Frame, random);
@@ -59,8 +63,8 @@ public class Bomb
 
         Arduino.SetPasswordText(password.GetCurrentWord());
         Thread.Sleep(10);
-        memory.StartRandomState();
 
+        memory.StartRandomState();
     }
 
     public void Start()
@@ -135,6 +139,14 @@ public class Bomb
     {
         // Play explosion Sound
         Console.WriteLine("BOMB EXPLODE");
+    }
+
+    public void ResetState()
+    {
+        foreach (IModule module in modules)
+        {
+            module.Reset();
+        }
     }
 
     public override string ToString()

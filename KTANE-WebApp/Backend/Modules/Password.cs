@@ -210,6 +210,11 @@ public class Password : IModule
         }
     }
 
+    public void Reset()
+    {
+        IsSolved = false;
+    }
+
     public override string ToString()
     {
         return $"Solved: {IsSolved}, CorrectWord {correctWord}, DisplayedWord: {new string(GetCurrentWord())}";

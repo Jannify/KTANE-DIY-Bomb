@@ -17,6 +17,12 @@ public static class Arduino
 
     public static void Open()
     {
+        if (IsConnected)
+        {
+            Console.WriteLine("[Arduino] Port already open");
+            return;
+        }
+
         string portName = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/dev/ttyACM0" : "COM3";
         port.PortName = portName;
         port.BaudRate = 9600;
@@ -24,9 +30,14 @@ public static class Arduino
         port.Open();
         port.DiscardOutBuffer();
         port.DiscardInBuffer();
+        Console.WriteLine("[Arduino] Port opened");
     }
 
-    public static void Close() => port.Close();
+    public static void Close()
+    {
+        port.Close();
+        Console.WriteLine("[Arduino] Port closed");
+    }
 
 
     private static void Write(byte[] data)
@@ -46,9 +57,9 @@ public static class Arduino
             {
                 case 0x1: // BigButton Down
                     data = [(byte)type, 0, 0, 0];
-                    data[1] = (byte) port.ReadByte();
-                    data[2] = (byte) port.ReadByte();
-                    data[3] = (byte) port.ReadByte();
+                    data[1] = (byte)port.ReadByte();
+                    data[2] = (byte)port.ReadByte();
+                    data[3] = (byte)port.ReadByte();
                     break;
                 case 0x2: // Wire Cut
                 case 0x3: // Password Changes
@@ -56,7 +67,7 @@ public static class Arduino
                 case 0x5: // Memory
                 case 0x6: // Morse Code
                     data = [(byte)type, 0];
-                    data[1] = (byte) port.ReadByte();
+                    data[1] = (byte)port.ReadByte();
                     break;
                 case 0xE: // Time Up
                     data = [(byte)type];
@@ -67,7 +78,7 @@ public static class Arduino
                     Console.WriteLine("[Arduino] " + msg);
                     return;
                 default:
-                    throw new Exception($"Serial data type was not in expected range (0x1-0x6 + 0xE + 0xF, was {type}");
+                    throw new Exception($"Serial data type ({type}) was not in expected range (0x1-0x6 + 0xE + 0xF)");
             }
 
 
