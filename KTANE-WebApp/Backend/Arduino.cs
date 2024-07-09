@@ -237,19 +237,22 @@ public static class Arduino
             case 0:
                 break;
             case 1:
-                data[2] |= 0b00000100;
+                data[2] |= 0b00000010;
                 break;
             case 2:
-                data[2] |= 0b00001000;
+                data[2] |= 0b00000110;
                 break;
             case 3:
-                data[2] |= 0b00010000;
+                data[2] |= 0b00001110;
                 break;
             case 4:
-                data[2] |= 0b00100000;
+                data[2] |= 0b00011110;
+                break;
+            case 5:
+                data[2] |= 0b00111110;
                 break;
             default:
-                throw new ArgumentException("level was not in ragne of 0-4");
+                throw new ArgumentException("level was not in range of 0-5");
         }
 
         Write(data);

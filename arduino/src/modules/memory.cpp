@@ -30,7 +30,13 @@ void memorySetNumber(byte data0, byte data1)
     smallNumber2 = 1 + ((data0 & 0b00001100) >> 2);
     smallNumber3 = 1 + (data0 & 0b00000011);
     smallNumber4 = 1 + ((data1 & 0b11000000) >> 6);
-    memoryTriesBuffer |= ((data1 & 0b00111100) << 1);
+    byte memoryLevelValue = ((data1 & 0b00011110) << 2);
+    memoryTriesBuffer = (memoryTriesBuffer & 0b10000111) | (memoryLevelValue & 0b01111000);
+
+    if ((data1 & 0b00100000) > 0) // Level 5 complete
+    {
+        bigNumber = smallNumber1 = smallNumber2 = smallNumber3 = smallNumber4 = 0xFF;
+    }
 
     if (bombStarted)
     {

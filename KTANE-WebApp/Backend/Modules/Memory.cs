@@ -8,7 +8,7 @@ public class Memory : IModule
     private int currentStage;
     private readonly List<int> buttonIndicesPressed = [];
     private readonly List<MemoryDigit> buttonLabelsPressed = [];
-    private readonly MemoryDigit[] displaySequence = new MemoryDigit[4];
+    private readonly MemoryDigit[] displaySequence = new MemoryDigit[5];
     private readonly MemoryDigit[] currentButtons = new MemoryDigit[4];
 
     public void Generate(Random random)
@@ -48,10 +48,10 @@ public class Memory : IModule
                     case MemoryDigit.ONE when currentButtons[index] == MemoryDigit.FOUR:
                         GoToNextStage(bomb);
                         return;
-                    case MemoryDigit.THREE when index == 0:
+                    case MemoryDigit.TWO or MemoryDigit.FOUR when index == buttonIndicesPressed[0]:
                         GoToNextStage(bomb);
                         return;
-                    case MemoryDigit.TWO or MemoryDigit.FOUR when index == buttonIndicesPressed[0]:
+                    case MemoryDigit.THREE when index == 0:
                         GoToNextStage(bomb);
                         return;
                 }
@@ -124,7 +124,7 @@ public class Memory : IModule
 
         for (int i = 0; i < displaySequence.Length; i++)
         {
-            displaySequence[i] = (MemoryDigit)inStageRandom.Next(1, 5);
+            displaySequence[i] = (MemoryDigit)inStageRandom.Next(1, 4);
         }
 
         ShuffleButtonLabels(inStageRandom);
@@ -137,6 +137,7 @@ public class Memory : IModule
         {
             IsSolved = true;
             bomb.UpdateSolvedModules();
+            Arduino.SetMemory(MemoryDigit.ONE, currentButtons, currentStage);
             return;
         }
 

@@ -2,7 +2,6 @@ namespace KTANE_WebApp.Backend;
 
 public static class Extensions
 {
-    // Token: 0x06003255 RID: 12885 RVA: 0x000FF49C File Offset: 0x000FD89C
     public static void Shuffle<T>(this IList<T> list, Random random)
     {
         int i = list.Count;
@@ -10,9 +9,7 @@ public static class Extensions
         {
             i--;
             int num = random.Next(i + 1);
-            T t = list[num];
-            list[num] = list[i];
-            list[i] = t;
+            (list[num], list[i]) = (list[i], list[num]);
         }
     }
 
