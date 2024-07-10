@@ -1,6 +1,6 @@
 #pragma once
 
-void simonInit(byte, byte, byte);
+void simonInit(byte data0, byte data1);
 void simonLogicLoop();
 void simonSerialWriteLoop();
 void simonPowerOff();

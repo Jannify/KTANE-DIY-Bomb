@@ -200,7 +200,7 @@ public static class Arduino
     {
         byte[] data = new byte[3];
         data[0] = 0x8;
-        data[1] = (byte)((sequence.Length - 3) << 4);
+        data[1] = (byte)(sequence.Length << 4);
         data[1] |= (byte)((byte)sequence[0] << 2);
 
         if (sequence.Length > 1)
@@ -209,7 +209,7 @@ public static class Arduino
         }
 
         int offset = 6;
-        for (int i = 2; i < sequence.Length; i++)
+        for (int i = 2; i < sequence.Length && i < 6; i++)
         {
             data[2] |= (byte)((byte)sequence[i] << offset);
             offset -= 2;

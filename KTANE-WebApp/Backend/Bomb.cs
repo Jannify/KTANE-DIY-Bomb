@@ -113,9 +113,9 @@ public class Bomb
 
     public void IncrementTries()
     {
-        Mistakes++;
-
         return; // TODO: Remove after test
+
+        Mistakes++;
 
         if (Mistakes >= MaxMistakes)
         {

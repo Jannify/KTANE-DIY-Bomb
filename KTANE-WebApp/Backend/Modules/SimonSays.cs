@@ -7,7 +7,7 @@ public class SimonSays : IModule
 {
     public bool IsSolved { get; private set; }
 
-    private Timer restartTimer;
+    private readonly Timer sequenceTimer;
     private SimonSaysEntry[] sequence = [];
 
     private bool hasVowel;
@@ -15,10 +15,17 @@ public class SimonSays : IModule
     private int pressedButtonCount;
 
 
+    public SimonSays()
+    {
+        sequenceTimer = new Timer(TimeSpan.FromSeconds(7).TotalMilliseconds);
+        sequenceTimer.Elapsed += SequenceTimerCallback;
+    }
+
+
     public void Generate(Frame frame, Random random)
     {
         hasVowel = frame.SerialNumberContainsVowel();
-        currentSequenceLength = 0;
+        currentSequenceLength = 1;
         pressedButtonCount = 0;
 
         int sequenceLength = random.Next(3, 6);
@@ -31,32 +38,29 @@ public class SimonSays : IModule
 
     public void InitSequence()
     {
-        restartTimer = new Timer(7000);
-        restartTimer.Elapsed += RestartTimerCallback;
-        restartTimer.AutoReset = true;
-        restartTimer.Enabled = true;
+        sequenceTimer.Start();
+        RunSequence(1000);
     }
 
-    private void RestartTimerCallback(object? source, ElapsedEventArgs e)
-    {
-        if (currentSequenceLength == 0)
-            RunSequence(0);
-    }
+    private void SequenceTimerCallback(object sender, ElapsedEventArgs e) => SendStartSequence();
 
     public void HandleButtonPressed(Bomb bomb, byte buttonIndex)
     {
         if (IsSolved)
             return;
 
-        restartTimer.Stop();
+        sequenceTimer.Stop();
+
+        Console.WriteLine($"[SimonSays] Button pressed: {(SimonSaysEntry)buttonIndex}");
+        Console.WriteLine(ToString());
 
         SimonSaysEntry sequenceEntry = sequence[pressedButtonCount];
         if (GetCorrectButtonPress(bomb.Mistakes, hasVowel, sequenceEntry) != (SimonSaysEntry)buttonIndex)
         {
-            currentSequenceLength = 0;
+            currentSequenceLength = 1;
             pressedButtonCount = 0;
             bomb.IncrementTries();
-            restartTimer.Start();
+            sequenceTimer.Start();
             RunSequence(1500);
             return;
         }
@@ -68,16 +72,17 @@ public class SimonSays : IModule
 
         currentSequenceLength++;
 
-        if (currentSequenceLength >= sequence.Length)
+        if (currentSequenceLength > sequence.Length)
         {
             IsSolved = true;
-            restartTimer.Dispose();
+            sequenceTimer.Stop();
             bomb.UpdateSolvedModules();
             return;
         }
 
         pressedButtonCount = 0;
-        RunSequence(1000);
+        RunSequence(750);
+        sequenceTimer.Start();
     }
 
     private void RunSequence(int delay)
@@ -85,10 +90,11 @@ public class SimonSays : IModule
         Task.Run(() =>
         {
             Thread.Sleep(delay);
-            //Arduino.StartSimonSays(sequence.Take(currentSequenceLength + 1).ToArray());
+            SendStartSequence();
         });
     }
 
+    private void SendStartSequence() =>  Arduino.StartSimonSays(sequence.Take(currentSequenceLength).ToArray());
 
     private static SimonSaysEntry GetCorrectButtonPress(int mistakes, bool hasVowel, SimonSaysEntry sequenceEntry)
     {
@@ -201,12 +207,13 @@ public class SimonSays : IModule
             }
         }
 
-        throw new Exception($"Reached end of {nameof(GetCorrectButtonPress)} without entering a switch statement");
+        throw new Exception($"Reached end of {nameof(GetCorrectButtonPress)} without entering a switch statement for mistakes:{mistakes}, hasVowel:{hasVowel}, entry:{sequenceEntry}");
     }
 
     public void Reset()
     {
         IsSolved = false;
+        sequenceTimer.Stop();
     }
 
     public override string ToString()
@@ -214,7 +221,7 @@ public class SimonSays : IModule
         return $"Solved: {IsSolved}, CurrentSequence ({string.Join(" | ", sequence)}), AlreadyPressedButtonCount: {pressedButtonCount}";
     }
 
-    public enum SimonSaysEntry
+    public enum SimonSaysEntry : byte
     {
         BLUE = 0,
         RED = 1,

@@ -181,12 +181,12 @@ void loopSerialRead()
   }
   case 0x8: // SimonSays
   {
-    while (Serial.available() < 3)
+    while (Serial.available() < 2)
     {
     }
-    byte data[3];
-    Serial.readBytes(data, 3);
-    simonInit(data[0], data[1], data[2]);
+    byte data[2];
+    Serial.readBytes(data, 2);
+    simonInit(data[0], data[1]);
     break;
   }
   case 0x9: // Memory
