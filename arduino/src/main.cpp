@@ -10,6 +10,8 @@
 
 void resetAndPowerOffModules()
 {
+  baseDisplayMsgOnClock("LOAD");
+  
   timer.cancel();
   bombStarted = false;
   setSolvedModules(0, 0);
@@ -21,6 +23,8 @@ void resetAndPowerOffModules()
   morsePowerOff();
   passwordPowerOff();
   simonPowerOff();
+
+  baseDisplayMsgOnClock(" GO", true);
 }
 
 void setup()
@@ -51,6 +55,8 @@ void setup()
   pinMode(A13, INPUT);
   pinMode(A14, INPUT);
   pinMode(A15, INPUT);
+
+  baseDisplayMsgOnClock("LOAD");
 
   Serial.begin(9600);
 

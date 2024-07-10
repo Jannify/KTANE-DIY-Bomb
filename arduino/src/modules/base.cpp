@@ -29,6 +29,19 @@ void baseModuleLogicLoop()
   if (combinedSecondsLeft <= 3500 && combinedSecondsLeft != lastSecondsLeft)
   {
     lastSecondsLeft = combinedSecondsLeft;
+    baseSetClockToSecondsLeft(combinedSecondsLeft);
+    //tone(OUTPUT_BUZZER, 2000, 75);
+  }
+
+  if (combinedSecondsLeft >= (USHRT_MAX - 10))
+  {
+    return; // TODO: For testing only
+    sendSerialData(0xE);
+    // TODO: Set Bomb peripheral
+  }
+}
+
+void baseSetClockToSecondsLeft(unsigned short combinedSecondsLeft) {
     unsigned short minutesLeft = combinedSecondsLeft / 60;
     unsigned short secondsLeft = combinedSecondsLeft - minutesLeft * 60;
 
@@ -39,14 +52,17 @@ void baseModuleLogicLoop()
     }
 
     clock.setDisplayToDecNumber(minutesLeft * 100 + secondsLeft, dot);
-    //tone(OUTPUT_BUZZER, 2000, 75);
-  }
+}
 
-  if (combinedSecondsLeft >= (USHRT_MAX - 10))
-  {
-    return; // TODO: For testing only
-    sendSerialData(0xE);
-    // TODO: Set Bomb peripheral
+void baseDisplayMsgOnClock(const char *msg, bool clear)
+{
+  clock.setupDisplay(true, 7);
+  clock.clearDisplay();
+  clock.setDisplayToString(msg);
+
+  if(clear) {
+    delay(1000);
+    clock.setupDisplay(false, 7);
   }
 }
 
@@ -85,5 +101,4 @@ bool toggleLastTry(void *)
 void basePowerOff()
 {
   setTries(0);
-  clock.setupDisplay(false, 7);
 }
