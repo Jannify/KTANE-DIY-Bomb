@@ -87,8 +87,8 @@ public class Bomb
                 wires.HandleWireCut(this, data[1]);
                 break;
             case 0x3: // Password
-                bool send = (data[1] & 1) > 0;
-                bool isUp = (data[1] & 2) > 0;
+                bool send = (data[1] & 0b10000000) > 0;
+                bool isUp = (data[1] & 0b01000000) > 0;
                 int index = (data[1] & 0b00111000) >> 3;
                 password.HandelButtonPress(this, send, isUp, index);
                 break;

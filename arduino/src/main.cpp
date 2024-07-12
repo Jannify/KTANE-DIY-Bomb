@@ -11,7 +11,7 @@
 void resetAndPowerOffModules()
 {
   baseDisplayMsgOnClock("LOAD");
-  
+
   timer.cancel();
   bombStarted = false;
   setSolvedModules(0, 0);
@@ -141,6 +141,7 @@ void loopSerialRead()
     baseModuleInit(seconds);
     bigButtonStart();
     memoryStart();
+    showPassword();
     frameStart();
 
     startBomb();

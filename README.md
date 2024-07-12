@@ -65,7 +65,7 @@
 | 0x4  |      Set Tries      | On/Off X's LEDs                            |   1    | Number of Xs to display                                    |
 | 0x5  |     Set Solved      | Updated green "Module Solved" LEDs         |   1    | Password -> BigButton (leading zero + 7Bit)                |
 | 0x6  |   BigButton Strip   | Sets color of BigButton Strip              |   1    | ColorIndex (Red, Blue, Yellow, White) values               |
-| 0x7  |    Password Text    | Sets Text of Password LCD                  |   5    | 5 Letters (Encoding TBD)                                   |
+| 0x7  |    Password Text    | Sets Text of Password LCD                  |   5    | 5 Letters (all 0xFF for power off)                         |
 | 0x8  |      SimonSays      | Runs SimonSays sequence (length 3-6)       |   2    | 4Bit Length + 6 * (2 Bit Button index)                     |
 | 0x9  |       Memory        | Displays number on 7Bit segments and level |   2    | 2bits per number: BigNumber + 4*Buttons + 5bit LevelLED    |
 | 0xA  |                     |                                            |        |                                                            |

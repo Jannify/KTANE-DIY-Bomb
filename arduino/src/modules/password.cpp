@@ -3,84 +3,114 @@
 
 #include <U8g2lib.h>
 
-U8X8_SSD1309_128X64_NONAME0_HW_I2C greenDisplay;
+U8X8_SSD1309_128X64_NONAME2_HW_I2C greenDisplay;
+char password[5];
 
 bool passwordButtonWasPressed = false;
 
 void passwordInit()
 {
-    return;
     multiplexer.selectChannel(MULTIPLEXER_Password);
     greenDisplay.begin();
-    greenDisplay.setFont(u8x8_font_profont29_2x3_r);
+    greenDisplay.setPowerSave(1);
     greenDisplay.setInverseFont(1);
+    greenDisplay.setFont(u8x8_font_profont29_2x3_f);
+    greenDisplay.fillDisplay();
+    greenDisplay.clearLine(0);
+    greenDisplay.clearLine(1);
+    greenDisplay.clearLine(62);
+    greenDisplay.clearLine(63);
 }
 
-void setPassword(char *password)
+void setPassword(char *newPassword)
 {
-    return;
-    multiplexer.selectChannel(MULTIPLEXER_Password);
-    greenDisplay.fillDisplay();
-    for (size_t i = 0; i < 5; i++)
+    memcpy(password, newPassword, sizeof(char) * 5);
+
+    if (bombStarted)
     {
-        greenDisplay.drawGlyph(i * 3 + 1, 3, password[i]);
+        showPassword();
+    }
+}
+
+uint8_t full_tile[8] = {255, 255, 255, 255, 255, 255, 255, 255};
+
+void showPassword()
+{
+    if (password[0] == (char)0xFF && password[1] == (char)0xFF &&
+        password[2] == (char)0xFF && password[3] == (char)0xFF &&
+        password[4] == (char)0xFF)
+    {
+        passwordPowerOff();
+        return;
+    }
+
+    multiplexer.selectChannel(MULTIPLEXER_Password);
+    greenDisplay.setPowerSave(0);
+    // greenDisplay.drawTile(0, 4, 16, full_tile);
+    for (byte i = 0; i < 5; i++)
+    {
+        greenDisplay.drawGlyph(i * 3 + 1, 4, password[i]);
     }
 }
 
 void passwordSerialWriteLoop()
 {
-    return;
-    bool pressedSend = digitalRead(INPUT_Pass_Send);
+    if (!activeModules[5] || solvedModules[5])
+    {
+        return;
+    }
+
+    bool pressedSend = !digitalRead(INPUT_Pass_Send);
 
     bool wasButtonUp = false;
-    int buttonIndex = -1;
-    if (digitalRead(INPUT_Pass_1_Up))
+    byte buttonIndex = 255;
+    if (!digitalRead(INPUT_Pass_1_Up))
     {
         wasButtonUp = true;
         buttonIndex = 0;
     }
-    else if (digitalRead(INPUT_Pass_1_Down))
+    else if (!digitalRead(INPUT_Pass_1_Down))
     {
         buttonIndex = 0;
     }
-    else if (digitalRead(INPUT_Pass_2_Up))
+    else if (!digitalRead(INPUT_Pass_2_Up))
     {
         wasButtonUp = true;
         buttonIndex = 1;
     }
-    else if (digitalRead(INPUT_Pass_2_Down))
+    else if (!digitalRead(INPUT_Pass_2_Down))
     {
         buttonIndex = 1;
     }
-    else if (digitalRead(INPUT_Pass_3_Up))
+    else if (!digitalRead(INPUT_Pass_3_Up))
     {
         wasButtonUp = true;
         buttonIndex = 2;
     }
-    else if (digitalRead(INPUT_Pass_3_Down))
+    else if (!digitalRead(INPUT_Pass_3_Down))
     {
         buttonIndex = 2;
     }
-    else if (digitalRead(INPUT_Pass_4_Up))
+    else if (!digitalRead(INPUT_Pass_4_Up))
     {
         wasButtonUp = true;
         buttonIndex = 3;
     }
-    else if (digitalRead(INPUT_Pass_4_Down))
+    else if (!digitalRead(INPUT_Pass_4_Down))
     {
         buttonIndex = 3;
     }
-    else if (digitalRead(INPUT_Pass_5_Up))
+    else if (!digitalRead(INPUT_Pass_5_Up))
     {
         wasButtonUp = true;
         buttonIndex = 4;
     }
-    else if (digitalRead(INPUT_Pass_5_Down))
+    else if (!digitalRead(INPUT_Pass_5_Down))
     {
         buttonIndex = 4;
     }
 
-    if (!pressedSend && buttonIndex == -1)
+    if (!pressedSend && buttonIndex == 255)
     {
         passwordButtonWasPressed = false;
     }
@@ -92,7 +122,7 @@ void passwordSerialWriteLoop()
         {
             sendSerialData(0x3, 0b10000000);
         }
-        else if (buttonIndex != -1)
+        else if (buttonIndex != 255)
         {
             byte data = wasButtonUp ? 0b01000000 : 0x0;
             data |= buttonIndex << 3;
@@ -103,7 +133,6 @@ void passwordSerialWriteLoop()
 
 void passwordPowerOff()
 {
-    return;
     multiplexer.selectChannel(MULTIPLEXER_Password);
     greenDisplay.begin();
     greenDisplay.clearDisplay();

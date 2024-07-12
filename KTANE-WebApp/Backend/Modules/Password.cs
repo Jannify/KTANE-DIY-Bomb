@@ -4,17 +4,16 @@ public class Password : IModule
 {
     private readonly string[] possibleWords =
     [
-        "angst", "atmen", "beten", "bombe", "danke",
-        "draht", "druck", "drück", "farbe", "fehlt",
-        "ferse", "kabel", "knall", "knapp", "knopf",
-        "leere", "legal", "lehre", "mathe", "matte",
-        "panik", "pieps", "rauch", "ruhig", "saite",
-        "sehne", "seite", "sende", "strom", "super",
-        "timer", "übrig", "verse", "warte", "zange"
+        "ANGST", "ATMEN", "BETEN", "BOMBE", "DANKE",
+        "DRAHT", "DRUCK", "DRÜCK", "FARBE", "FEHLT",
+        "FERSE", "KABEL", "KNALL", "KNAPP", "KNOPF",
+        "LEERE", "LEGAL", "LEHRE", "MATHE", "MATTE",
+        "PANIK", "PIEPS", "RAUCH", "RUHIG", "SAITE",
+        "SEHNE", "SEITE", "SENDE", "STROM", "SUPER",
+        "TIMER", "ÜBRIG", "VERSE", "WARTE", "ZANGE"
     ];
 
-    private readonly char[] alphabet = "abcdefghijklmnopqrstuvwxyzäöü".ToCharArray();
-
+    private readonly char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ".ToCharArray();
 
     public bool IsSolved { get; private set; }
 
@@ -51,6 +50,7 @@ public class Password : IModule
             {
                 IsSolved = true;
                 bomb.UpdateSolvedModules();
+                Arduino.SetPasswordText([(char)0xFF, (char)0xFF, (char)0xFF, (char)0xFF, (char)0xFF]);
                 return;
             }
 
@@ -78,7 +78,8 @@ public class Password : IModule
     private void ChangeSelectedCharacter(bool isUp, int position)
     {
         int newPos = selectedCharacters[position] + (isUp ? 1 : -1);
-        selectedCharacters[position] = newPos % possibleCharacters[position].Count;
+        int maxPos = possibleCharacters[position].Count;
+        selectedCharacters[position] = (newPos % maxPos + maxPos) % maxPos; // Modulo without negative numbers
     }
 
     // Copied from KTANE
