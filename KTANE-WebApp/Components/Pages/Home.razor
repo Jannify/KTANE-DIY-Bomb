@@ -91,7 +91,7 @@
     {
         if (!Arduino.IsConnected)
         {
-            Console.WriteLine("[ERROR] Arduino not connected");
+            Log.Error("[ERROR] Arduino not connected");
             return;
         }
 
@@ -99,7 +99,7 @@
         Bomb.Instance.GenerateNewBomb(inputInfo);
         isBombGenerated = true;
 
-        Console.WriteLine(Bomb.Instance.ToString());
+        Log.Info(Bomb.Instance.ToString());
     }
 
 

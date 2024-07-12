@@ -19,7 +19,7 @@ public static class Arduino
     {
         if (IsConnected)
         {
-            Console.WriteLine("[Arduino] Port already open");
+            Log.Warn("[Arduino] Port already open");
             return;
         }
 
@@ -30,19 +30,19 @@ public static class Arduino
         port.Open();
         port.DiscardOutBuffer();
         port.DiscardInBuffer();
-        Console.WriteLine("[Arduino] Port opened");
+        Log.Info("[Arduino] Port opened");
     }
 
     public static void Close()
     {
         port.Close();
-        Console.WriteLine("[Arduino] Port closed");
+        Log.Info("[Arduino] Port closed");
     }
 
 
     private static void Write(byte[] data)
     {
-        Console.WriteLine($"Send: {data.BytesToHexString()}");
+        Log.Debug($"Send: {data.BytesToHexString()}");
         port.Write(data, 0, data.Length);
     }
 
@@ -75,22 +75,22 @@ public static class Arduino
                 case 0xF: //Logging
                     //string msg = port.ReadTo("\0");
                     string msg = port.ReadLine();
-                    Console.WriteLine("[Arduino] " + msg);
+                    Log.Error("[Arduino] " + msg);
                     return;
                 default:
                     port.DiscardInBuffer();
                     Write([0xE]);
-                    Console.WriteLine($"[ERR] Serial data type ({type}) was not in expected range (0x1-0x6 + 0xE + 0xF). Requesting resend");
+                    Log.Error($"Serial data type ({type}) was not in expected range (0x1-0x6 + 0xE + 0xF). Requesting resend");
                     return;
             }
 
 
-            Console.WriteLine($"Received: {data.BytesToHexString()}");
+            Log.Debug($"Received: {data.BytesToHexString()}");
             OnMessageReceived?.Invoke(data);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            Console.WriteLine(exception);
+            Log.Error(ex);
         }
     }
 

@@ -163,7 +163,7 @@ public class Bomb
         Arduino.Explode();
         soundplayer.Play(Path.Combine("Sounds", "explosion stones.wav"));
         simonSays.Stop();
-        Console.WriteLine("BOMB EXPLODE");
+        Log.Info("BOMB EXPLODE");
     }
 
     public Wires GetWiresModule() => wires;

@@ -4,6 +4,7 @@
 @using Blazor.Extensions.Canvas.Canvas2D
 @using KTANE_WebApp.Backend.Module
 @using KTANE_WebApp.Components.Models
+@using NitroxModel.Logger
 @rendermode InteractiveServer
 <div>
     <button type="submit" class="btn btn-primary" @onclick="ConnectArduino">Connect Arduino</button>
@@ -14,8 +15,12 @@
     <button type="submit" class="btn btn-primary" @onclick="Bomb.Instance.Explode">Test Audio</button>
 </div>
 
-@code {
+<textarea style="width: 100%; height: 20em">
+  @WebsiteSink.Text
+</textarea>
 
+
+@code {
     private static void ConnectArduino()
     {
         try
@@ -24,7 +29,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.Error(ex);
         }
     }
 
@@ -32,5 +37,4 @@
     {
         Arduino.Close();
     }
-
 }

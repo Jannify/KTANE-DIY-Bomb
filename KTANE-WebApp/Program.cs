@@ -7,13 +7,14 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        Log.Setup();
         try
         {
             Arduino.Open();
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.Error(ex);
         }
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

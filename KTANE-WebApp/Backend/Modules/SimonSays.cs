@@ -52,8 +52,7 @@ public class SimonSays : IModule
 
         sequenceTimer.Stop();
 
-        Console.WriteLine($"[SimonSays] Button pressed: {(SimonSaysEntry)buttonIndex}");
-        Console.WriteLine(ToString());
+        Log.Debug($"[SimonSays] Button pressed: {(SimonSaysEntry)buttonIndex}\n{ToString()}");
 
         SimonSaysEntry sequenceEntry = sequence[pressedButtonCount];
         if (GetCorrectButtonPress(bomb.Mistakes, hasVowel, sequenceEntry) != (SimonSaysEntry)buttonIndex)

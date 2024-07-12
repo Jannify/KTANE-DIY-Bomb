@@ -21,7 +21,7 @@ public class BigButton : IModule
         if(!IsActive || IsSolved)
             return;
 
-        Console.WriteLine($"[HandleBigButtonPress] Long:{pressedLong} SecondsLeft:{secondsLeft}");
+        Log.Debug($"[HandleBigButtonPress] Long:{pressedLong} SecondsLeft:{secondsLeft}");
 
         if (Text == TextOption.ABRECHEN && ButtonColor == ColorOption.BLUE)
             HandleShouldHold(bomb, secondsLeft);
