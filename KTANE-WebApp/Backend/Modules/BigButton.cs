@@ -2,6 +2,7 @@ namespace KTANE_WebApp.Backend.Module;
 
 public class BigButton : IModule
 {
+    public bool IsActive { get; set; }
     public bool IsSolved { get; private set; }
 
     public ColorOption ButtonColor;
@@ -17,7 +18,7 @@ public class BigButton : IModule
 
     public void HandleButtonPress(Bomb bomb, bool pressedLong, ushort secondsLeft)
     {
-        if(IsSolved)
+        if(!IsActive || IsSolved)
             return;
 
         Console.WriteLine($"[HandleBigButtonPress] Long:{pressedLong} SecondsLeft:{secondsLeft}");

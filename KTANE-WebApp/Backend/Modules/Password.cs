@@ -15,6 +15,7 @@ public class Password : IModule
 
     private readonly char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ".ToCharArray();
 
+    public bool IsActive { get; set; }
     public bool IsSolved { get; private set; }
 
     private string correctWord = string.Empty;
@@ -44,6 +45,9 @@ public class Password : IModule
 
     public void HandelButtonPress(Bomb bomb, bool send, bool isUp, int characterIndex)
     {
+        if(!IsActive || IsSolved)
+            return;
+
         if (send)
         {
             if (IsSelectedWordCorrect())

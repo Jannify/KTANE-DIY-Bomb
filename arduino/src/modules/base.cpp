@@ -35,9 +35,7 @@ void baseModuleLogicLoop()
 
   if (combinedSecondsLeft >= (USHRT_MAX - 10))
   {
-    return; // TODO: For testing only
     sendSerialData(0xE);
-    // TODO: Set Bomb peripheral
   }
 }
 

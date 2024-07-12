@@ -7,25 +7,7 @@
 #include "modules/simon.h"
 #include "modules/password.h"
 #include "modules/wires.h"
-
-void resetAndPowerOffModules()
-{
-  baseDisplayMsgOnClock("LOAD");
-
-  timer.cancel();
-  bombStarted = false;
-  setSolvedModules(0, 0);
-
-  basePowerOff();
-  bigButtonPowerOff();
-  framePowerOff();
-  memoryPowerOff();
-  morsePowerOff();
-  passwordPowerOff();
-  simonPowerOff();
-
-  baseDisplayMsgOnClock(" GO", true);
-}
+#include "main.h"
 
 void setup()
 {
@@ -80,6 +62,37 @@ void setup()
   resetAndPowerOffModules();
 }
 
+void loop()
+{
+  timer.tick();
+
+  loopSerialRead();
+
+  if (!bombStarted)
+  {
+    return;
+  }
+
+  baseModuleLogicLoop();
+
+  simonLogicLoop();
+  morseLogicLoop();
+
+  if (!loopLogicButtonCooldown)
+  {
+    morseLogicButtonLoop();
+  }
+
+  if (!loopSerialWriteCooldown)
+  {
+    bigButtonSerialWriteLoop();
+    wiresSerialWriteLoop();
+    passwordSerialWriteLoop();
+    simonSerialWriteLoop();
+    memorySerialWriteLoop();
+  }
+}
+
 void loopSerialRead()
 {
   if (!Serial.available())
@@ -115,6 +128,13 @@ void loopSerialRead()
   }
   case 0x2: // Init static modules
   {
+    while (Serial.available() < 1) // 2)
+    {
+    }
+    byte data0 = Serial.read();
+    // byte data1 = Serial.read();
+    setActiveModules(data0, 0);
+
     while (Serial.available() < 1)
     {
     }
@@ -214,36 +234,43 @@ void loopSerialRead()
     resendSerialData();
     break;
   }
+  case 0xF: // Setup bomb for exploded
+  {
+    explode();
+    break;
+  }
   }
 }
 
-void loop()
+void explode()
 {
-  timer.tick();
-
-  loopSerialRead();
-
-  if (!bombStarted)
+  timer.cancel();
+  loopLogicButtonCooldown = false;
+  loopSerialWriteCooldown = false;
+  bombStarted = false;
+  for (byte i = 0; i < 11; i++)
   {
-    return;
+    activeModules[i] = false;
   }
+}
 
-  baseModuleLogicLoop();
+void resetAndPowerOffModules()
+{
+  baseDisplayMsgOnClock("LOAD");
 
-  simonLogicLoop();
-  morseLogicLoop();
+  timer.cancel();
+  loopLogicButtonCooldown = false;
+  loopSerialWriteCooldown = false;
+  bombStarted = false;
+  setSolvedModules(0, 0);
 
-  if (!loopLogicButtonCooldown)
-  {
-    morseLogicButtonLoop();
-  }
+  basePowerOff();
+  bigButtonPowerOff();
+  framePowerOff();
+  memoryPowerOff();
+  morsePowerOff();
+  passwordPowerOff();
+  simonPowerOff();
 
-  if (!loopSerialWriteCooldown)
-  {
-    bigButtonSerialWriteLoop();
-    wiresSerialWriteLoop();
-    passwordSerialWriteLoop();
-    simonSerialWriteLoop();
-    memorySerialWriteLoop();
-  }
+  baseDisplayMsgOnClock(" GO", true);
 }

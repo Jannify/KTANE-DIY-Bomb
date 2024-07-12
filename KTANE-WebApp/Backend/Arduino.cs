@@ -128,15 +128,21 @@ public static class Arduino
     /// <summary>
     /// Init bomb static modules with parameters
     /// </summary>
-    public static void InitStaticModules(int morseIndex, byte bigButtonColorIndex, byte bigButtonTextIndex)
+    public static void InitStaticModules(bool[] activeModules, int morseIndex, byte bigButtonColorIndex, byte bigButtonTextIndex)
     {
         byte[] data =
         [
             0x2,
+            0,
             (byte)morseIndex,
             bigButtonColorIndex,
             bigButtonTextIndex
         ];
+
+        for (int i = 0; i < 7; i++)
+        {
+            data[1] |= (byte)(activeModules[i] ? 0b000000001 << i : 0x00);
+        }
 
         Write(data);
     }
@@ -153,9 +159,9 @@ public static class Arduino
     /// <summary>
     /// Updates the tries (X's on the bomb)
     /// </summary>
-    public static void SetTries(byte newTriesCount)
+    public static void SetTries(int newTriesCount)
     {
-        byte[] data = [0x4, newTriesCount];
+        byte[] data = [0x4, (byte)newTriesCount];
         Write(data);
     }
 
@@ -257,4 +263,6 @@ public static class Arduino
 
         Write(data);
     }
+
+    public static void Explode() => Write([0xF]);
 }

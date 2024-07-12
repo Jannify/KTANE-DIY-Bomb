@@ -5,6 +5,7 @@ namespace KTANE_WebApp.Backend.Module;
 
 public class SimonSays : IModule
 {
+    public bool IsActive { get; set; }
     public bool IsSolved { get; private set; }
 
     private readonly Timer sequenceTimer;
@@ -46,7 +47,7 @@ public class SimonSays : IModule
 
     public void HandleButtonPressed(Bomb bomb, byte buttonIndex)
     {
-        if (IsSolved)
+        if(!IsActive || IsSolved)
             return;
 
         sequenceTimer.Stop();
@@ -209,6 +210,8 @@ public class SimonSays : IModule
 
         throw new Exception($"Reached end of {nameof(GetCorrectButtonPress)} without entering a switch statement for mistakes:{mistakes}, hasVowel:{hasVowel}, entry:{sequenceEntry}");
     }
+
+    public void Stop() => sequenceTimer.Stop();
 
     public void Reset()
     {

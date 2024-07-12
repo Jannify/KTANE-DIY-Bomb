@@ -2,6 +2,7 @@ namespace KTANE_WebApp.Backend.Module;
 
 public class Wires : IModule
 {
+    public bool IsActive { get; set; }
     public bool IsSolved { get; private set; }
 
     private readonly WireColor[] wires = new WireColor[6];
@@ -80,7 +81,7 @@ public class Wires : IModule
 
     public void HandleWireCut(Bomb bomb, int wireBitfield)
     {
-        if(IsSolved)
+        if(!IsActive || IsSolved)
             return;
 
         int wireCutIndex = -1;

@@ -77,6 +77,7 @@ extern byte memoryTriesBuffer;
 void startBomb();
 void engageLogicCooldown();
 void engageSerialWriteCooldown();
+void setActiveModules(byte data0, byte data1);
 void setSolvedModules(byte data0, byte data1);
 bool setPinLow(void *argument);
 void shiftOutLED(byte clockPin, byte val);

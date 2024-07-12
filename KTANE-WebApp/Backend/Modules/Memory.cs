@@ -2,6 +2,7 @@ namespace KTANE_WebApp.Backend.Module;
 
 public class Memory : IModule
 {
+    public bool IsActive { get; set; }
     public bool IsSolved { get; private set; }
 
     private Random inStageRandom;
@@ -18,7 +19,7 @@ public class Memory : IModule
 
     public void HandleButtonPressed(Bomb bomb, int index)
     {
-        if (IsSolved)
+        if(!IsActive || IsSolved)
             return;
 
         buttonIndicesPressed.Add(index);

@@ -24,18 +24,18 @@ public class Bomb
 
     ~Bomb() => Arduino.OnMessageReceived -= HandleSerialInput;
 
-
     public void GenerateNewBomb(BombGenerationInputInfo info)
     {
         Random random = new(info.Seed);
         initialTime = info.InitialTime;
         MaxMistakes = info.MaxMistakes;
-        Mistakes = 0;
+        Mistakes = Math.Abs(3 - MaxMistakes);
 
         modules = [bigButton, wires, morse, memory, simonSays, password];
         foreach (IModule module in modules)
         {
             module.Reset();
+            module.IsActive = true;
         }
 
         Frame.Generate(random);
@@ -52,9 +52,15 @@ public class Bomb
         Arduino.InitFrame(Frame.SerialNumber, Frame.IndicatorLight, Frame.IndicatorText);
         Thread.Sleep(10);
 
-        Arduino.InitStaticModules(morse.MorseIndex, (byte)bigButton.ButtonColor, (byte)bigButton.Text);
+        bool[] activeModules = new bool[14];
+        for (int i = 0; i < modules.Length; i++)
+        {
+            activeModules[i] = modules[i].IsActive;
+        }
+        Arduino.InitStaticModules(activeModules, morse.MorseIndex, (byte)bigButton.ButtonColor, (byte)bigButton.Text);
         Thread.Sleep(10);
 
+        Arduino.SetTries(Mistakes);
         UpdateSolvedModules();
         Thread.Sleep(10);
 
@@ -113,15 +119,11 @@ public class Bomb
 
     public void IncrementTries()
     {
-        return; // TODO: Remove after test
-
         Mistakes++;
+        Arduino.SetTries(Mistakes);
 
         if (Mistakes >= MaxMistakes)
-        {
             Explode();
-            Arduino.ResetState();
-        }
     }
 
     public void UpdateSolvedModules()
@@ -137,7 +139,8 @@ public class Bomb
 
     private void Explode()
     {
-        // Play explosion Sound
+        Arduino.Explode();
+        simonSays.Stop();
         Console.WriteLine("BOMB EXPLODE");
     }
 

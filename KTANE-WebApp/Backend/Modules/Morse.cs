@@ -2,6 +2,7 @@ namespace KTANE_WebApp.Backend.Module;
 
 public class Morse : IModule
 {
+    public bool IsActive { get; set; }
     public bool IsSolved { get; set; }
     public int MorseIndex { get; private set; }
 
