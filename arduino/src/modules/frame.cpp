@@ -30,7 +30,6 @@ void setIndicatorText(char *txt)
 
 void setSerialNumber(char *txt)
 {
-  return;
   multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
   serialNumberText.begin();
   serialNumberText.setFont(u8g2_font_inb16_mr);
@@ -43,7 +42,7 @@ void setSerialNumber(char *txt)
     serialNumberText.drawBox(0, 28, 128, 4);
     for (size_t i = 0; i < 6; i++)
     {
-      serialNumberText.drawGlyph(22 * i, 55, txt[i]);
+      serialNumberText.drawGlyph(2 + 22 * i, 55, txt[i]);
     }
   } while (serialNumberText.nextPage());
 }
@@ -54,8 +53,8 @@ void frameStart()
   multiplexer.selectChannel(MULTIPLEXER_Indicator);
   indicatorText.setPowerSave(0);
 
-  // multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
-  // serialNumberText.setPowerSave(0);
+  multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
+  serialNumberText.setPowerSave(0);
 }
 
 void framePowerOff()
@@ -65,10 +64,10 @@ void framePowerOff()
   indicatorText.clearDisplay();
   indicatorText.setPowerSave(1);
 
-  // multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
-  // serialNumberText.begin();
-  // serialNumberText.clearDisplay();
-  // serialNumberText.setPowerSave(1);
+  multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
+  serialNumberText.begin();
+  serialNumberText.clearDisplay();
+  serialNumberText.setPowerSave(1);
   setIndicatorLED(false);
   digitalWrite(OUTPUT_Indicator_LED, LOW);
 }

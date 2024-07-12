@@ -29,7 +29,7 @@ public class Frame
         }
 
         text += random.Next(10);
-        for (int j = 3; j < 6; j++)
+        for (int j = 3; j <= 6; j++)
         {
             text += possibleCharArray[random.Next(possibleCharArray.Length - 10)];
         }
