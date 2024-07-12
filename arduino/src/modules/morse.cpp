@@ -65,7 +65,7 @@ void setDisplayText()
 
   multiplexer.selectChannel(MULTIPLEXER_Morse);
   yellowDisplay.clearDisplay();
-  for (size_t i = 0; i < 8; i++)
+  for (byte i = 0; i < 8; i++)
   {
     yellowDisplay.drawGlyph(i * 2, 3, phrase[i]);
   }

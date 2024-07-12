@@ -42,7 +42,7 @@ public class SimonSays : IModule
         RunSequence(1000);
     }
 
-    private void SequenceTimerCallback(object sender, ElapsedEventArgs e) => SendStartSequence();
+    private void SequenceTimerCallback(object? sender, ElapsedEventArgs e) => SendStartSequence();
 
     public void HandleButtonPressed(Bomb bomb, byte buttonIndex)
     {

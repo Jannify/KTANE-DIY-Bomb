@@ -56,7 +56,7 @@ void setup()
   pinMode(A14, INPUT);
   pinMode(A15, INPUT);
 
-  baseDisplayMsgOnClock("LOAD");
+  baseDisplayMsgOnClock("USB");
 
   Serial.begin(9600);
 
@@ -64,9 +64,12 @@ void setup()
   { // wait for serial port to connect. Needed for native USB port only
   }
 
+  baseDisplayMsgOnClock("I2C");
+
   Wire.begin();
   if (!multiplexer.begin())
   {
+    baseDisplayMsgOnClock("I2CF");
     Serial.write((byte)0xF);
     Serial.println("COULD NOT CONNECT MULTIPLEXER");
     engageSerialWriteCooldown();
