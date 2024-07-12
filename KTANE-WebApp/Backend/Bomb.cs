@@ -1,11 +1,15 @@
 using System.Text;
 using KTANE_WebApp.Backend.Module;
+using NetCoreAudio;
 
 namespace KTANE_WebApp.Backend;
 
 public class Bomb
 {
     public static readonly Bomb Instance = new();
+
+    private readonly Player soundplayer = new();
+    private int soundVolume = 25;
 
     private ushort initialTime;
     public int MaxMistakes;
@@ -124,6 +128,8 @@ public class Bomb
 
         if (Mistakes >= MaxMistakes)
             Explode();
+        else
+            PlayMisstakeSound();
     }
 
     public void UpdateSolvedModules()
@@ -137,9 +143,25 @@ public class Bomb
         Arduino.SetSolved(solved);
     }
 
-    private void Explode()
+    public int SoundVolume
+    {
+        get => soundVolume;
+        set
+        {
+            soundVolume = value;
+            soundplayer.SetVolume((byte)value);
+        }
+    }
+
+    private void PlayMisstakeSound()
+    {
+        soundplayer.Play(Path.Combine("Sounds", "strike.wav"));
+    }
+
+    public void Explode()
     {
         Arduino.Explode();
+        soundplayer.Play(Path.Combine("Sounds", "explosion stones.wav"));
         simonSays.Stop();
         Console.WriteLine("BOMB EXPLODE");
     }

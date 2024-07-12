@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="Blazor.Extensions.Canvas" Version="1.1.1" />
+      <PackageReference Include="NetCoreAudio" Version="2.0.0" />
       <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     </ItemGroup>
 

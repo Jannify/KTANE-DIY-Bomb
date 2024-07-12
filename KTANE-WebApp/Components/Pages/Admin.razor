@@ -5,13 +5,18 @@
 @using KTANE_WebApp.Backend.Module
 @using KTANE_WebApp.Components.Models
 @rendermode InteractiveServer
-
-<button type="submit" class="btn btn-primary" @onclick="ConnectArduino">Connect Arduino</button>
-<button type="submit" class="btn btn-primary" @onclick="DisconnectArduino">Disconnect Arduino</button>
+<div>
+    <button type="submit" class="btn btn-primary" @onclick="ConnectArduino">Connect Arduino</button>
+    <button type="submit" class="btn btn-primary" @onclick="DisconnectArduino">Disconnect Arduino</button>
+</div>
+<div style="margin-top:5em">
+    <input type="range" min="1" max="100" class="slider" @bind="Bomb.Instance.SoundVolume" @bind:event="oninput">
+    <button type="submit" class="btn btn-primary" @onclick="Bomb.Instance.Explode">Test Audio</button>
+</div>
 
 @code {
 
-    private void ConnectArduino()
+    private static void ConnectArduino()
     {
         try
         {
@@ -23,7 +28,7 @@
         }
     }
 
-    private void DisconnectArduino()
+    private static void DisconnectArduino()
     {
         Arduino.Close();
     }
