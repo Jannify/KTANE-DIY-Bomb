@@ -10,6 +10,7 @@ bool passwordButtonWasPressed = false;
 
 void passwordInit()
 {
+    return;
     multiplexer.selectChannel(MULTIPLEXER_Password);
     greenDisplay.begin();
     greenDisplay.setPowerSave(1);
@@ -24,6 +25,7 @@ void passwordInit()
 
 void setPassword(char *newPassword)
 {
+    return;
     memcpy(password, newPassword, sizeof(char) * 5);
 
     if (bombStarted)
@@ -36,6 +38,7 @@ uint8_t full_tile[8] = {255, 255, 255, 255, 255, 255, 255, 255};
 
 void showPassword()
 {
+    return;
     if (password[0] == (char)0xFF && password[1] == (char)0xFF &&
         password[2] == (char)0xFF && password[3] == (char)0xFF &&
         password[4] == (char)0xFF)
@@ -55,6 +58,7 @@ void showPassword()
 
 void passwordSerialWriteLoop()
 {
+    return;
     if (!activeModules[5] || solvedModules[5])
     {
         return;
@@ -133,6 +137,7 @@ void passwordSerialWriteLoop()
 
 void passwordPowerOff()
 {
+    return;
     multiplexer.selectChannel(MULTIPLEXER_Password);
     greenDisplay.begin();
     greenDisplay.clearDisplay();

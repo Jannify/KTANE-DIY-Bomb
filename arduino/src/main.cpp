@@ -264,12 +264,19 @@ void resetAndPowerOffModules()
   bombStarted = false;
   setSolvedModules(0, 0);
 
+  baseDisplayMsgOnClock("LOD1");
   basePowerOff();
+  baseDisplayMsgOnClock("LOD2");
   bigButtonPowerOff();
+  baseDisplayMsgOnClock("LOD3");
   framePowerOff();
+  baseDisplayMsgOnClock("LOA4");
   memoryPowerOff();
+  baseDisplayMsgOnClock("LOA5");
   morsePowerOff();
+  baseDisplayMsgOnClock("LOA6");
   passwordPowerOff();
+  baseDisplayMsgOnClock("LOA7");
   simonPowerOff();
 
   baseDisplayMsgOnClock(" GO", true);
