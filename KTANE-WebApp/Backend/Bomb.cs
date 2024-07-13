@@ -129,7 +129,7 @@ public class Bomb
         if (Mistakes >= MaxMistakes)
             Explode();
         else
-            PlayMisstakeSound();
+            PlayMistakeSound();
     }
 
     public void UpdateSolvedModules()
@@ -153,7 +153,7 @@ public class Bomb
         }
     }
 
-    private void PlayMisstakeSound()
+    public void PlayMistakeSound()
     {
         soundplayer.Play(Path.Combine("Sounds", "strike.wav"));
     }

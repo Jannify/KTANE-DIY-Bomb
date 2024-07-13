@@ -3,13 +3,8 @@
 ## Notes
 
 - A11 & A15 no pullup
-
-## TODO
-
-- Glue Buzzer Resistor and LED legs
-- Morse LED driver
-- Wire PasswordModule
-- Generate own font for BigButton Display
+- PW PI: ktanepi
+- PW Wifi: ktane558
 
 ## Links
 
@@ -34,9 +29,3 @@ blue 2,63 fV    => 120 Ohm bei 5V & 20 Ohm bei 3V
 ~~3x 160 Ohm for 2xRed + Yellow~~
 11x 130 Ohm Ohm for Green
  5x 120 Ohm for 4x blue + 1x white
-
-## iptables for Pi
-
-iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
-iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
-iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
