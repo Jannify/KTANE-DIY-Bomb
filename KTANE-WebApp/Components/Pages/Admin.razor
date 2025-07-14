@@ -1,21 +1,23 @@
-﻿@page "/admin"
-@using NitroxModel.Logger
+@page "/admin"
+@using KTANE.Backend
+@using KTANE.Backend.Logger
 @rendermode InteractiveServer
-<div>
+    <div>
     <button type="submit" class="btn btn-primary" @onclick="ConnectArduino">Connect Arduino</button>
     <button type="submit" class="btn btn-primary" @onclick="DisconnectArduino">Disconnect Arduino</button>
-</div>
-<div style="margin-top:5em">
+    </div>
+    <div style="margin-top:5em">
     <input type="range" min="1" max="100" class="slider" @bind="Bomb.Instance.SoundVolume" @bind:event="oninput">
     <button type="submit" class="btn btn-primary" @onclick="Bomb.Instance.PlayMistakeSound">Test Audio</button>
-</div>
+    </div>
 
-<textarea style="width: 100%; height: 20em">
-  @WebsiteSink.Text
-</textarea>
+    <textarea style="width: 100%; height: 20em">
+                    @WebsiteSink.Text
+                    </textarea>
+    <button type="submit" class="btn btn-primary" @onclick="ClearConsole">Clear</button>
 
 
-@code {
+    @code {
     private static void ConnectArduino()
     {
         try
@@ -32,4 +34,10 @@
     {
         Arduino.Close();
     }
+
+    private static void ClearConsole()
+    {
+        WebsiteSink.ClearText();
+    }
+
 }

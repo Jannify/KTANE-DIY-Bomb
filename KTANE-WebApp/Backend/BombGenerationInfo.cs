@@ -1,4 +1,4 @@
-namespace KTANE_WebApp.Backend;
+namespace KTANE.Backend;
 
 public class BombGenerationInputInfo
 {

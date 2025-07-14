@@ -1,9 +1,8 @@
 using System.Diagnostics;
-using NitroxModel.Logger;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
-namespace KTANE_WebApp.Backend;
+namespace KTANE.Backend.Logger;
 
 public static class Log
 {

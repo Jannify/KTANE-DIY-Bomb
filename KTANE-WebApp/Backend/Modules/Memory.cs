@@ -1,4 +1,4 @@
-namespace KTANE_WebApp.Backend.Module;
+namespace KTANE.Backend.Modules;
 
 public class Memory : IModule
 {

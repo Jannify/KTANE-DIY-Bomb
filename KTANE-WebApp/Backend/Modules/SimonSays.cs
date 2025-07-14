@@ -1,7 +1,8 @@
 using System.Timers;
+using KTANE.Backend.Logger;
 using Timer = System.Timers.Timer;
 
-namespace KTANE_WebApp.Backend.Module;
+namespace KTANE.Backend.Modules;
 
 public class SimonSays : IModule
 {
@@ -47,7 +48,7 @@ public class SimonSays : IModule
 
     public void HandleButtonPressed(Bomb bomb, byte buttonIndex)
     {
-        if(!IsActive || IsSolved)
+        if(!IsActive || IsSolved || bomb.Exploded)
             return;
 
         sequenceTimer.Stop();

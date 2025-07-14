@@ -20,7 +20,7 @@
 | A4        | Input Buttons  | Morse Send                                                            |
 | A5  - A6  | Input Buttons  | Morse Switch (left + right)                                           |
 | A7  - A10 | Buttons        | NumberMemory pressed (left to right)                                  |
-| A11 - A15 | Wires          | Wire Input                                                            |
+|(A11 - A15)| Wires          | Wire Input                                                            |
 |           |                |                                                                       |
 | D2        | WS2812         | BigButton Button Color                                                |
 | D3        | WS2812         | BigButton Strip Color                                                 |
@@ -29,7 +29,7 @@
 | D14       | Input Button   | Password Send                                                         |
 | D15       | Button         | BigButton pressed                                                     |
 |           |                |                                                                       |
-| D16       | LED            | Yellow LED for Morse                                                  |
+| D11 (16)  | LED            | Yellow LED for Morse                                                  |
 |           |                |                                                                       |
 | D20 - D21 | I2C            |                                                                       |
 |           |                |                                                                       |
@@ -46,11 +46,11 @@
 
 ### Arduino Mega I²C Multiplexer
 
-- 0,96" OLED White  - Multiplex 0 - Indicator
+- 1,30" OLED White  - Multiplex 0 - SerialNumber
 - 2,40" OLED Yellow - Multiplex 1 - Morse
-- 2,40" OLED Green  - Multiplex 2 - Password
+- 0,96" OLED White  - Multiplex 2 - Indicator
 - 0,91" OLED White  - Multiplex 3 - BigButton Text
-- 1,30" OLED White  - Multiplex 4 - SerialNumber
+- 2,40" OLED Green  - Multiplex 4 - Password
 
 ## Communication
 

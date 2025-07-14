@@ -1,4 +1,6 @@
-namespace KTANE_WebApp.Backend.Module;
+using KTANE.Backend.Logger;
+
+namespace KTANE.Backend.Modules;
 
 public class BigButton : IModule
 {

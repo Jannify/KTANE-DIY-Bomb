@@ -8,6 +8,7 @@
 #include "modules/password.h"
 #include "modules/wires.h"
 #include "main.h"
+#include "test.h"
 
 void setup()
 {
@@ -32,7 +33,7 @@ void setup()
   pinMode(A8, INPUT_PULLUP);
   pinMode(A9, INPUT_PULLUP);
   pinMode(A10, INPUT_PULLUP);
-  pinMode(A11, INPUT);
+  pinMode(A11, OUTPUT); // is original input
   pinMode(A12, INPUT);
   pinMode(A13, INPUT);
   pinMode(A14, INPUT);
@@ -60,11 +61,14 @@ void setup()
   delay(10);
 
   resetAndPowerOffModules();
+
+  //test_setup();
 }
 
 void loop()
 {
   timer.tick();
+  //test_loop();
 
   loopSerialRead();
 

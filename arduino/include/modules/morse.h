@@ -1,5 +1,9 @@
 #pragma once
 
+//Test
+extern int morseFrequencyIndex;
+void setDisplayText();
+
 void morseInitRead(byte index);
 void morseStart();
 void morseLogicLoop();

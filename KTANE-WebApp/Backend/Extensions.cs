@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace KTANE_WebApp.Backend;
+namespace KTANE.Backend;
 
 public static class Extensions
 {

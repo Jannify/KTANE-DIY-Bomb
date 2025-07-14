@@ -109,7 +109,7 @@ void morseLogicButtonLoop()
     morseButtonWasPressed = true;
     engageLogicCooldown();
 
-    if (!digitalRead(INPUT_Morse_Left))
+    if (!digitalRead(INPUT_Morse_Right))
     {
       if (morseFrequencyIndex > 0)
       {
@@ -117,7 +117,7 @@ void morseLogicButtonLoop()
         setDisplayText();
       }
     }
-    else if (!digitalRead(INPUT_Morse_Right))
+    else if (!digitalRead(INPUT_Morse_Left))
     {
       if (morseFrequencyIndex < 15)
       {

@@ -1,8 +1,9 @@
 using System.IO.Ports;
 using System.Runtime.InteropServices;
-using KTANE_WebApp.Backend.Module;
+using KTANE.Backend.Logger;
+using KTANE.Backend.Modules;
 
-namespace KTANE_WebApp.Backend;
+namespace KTANE.Backend;
 
 public static class Arduino
 {
@@ -17,13 +18,38 @@ public static class Arduino
 
     public static void Open()
     {
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                try
+                {
+                    Open("/dev/ttyACM0");
+                }
+                catch (Exception _)
+                {
+                    Open("/dev/ttyACM1");
+                }
+            }
+            else
+            {
+                Open("COM3");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+        }
+    }
+
+    public static void Open(string portName)
+    {
         if (IsConnected)
         {
             Log.Warn("[Arduino] Port already open");
             return;
         }
 
-        string portName = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "/dev/ttyACM0" : "COM3";
         port.PortName = portName;
         port.BaudRate = 9600;
         port.DataReceived += OnDataReceived;

@@ -28,6 +28,7 @@ unsigned long endPressed = 0;
 
 void bigButtonInit(byte bigKnobColorIndex, byte textIndex)
 {
+    return;
     switch (bigKnobColorIndex)
     {
     case 0: // Red
@@ -70,6 +71,7 @@ void bigButtonInit(byte bigKnobColorIndex, byte textIndex)
 
 void bigButtonStart()
 {
+    return;
     multiplexer.selectChannel(MULTIPLEXER_BigButton);
     buttonDisplay.setPowerSave(0);
 
@@ -82,6 +84,7 @@ void bigButtonStart()
 
 void bigButtonSetStripColor(byte bigKnobColorIndex)
 {
+    return;
     switch (bigKnobColorIndex)
     {
     case 0: // Red
@@ -101,6 +104,7 @@ void bigButtonSetStripColor(byte bigKnobColorIndex)
 
 void bigButtonSerialWriteLoop()
 {
+    return;
     if (!activeModules[0] || solvedModules[0])
     {
         return;
@@ -131,6 +135,7 @@ void bigButtonSerialWriteLoop()
 
 void bigButtonPowerOff()
 {
+    return;
     bigKnob.begin();
     bigKnob.clear();
     bigKnob.show();

@@ -1,51 +1,40 @@
-using KTANE_WebApp.Backend;
-using KTANE_WebApp.Components;
+using KTANE.Backend;
+using KTANE.Backend.Logger;
+using KTANE.Components;
 
-namespace KTANE_WebApp;
-
-public class Program
+Log.Setup();
+try
 {
-    public static void Main(string[] args)
-    {
-        Log.Setup();
-        try
-        {
-            Arduino.Open();
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex);
-        }
-
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
-        builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
-
-        WebApplication app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
-        {
-            app.UseExceptionHandler("/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
-        }
-        else
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        app.UseHttpsRedirection();
-
-        app.UseStaticFiles();
-        app.UseAntiforgery();
-
-        app.MapRazorComponents<App>()
-            .AddInteractiveServerRenderMode();
-
-        app.Run();
-
-    }
+    Arduino.Open();
 }
+catch (Exception ex)
+{
+    Log.Error(ex);
+}
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+WebApplication app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+
+
+app.UseAntiforgery();
+
+app.MapStaticAssets();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
+
+app.Run();

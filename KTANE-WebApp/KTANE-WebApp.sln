@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KTANE-WebApp", "KTANE-WebApp.csproj", "{4624446D-B59D-48B3-BC58-8C9252A6B45E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KTANE", "KTANE.csproj", "{AC83636A-E4DB-4A51-8BF9-05BCB16EA33E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4624446D-B59D-48B3-BC58-8C9252A6B45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4624446D-B59D-48B3-BC58-8C9252A6B45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4624446D-B59D-48B3-BC58-8C9252A6B45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4624446D-B59D-48B3-BC58-8C9252A6B45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC83636A-E4DB-4A51-8BF9-05BCB16EA33E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC83636A-E4DB-4A51-8BF9-05BCB16EA33E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC83636A-E4DB-4A51-8BF9-05BCB16EA33E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC83636A-E4DB-4A51-8BF9-05BCB16EA33E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

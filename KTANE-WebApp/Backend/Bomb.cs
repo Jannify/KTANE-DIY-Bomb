@@ -1,8 +1,9 @@
 using System.Text;
-using KTANE_WebApp.Backend.Module;
+using KTANE.Backend.Logger;
+using KTANE.Backend.Modules;
 using NetCoreAudio;
 
-namespace KTANE_WebApp.Backend;
+namespace KTANE.Backend;
 
 public class Bomb
 {
@@ -14,6 +15,7 @@ public class Bomb
     private ushort initialTime;
     public int MaxMistakes;
     public int Mistakes;
+    public bool Exploded;
 
     private IModule[] modules = [];
     public readonly Frame Frame = new();
@@ -34,6 +36,7 @@ public class Bomb
         initialTime = info.InitialTime;
         MaxMistakes = info.MaxMistakes;
         Mistakes = Math.Abs(3 - MaxMistakes);
+        Exploded = false;
 
         modules = [bigButton, wires, morse, memory, simonSays, password];
         foreach (IModule module in modules)
@@ -160,6 +163,7 @@ public class Bomb
 
     public void Explode()
     {
+        Exploded = true;
         Arduino.Explode();
         soundplayer.Play(Path.Combine("Sounds", "explosion stones.wav"));
         simonSays.Stop();

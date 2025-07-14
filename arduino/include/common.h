@@ -4,18 +4,18 @@
 #include <arduino-timer.h>
 #include <Arduino.h>
 
-#define INPUT_Simon_Blue A0
-#define INPUT_Simon_Red A1
-#define INPUT_Simon_Yellow A2
-#define INPUT_Simon_Green A3
+#define INPUT_Simon_Blue A2
+#define INPUT_Simon_Red A0
+#define INPUT_Simon_Yellow A3
+#define INPUT_Simon_Green A1
 #define INPUT_Morse_Send A4
 #define INPUT_Morse_Left A5
 #define INPUT_Morse_Right A6
-#define INPUT_Memory_1 A7
-#define INPUT_Memory_2 A8
-#define INPUT_Memory_3 A9
-#define INPUT_Memory_4 A10
-#define INPUT_WIRE_1 A11
+#define INPUT_Memory_1 A10
+#define INPUT_Memory_2 A9
+#define INPUT_Memory_3 A8
+#define INPUT_Memory_4 A7
+#define INPUT_WIRE_1 A12
 #define INPUT_WIRE_2 A12
 #define INPUT_WIRE_3 A13
 #define INPUT_WIRE_4 A14
@@ -37,7 +37,7 @@
 #define INPUT_Pass_Send 14
 #define INPUT_BigButton 15
 
-#define OUTPUT_Morse_LED 16
+#define OUTPUT_Morse_LED A11
 
 #define OUTPUT_Indicator_LED 41
 #define OUTPUT_Register_Data_Memory 42
@@ -56,11 +56,11 @@
 #define I2C_SDA 20
 #define I2C_SCL 21
 
-#define MULTIPLEXER_Password 0
+#define MULTIPLEXER_SerialNumber 0
 #define MULTIPLEXER_Morse 1
 #define MULTIPLEXER_Indicator 2
 #define MULTIPLEXER_BigButton 3
-#define MULTIPLEXER_SerialNumber 4
+#define MULTIPLEXER_Password 4
 
 extern TCA9548 multiplexer;
 extern Timer<20> timer;
