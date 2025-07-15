@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using KTANE.Backend;
+using KTANE.Backend.Modules;
 
 namespace KTANE.Components.Models;
 
@@ -13,13 +14,35 @@ public class GenerateBombFormModel
 
     public string Seed = string.Empty;
 
+    [Range(typeof(bool), "false", "true", ErrorMessage = "Eingabe benötigt")]
+    public bool BigButtonActive { get; set; } = false;
+    [Range(typeof(bool), "false", "true", ErrorMessage = "Eingabe benötigt")]
+    public bool WiresActive { get; set; } = false;
+    [Range(typeof(bool), "false", "true", ErrorMessage = "Eingabe benötigt")]
+    public bool MorseActive { get; set; } = true;
+    [Range(typeof(bool), "false", "true", ErrorMessage = "Eingabe benötigt")]
+    public bool MemoryActive { get; set; } = true;
+    [Range(typeof(bool), "false", "true", ErrorMessage = "Eingabe benötigt")]
+    public bool SimonSaysActive { get; set; } = true;
+    [Range(typeof(bool), "false", "true", ErrorMessage = "Eingabe benötigt")]
+    public bool PasswordActive { get; set; } = false;
+
     public BombGenerationInputInfo ToStruct()
     {
         return new BombGenerationInputInfo
         {
             Seed = string.IsNullOrWhiteSpace(Seed) ? Guid.NewGuid().GetHashCode() : Seed.GetHashCode(),
             InitialTime = (ushort)InitialTime,
-            MaxMistakes = MaxMistakes
+            MaxMistakes = MaxMistakes,
+            ActiveModules = new Dictionary<Type, bool>
+            {
+                {typeof(BigButton), BigButtonActive},
+                {typeof(Wires), WiresActive},
+                {typeof(Morse), MorseActive},
+                {typeof(Memory), MemoryActive},
+                {typeof(SimonSays), SimonSaysActive},
+                {typeof(Password), PasswordActive},
+            }
         };
     }
 }

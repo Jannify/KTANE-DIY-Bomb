@@ -1,3 +1,5 @@
+using KTANE.Backend.Logger;
+
 namespace KTANE.Backend.Modules;
 
 public class Memory : IModule
@@ -25,6 +27,21 @@ public class Memory : IModule
         buttonIndicesPressed.Add(index);
         buttonLabelsPressed.Add(currentButtons[index]);
 
+        if (IsCorrectButton(index))
+        {
+            GoToNextStage(bomb);
+        }
+        else
+        {
+            bomb.IncrementTries();
+            StartRandomState();
+        }
+
+        Log.Debug($"[{nameof(Memory),9}] {ToString()}");
+    }
+
+    private bool IsCorrectButton(int index)
+    {
         MemoryDigit display = displaySequence[currentStage];
         switch (currentStage)
         {
@@ -32,14 +49,9 @@ public class Memory : IModule
                 switch (display)
                 {
                     case MemoryDigit.ONE or MemoryDigit.TWO when index == 1:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.THREE when index == 2:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.FOUR when index == 3:
-                        GoToNextStage(bomb);
-                        return;
+                        return true;
                 }
 
                 break;
@@ -47,14 +59,9 @@ public class Memory : IModule
                 switch (display)
                 {
                     case MemoryDigit.ONE when currentButtons[index] == MemoryDigit.FOUR:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.TWO or MemoryDigit.FOUR when index == buttonIndicesPressed[0]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.THREE when index == 0:
-                        GoToNextStage(bomb);
-                        return;
+                        return true;
                 }
 
                 break;
@@ -62,17 +69,10 @@ public class Memory : IModule
                 switch (display)
                 {
                     case MemoryDigit.ONE when currentButtons[index] == buttonLabelsPressed[1]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.TWO when currentButtons[index] == buttonLabelsPressed[0]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.THREE when index == 2:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.FOUR when currentButtons[index] == MemoryDigit.FOUR:
-                        GoToNextStage(bomb);
-                        return;
+                        return true;
                 }
 
                 break;
@@ -80,14 +80,9 @@ public class Memory : IModule
                 switch (display)
                 {
                     case MemoryDigit.ONE when index == buttonIndicesPressed[0]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.TWO when index == 0:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.THREE or MemoryDigit.FOUR when index == buttonIndicesPressed[1]:
-                        GoToNextStage(bomb);
-                        return;
+                        return true;
                 }
 
                 break;
@@ -95,17 +90,10 @@ public class Memory : IModule
                 switch (display)
                 {
                     case MemoryDigit.ONE when currentButtons[index] == buttonLabelsPressed[0]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.TWO when currentButtons[index] == buttonLabelsPressed[1]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.THREE when currentButtons[index] == buttonLabelsPressed[3]:
-                        GoToNextStage(bomb);
-                        return;
                     case MemoryDigit.FOUR when currentButtons[index] == buttonLabelsPressed[2]:
-                        GoToNextStage(bomb);
-                        return;
+                        return true;
                 }
 
                 break;
@@ -113,8 +101,7 @@ public class Memory : IModule
                 throw new ArgumentOutOfRangeException();
         }
 
-        bomb.IncrementTries();
-        StartRandomState();
+        return false;
     }
 
     public void StartRandomState()
@@ -157,6 +144,25 @@ public class Memory : IModule
         Arduino.SetMemory(displaySequence[currentStage], currentButtons, currentStage);
     }
 
+    public MemoryDigit GetCorrectButton()
+    {
+        int correctButton = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (IsCorrectButton(i))
+            {
+                if(correctButton != -1)
+                    Log.Error($"Multiple correct buttons found:\n" +
+                              $"Button: {i},\n currentButtons: ({string.Join(",", currentButtons)}),\n" +
+                              $"buttonIndicesPressed: ({string.Join(",", buttonIndicesPressed)}),\n buttonLabelsPressed: ({string.Join(",", buttonLabelsPressed)})");
+
+                correctButton = i;
+            }
+        }
+
+        return (MemoryDigit)correctButton;
+    }
+
     public void Reset()
     {
         IsSolved = false;
@@ -167,7 +173,7 @@ public class Memory : IModule
 
     public override string ToString()
     {
-        return $"Solved: {IsSolved}, CurrentStage: {currentStage}, CurrentBigNumber {displaySequence[currentStage]}, CurrentButtons ({string.Join(",", currentButtons)})";
+        return $"Solved: {IsSolved}, CurrentStage: {currentStage}, BigNumber {displaySequence[currentStage]}, Buttons ({string.Join(",", currentButtons)}), CorrectButton: {GetCorrectButton()}";
     }
 
     public enum MemoryDigit : byte

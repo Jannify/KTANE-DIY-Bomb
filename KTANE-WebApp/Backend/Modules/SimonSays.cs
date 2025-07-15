@@ -53,7 +53,7 @@ public class SimonSays : IModule
 
         sequenceTimer.Stop();
 
-        Log.Debug($"[SimonSays] Button pressed: {(SimonSaysEntry)buttonIndex}\n{ToString()}");
+        Log.Debug($"[{nameof(SimonSays)}] Button pressed: {(SimonSaysEntry)buttonIndex}\n{ToString()}");
 
         SimonSaysEntry sequenceEntry = sequence[pressedButtonCount];
         if (GetCorrectButtonPress(bomb.Mistakes, hasVowel, sequenceEntry) != (SimonSaysEntry)buttonIndex)
@@ -63,6 +63,7 @@ public class SimonSays : IModule
             bomb.IncrementTries();
             sequenceTimer.Start();
             RunSequence(1500);
+            Log.Debug($"[{nameof(SimonSays),9}] {ToString()}");
             return;
         }
 
@@ -221,7 +222,7 @@ public class SimonSays : IModule
 
     public override string ToString()
     {
-        return $"Solved: {IsSolved}, CurrentSequence ({string.Join(" | ", sequence)}), AlreadyPressedButtonCount: {pressedButtonCount}";
+        return $"Solved: {IsSolved}, CurrentSequence ({string.Join(" | ", sequence)}), CorrectSequence: ({string.Join(" | ", sequence.Select(x => GetCorrectButtonPress(Bomb.Instance.Mistakes, hasVowel, x)))}), AlreadyPressedButtonCount: {pressedButtonCount}";
     }
 
     public enum SimonSaysEntry : byte

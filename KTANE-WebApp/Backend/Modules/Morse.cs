@@ -20,6 +20,6 @@ public class Morse : IModule
 
     public override string ToString()
     {
-        return $"Solved: {IsSolved}, MorseIndex: {MorseIndex} - {frequencies[MorseIndex]}MHz";
+        return $"Solved: {IsSolved}, MorseIndex: {MorseIndex}, CorrectMhz: {frequencies[MorseIndex]}MHz";
     }
 }

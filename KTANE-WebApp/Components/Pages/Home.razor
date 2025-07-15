@@ -7,6 +7,9 @@
 @using KTANE.Backend.Modules
 @rendermode InteractiveServer
 
+
+<button type="submit" class="btn btn-primary" @onclick="ResetBomb">Reset</button>
+
 <EditForm Model="@model" OnValidSubmit="SubmitForm" FormName="generate-new-bomb">
     <DataAnnotationsValidator/>
     <div class="form-group">
@@ -27,15 +30,38 @@
             <InputText @bind-Value="model.Seed" class="form-control"/>
         </label>
     </div>
+    <div class="form-group, row">
+        Active Modules
+        <label class="form-label">
+            Big Button:
+            <InputCheckbox @bind-Value="model.BigButtonActive"/>
+        </label>
+        <label class="form-label">
+            Wires:
+            <InputCheckbox @bind-Value="model.WiresActive"/>
+        </label>
+        <label class="form-label">
+            Morse:
+            <InputCheckbox @bind-Value="model.MorseActive"/>
+        </label>
+        <label class="form-label">
+            Memory:
+            <InputCheckbox @bind-Value="model.MemoryActive"/>
+        </label>
+        <label class="form-label">
+            Simon Says:
+            <InputCheckbox @bind-Value="model.SimonSaysActive"/>
+        </label>
+        <label class="form-label">
+            Password:
+            <InputCheckbox @bind-Value="model.PasswordActive"/>
+        </label>
+    </div>
     <ValidationSummary/>
     <div>
         <button type="submit" class="btn btn-primary">Generieren</button>
     </div>
 </EditForm>
-
-<div>
-    <button type="submit" class="btn btn-primary" @onclick="ResetBomb">Reset</button>
-</div>
 
 <div style="@(isBombGenerated ? "display:block" : "display:none")">
     <br/>
@@ -47,12 +73,12 @@
     <h3>Bitte baue die Bombe so um wie sie auf den folgenden Bildern gezeigt wird. Danach drücke auf START</h3>
     <br/>
     @* <img @ref="wiresBackground" hidden id="wiresBackground" src="@Assets["images/wiresBackground.png"]"/> *@
-    @* <BECanvas Width="385" Height="364" @ref="wireCanvas"></BECanvas> *@
+    @* <BECanvas Width="300" Height="300" @ref="wireCanvas"></BECanvas> *@
 
     <img @ref="batteryBackground" hidden id="batteryBackground" src="@Assets["images/batteryBackground.png"]"/>
     <img @ref="batteryAA" hidden id="batteryAA" src="@Assets["images/batteryAA.png"]"/>
-    <BECanvas Width="600" Height="600" @ref="batteryCanvas"></BECanvas>
-    <BECanvas Width="600" Height="600" @ref="batteryCanvas2"></BECanvas>
+    <BECanvas Width="300" Height="300" @ref="batteryCanvas1"></BECanvas>
+    <BECanvas Width="300" Height="300" @ref="batteryCanvas2"></BECanvas>
 
     <br/>
     <br/>
@@ -73,9 +99,9 @@
 
     private ElementReference batteryBackground;
     private ElementReference batteryAA;
-    private Canvas2DContext batteryCanvasContext;
+    private Canvas2DContext batteryCanvasContext1;
     private Canvas2DContext batteryCanvasContext2;
-    private BECanvasComponent batteryCanvas;
+    private BECanvasComponent batteryCanvas1;
     private BECanvasComponent batteryCanvas2;
 
     private void StartBomb()
@@ -142,6 +168,8 @@
         //     await wireCanvasContext.SetFillStyleAsync(color);
         //     await wireCanvasContext.FillRectAsync(80, 95 + 38.3 * i, 240, 10);
         // }
+        //
+        // await wireCanvasContext.SetTransformAsync(0.5, 0, 0, 0.5, 0, 0);
 
         List<bool> batteries = new List<bool>();
         for (int i = 0; i < Bomb.Instance.Frame.NumberOfBatteries; i++)
@@ -156,22 +184,26 @@
 
         batteries.Shuffle(new Random());
 
-        batteryCanvasContext = await batteryCanvas.CreateCanvas2DAsync();
+        batteryCanvasContext1= await batteryCanvas1.CreateCanvas2DAsync();
         batteryCanvasContext2 = await batteryCanvas2.CreateCanvas2DAsync();
-        await batteryCanvasContext.DrawImageAsync(batteryBackground, 0, 0);
+        await batteryCanvasContext1.DrawImageAsync(batteryBackground, 0, 0);
         await batteryCanvasContext2.DrawImageAsync(batteryBackground, 0, 0);
 
         if (batteries[0])
-            await batteryCanvasContext.DrawImageAsync(batteryAA, 245, 120);
+            await batteryCanvasContext1.DrawImageAsync(batteryAA, 245, 120);
 
         if (batteries[1])
-            await batteryCanvasContext.DrawImageAsync(batteryAA, 245, 190);
+            await batteryCanvasContext1.DrawImageAsync(batteryAA, 245, 190);
 
         if (batteries[2])
             await batteryCanvasContext2.DrawImageAsync(batteryAA, 245, 120);
 
         if (batteries[3])
             await batteryCanvasContext2.DrawImageAsync(batteryAA, 245, 190);
+
+
+        await batteryCanvasContext1.SetTransformAsync(0.5, 0, 0, 0.5, 0, 0);
+        await batteryCanvasContext2.SetTransformAsync(0.5, 0, 0, 0.5, 0, 0);
     }
 
 }

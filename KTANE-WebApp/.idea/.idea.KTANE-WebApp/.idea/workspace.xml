@@ -9,7 +9,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cebfe96c-1fd1-43c3-aa31-a7d83db9ebb5" name="Changes" comment="" />
+    <list default="true" id="cebfe96c-1fd1-43c3-aa31-a7d83db9ebb5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.KTANE-WebApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.KTANE-WebApp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Arduino.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Arduino.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Bomb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Bomb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/BombGenerationInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/BombGenerationInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Modules/Memory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/Memory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Modules/Morse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/Morse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Modules/SimonSays.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/SimonSays.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Models/GenerateFormModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Models/GenerateFormModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/Pages/Home.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Pages/Home.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KTANE-WebApp.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/KTANE-WebApp.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/images/wiresBackground.png" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/images/wiresBackground.png" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,6 +35,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/82987fa2a2b44e61b589ae01eb17373cd19e00/6b/ee1ee108/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Components/App.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Components/Layout/MainLayout.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Components/Pages/Error.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />

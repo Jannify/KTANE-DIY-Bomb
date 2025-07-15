@@ -42,7 +42,10 @@ public class Bomb
         foreach (IModule module in modules)
         {
             module.Reset();
-            module.IsActive = true;
+            if (info.ActiveModules[module.GetType()])
+            {
+                module.IsActive = true;
+            }
         }
 
         Frame.Generate(random);
@@ -54,10 +57,10 @@ public class Bomb
         morse.Generate(random);
 
         Arduino.ResetState();
-        Thread.Sleep(10);
+        Thread.Sleep(20);
 
         Arduino.InitFrame(Frame.SerialNumber, Frame.IndicatorLight, Frame.IndicatorText);
-        Thread.Sleep(10);
+        Thread.Sleep(20);
 
         bool[] activeModules = new bool[14];
         for (int i = 0; i < modules.Length; i++)
@@ -65,17 +68,17 @@ public class Bomb
             activeModules[i] = modules[i].IsActive;
         }
         Arduino.InitStaticModules(activeModules, morse.MorseIndex, (byte)bigButton.ButtonColor, (byte)bigButton.Text);
-        Thread.Sleep(10);
+        Thread.Sleep(20);
 
         Arduino.SetTries(Mistakes);
         UpdateSolvedModules();
-        Thread.Sleep(10);
+        Thread.Sleep(20);
 
         Arduino.SetBigButtonStrip((byte)bigButton.StripColor);
-        Thread.Sleep(10);
+        Thread.Sleep(20);
 
         Arduino.SetPasswordText(password.GetCurrentWord());
-        Thread.Sleep(10);
+        Thread.Sleep(20);
 
         memory.StartRandomState();
     }
@@ -183,12 +186,13 @@ public class Bomb
     public override string ToString()
     {
         StringBuilder sb = new("KTANE Bomb:\n");
-        sb.AppendLine($"   MaxMistakes: {MaxMistakes}, Mistakes: {Mistakes}, Time: {initialTime}");
+        sb.AppendLine($"   [     Bomb] MaxMistakes: {MaxMistakes}, Mistakes: {Mistakes}, Time: {initialTime}");
         sb.AppendLine($"   [    Frame] {Frame}");
 
         foreach (IModule module in modules)
         {
-            sb.AppendLine($"   [{module.GetType().Name,9}] {module}");
+            if (module.IsActive)
+                sb.AppendLine($"   [{module.GetType().Name,9}] {module}");
         }
 
         return sb.ToString();
