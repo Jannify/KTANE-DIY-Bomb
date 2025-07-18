@@ -18,7 +18,7 @@ public class BigButton : IModule
         Text = (TextOption)random.Next(4);
     }
 
-    public void HandleButtonPress(Bomb bomb, bool pressedLong, ushort secondsLeft)
+    public void HandleButtonPress(Bomb bomb, bool pressedLong, int minutesLeft, int secondsLeft)
     {
         if(!IsActive || IsSolved)
             return;
@@ -26,19 +26,19 @@ public class BigButton : IModule
         Log.Debug($"[HandleBigButtonPress] Long:{pressedLong} SecondsLeft:{secondsLeft}");
 
         if (Text == TextOption.ABRECHEN && ButtonColor == ColorOption.BLUE)
-            HandleShouldHold(bomb, secondsLeft);
+            HandleShouldHold(bomb, minutesLeft, secondsLeft);
         else if (Text == TextOption.SPRENGEN && bomb.Frame.NumberOfBatteries > 1)
             HandleShouldPress(bomb, pressedLong);
         else if (ButtonColor == ColorOption.WHITE && bomb.Frame.IndicatorText == "CAR")
-            HandleShouldHold(bomb, secondsLeft);
+            HandleShouldHold(bomb, minutesLeft, secondsLeft);
         else if (bomb.Frame is { NumberOfBatteries: > 2, IndicatorLight: true, IndicatorText: "FRK" })
             HandleShouldPress(bomb, pressedLong);
         else if (ButtonColor == ColorOption.YELLOW)
-            HandleShouldHold(bomb, secondsLeft);
+            HandleShouldHold(bomb, minutesLeft, secondsLeft);
         else if (Text == TextOption.HALTEN && ButtonColor == ColorOption.RED)
             HandleShouldPress(bomb, pressedLong);
         else
-            HandleShouldHold(bomb, secondsLeft);
+            HandleShouldHold(bomb, minutesLeft, secondsLeft);
     }
 
     private void HandleShouldPress(Bomb bomb, bool pressedLong)
@@ -53,10 +53,8 @@ public class BigButton : IModule
         }
     }
 
-    private void HandleShouldHold(Bomb bomb, ushort combinedSecondsLeft)
+    private void HandleShouldHold(Bomb bomb, int minutesLeft, int secondsLeft)
     {
-        int minutesLeft = combinedSecondsLeft / 60;
-        int secondsLeft = combinedSecondsLeft - minutesLeft * 60;
         string clockText = minutesLeft.ToString() + secondsLeft;
 
         switch (StripColor)

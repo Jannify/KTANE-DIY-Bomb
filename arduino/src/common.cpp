@@ -15,6 +15,8 @@ byte memoryTriesBuffer = 0x00;
 byte lastSendLength = 0;
 byte lastSendData[4] = {0x0};
 
+byte receivedData[10] = {0xFF};
+
 void startBomb()
 {
   for (size_t i = 0; i < 6; i++)
@@ -105,12 +107,24 @@ void shiftOutLED(byte clockPin, byte val)
   delay(2);
 }
 
+void sendSerialDataWithChecksum()
+{
+  byte calc_checksum = 0;
+  for (size_t i = 0; i < lastSendLength; i++)
+  {
+    Serial.write(lastSendData[i]);
+    calc_checksum ^= lastSendData[i];
+  }
+  calc_checksum = ~calc_checksum;
+  Serial.write(calc_checksum);
+}
+
 void sendSerialData(byte type)
 {
   lastSendLength = 1;
   lastSendData[0] = type;
 
-  Serial.write(type);
+  sendSerialDataWithChecksum();
   engageSerialWriteCooldown();
 }
 
@@ -120,8 +134,7 @@ void sendSerialData(byte type, byte data)
   lastSendData[0] = type;
   lastSendData[1] = data;
 
-  Serial.write(type);
-  Serial.write(data);
+  sendSerialDataWithChecksum();
   engageSerialWriteCooldown();
 }
 
@@ -132,9 +145,7 @@ void sendSerialData(byte type, byte data0, byte data1)
   lastSendData[1] = data0;
   lastSendData[2] = data1;
 
-  Serial.write(type);
-  Serial.write(data0);
-  Serial.write(data1);
+  sendSerialDataWithChecksum();
   engageSerialWriteCooldown();
 }
 
@@ -146,18 +157,30 @@ void sendSerialData(byte type, byte data0, byte data1, byte data2)
   lastSendData[2] = data1;
   lastSendData[3] = data2;
 
-  Serial.write(type);
-  Serial.write(data0);
-  Serial.write(data1);
-  Serial.write(data2);
+  sendSerialDataWithChecksum();
   engageSerialWriteCooldown();
 }
 
 void resendSerialData()
 {
-  for (size_t i = 0; i < lastSendLength; i++)
-  {
-    Serial.write(lastSendData[i]);
-  }
+  sendSerialDataWithChecksum();
   engageSerialWriteCooldown();
+}
+
+bool receiveSerialData(byte type, byte length) {
+  while (Serial.available() < length + 1)
+  {
+  }
+
+  byte calc_checksum = type;
+  for (byte i = 0; i < length; i++)
+  {
+    receivedData[i] = Serial.read();
+    calc_checksum ^= receivedData[i];
+  }
+  calc_checksum = ~calc_checksum;
+  
+  byte received_checksum = Serial.read();
+
+  return calc_checksum == received_checksum;
 }

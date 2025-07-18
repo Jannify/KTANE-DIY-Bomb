@@ -35,7 +35,8 @@ void baseModuleLogicLoop()
 
   if (combinedSecondsLeft >= (USHRT_MAX - 10))
   {
-    sendSerialData(0xE);
+    sendSerialData(0xD);
+    bombStarted = false;
   }
 }
 

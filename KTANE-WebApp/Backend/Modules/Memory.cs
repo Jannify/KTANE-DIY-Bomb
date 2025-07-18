@@ -36,8 +36,6 @@ public class Memory : IModule
             bomb.IncrementTries();
             StartRandomState();
         }
-
-        Log.Debug($"[{nameof(Memory),9}] {ToString()}");
     }
 
     private bool IsCorrectButton(int index)
@@ -130,6 +128,7 @@ public class Memory : IModule
         }
 
         ShuffleButtonLabels(inStageRandom);
+        Log.Debug($"[{nameof(Memory),9}] {ToString()}");
     }
 
     private void ShuffleButtonLabels(Random random)
@@ -144,23 +143,26 @@ public class Memory : IModule
         Arduino.SetMemory(displaySequence[currentStage], currentButtons, currentStage);
     }
 
-    public MemoryDigit GetCorrectButton()
+    private MemoryDigit GetCorrectButton()
     {
-        int correctButton = -1;
+        if (currentStage == 5)
+            return MemoryDigit.ERROR;
+
+        int correctButtonIndex = -1;
         for (int i = 0; i < 4; i++)
         {
             if (IsCorrectButton(i))
             {
-                if(correctButton != -1)
+                if(correctButtonIndex != -1)
                     Log.Error($"Multiple correct buttons found:\n" +
                               $"Button: {i},\n currentButtons: ({string.Join(",", currentButtons)}),\n" +
                               $"buttonIndicesPressed: ({string.Join(",", buttonIndicesPressed)}),\n buttonLabelsPressed: ({string.Join(",", buttonLabelsPressed)})");
 
-                correctButton = i;
+                correctButtonIndex = i;
             }
         }
 
-        return (MemoryDigit)correctButton;
+        return currentButtons[correctButtonIndex];
     }
 
     public void Reset()
@@ -181,6 +183,7 @@ public class Memory : IModule
         ONE = 0,
         TWO = 1,
         THREE = 2,
-        FOUR = 3
+        FOUR = 3,
+        ERROR = 7
     }
 }

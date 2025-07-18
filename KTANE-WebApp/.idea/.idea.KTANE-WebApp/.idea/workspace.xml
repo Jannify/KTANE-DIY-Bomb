@@ -10,18 +10,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cebfe96c-1fd1-43c3-aa31-a7d83db9ebb5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Backend/Serial/ISerialInterface.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/Serial/OfflineSerialInterface.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Backend/Serial/SerialInterface.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.KTANE-WebApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.KTANE-WebApp/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/Arduino.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Arduino.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/Bomb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Bomb.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/BombGenerationInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/BombGenerationInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Modules/BigButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/BigButton.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/Modules/Memory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/Memory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/Modules/Morse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/Morse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/Modules/SimonSays.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Modules/SimonSays.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Models/GenerateFormModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Models/GenerateFormModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Components/Pages/Home.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Pages/Home.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KTANE-WebApp.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/KTANE-WebApp.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wwwroot/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wwwroot/images/wiresBackground.png" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/images/wiresBackground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/.vscode/extensions.json" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/.vscode/extensions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/arduino.code-workspace" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/arduino.code-workspace" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/include/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/include/common.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/platformio.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/src/common.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/src/common.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/src/modules/base.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/src/modules/base.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../arduino/src/modules/memory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../arduino/src/modules/memory.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +42,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/82987fa2a2b44e61b589ae01eb17373cd19e00/6b/ee1ee108/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/82987fa2a2b44e61b589ae01eb17373cd19e00/d2/24a5a6a8/Void.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Components/App.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Components/Layout/MainLayout.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Components/Pages/Error.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
@@ -51,23 +58,26 @@
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2zpHGlTcxQGCxSoJ7eLo0Jtlvum" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.KTANE-WebApp: http.executor": "Run",
-    ".NET Launch Settings Profile.KTANE: http.executor": "Run",
-    ".NET Project.KTANE-WebApp.executor": "Run",
-    ".NET Project.KTANE.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "settings.editor.selected.configurable": "preferences.environmentSetup"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.KTANE-WebApp: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.KTANE: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.KTANE-WebApp.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.KTANE.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.environmentSetup&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.KTANE: http">
     <configuration name="KTANE: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/KTANE.csproj" />

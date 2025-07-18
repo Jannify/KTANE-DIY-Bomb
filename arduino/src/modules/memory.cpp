@@ -18,8 +18,11 @@ void memoryInit()
 void memoryStart()
 {
     shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
+    delay(2);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Big, MSBFIRST, bigNumber);
+    delay(2);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Left, MSBFIRST, smallNumber2 | (smallNumber1 << 4));
+    delay(2);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Right, MSBFIRST, smallNumber4 | (smallNumber3 << 4));
 }
 
@@ -38,7 +41,7 @@ void memorySetNumber(byte data0, byte data1)
         bigNumber = smallNumber1 = smallNumber2 = smallNumber3 = smallNumber4 = 0xFF;
     }
 
-    if (bombStarted)
+    if (bombStarted && activeModules[3])
     {
         memoryStart();
     }
@@ -88,11 +91,11 @@ void memoryPowerOff()
     memoryTriesBuffer &= 0b10000111;
     shiftOutLED(OUTPUT_Clock_MemoryTriesIndicator, memoryTriesBuffer);
 
-    delay(2);
+    delay(4);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Big, MSBFIRST, 0xFF);
-    delay(2);
+    delay(4);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Left, MSBFIRST, 0xFF);
-    delay(2);
+    delay(4);
     shiftOut(OUTPUT_Register_Data_Memory, OUTPUT_Clock_Memory_Right, MSBFIRST, 0xFF);
-    delay(2);
+    delay(4);
 }

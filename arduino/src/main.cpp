@@ -69,6 +69,7 @@ void loop()
 {
   timer.tick();
   //test_loop();
+  //return;
 
   loopSerialRead();
 
@@ -103,6 +104,53 @@ void loopSerialRead()
     return;
 
   int type = Serial.read();
+  byte length = 255;
+
+  switch (type)
+  {
+    // Length 0
+    case 0x0:
+    case 0xD:
+    case 0xF:
+      length = 0;
+      break;
+    // Length 1
+    case 0x4:
+    case 0x5:
+    case 0x6:
+      length = 1;
+      break;
+    // Length 2
+    case 0x3:
+    case 0x8:
+    case 0x9:
+      length = 2;
+      break;
+    // Length 4
+    case 0x2:
+      length = 4;
+      break;
+    // Length 5
+    case 0x7:
+      length = 5;
+      break;
+    // Length 10
+    case 0x1:
+      length = 10;
+      break;
+  }
+
+  if(length==255) {
+    Serial.write((byte)0xF);
+    Serial.println("Got 255 length");
+    return;
+  }
+
+  if (!receiveSerialData(type, length)) {
+    sendSerialData(0xE);
+    return;
+  }
+  
   switch (type)
   {
   case 0x0: // Reset
@@ -110,47 +158,18 @@ void loopSerialRead()
     break;
   case 0x1: // Init frame
   {
-    while (Serial.available() < 6)
-    {
-    }
-    char serialNumber[6];
-    Serial.readBytes(serialNumber, 6);
+    char serialNumber[] = {receivedData[0], receivedData[1], receivedData[2], receivedData[3], receivedData[4], receivedData[5]};
     setSerialNumber(serialNumber);
-
-    while (Serial.available() < 1)
-    {
-    }
-    setIndicatorLED(Serial.read());
-
-    while (Serial.available() < 3)
-    {
-    }
-    char indicatorLetters[3];
-    Serial.readBytes(indicatorLetters, 3);
-    setIndicatorText(indicatorLetters);
+    setIndicatorLED(receivedData[6]);
+    char indicator[] = {receivedData[7], receivedData[8], receivedData[9]};
+    setIndicatorText(indicator);
     break;
   }
   case 0x2: // Init static modules
   {
-    while (Serial.available() < 1) // 2)
-    {
-    }
-    byte data0 = Serial.read();
-    // byte data1 = Serial.read();
-    setActiveModules(data0, 0);
-
-    while (Serial.available() < 1)
-    {
-    }
-    byte morseCodeIndex = Serial.read();
-    morseInitRead(morseCodeIndex);
-
-    while (Serial.available() < 2)
-    {
-    }
-    byte bigKnobColorIndex = Serial.read();
-    byte bigKnobTextIndex = Serial.read();
-    bigButtonInit(bigKnobColorIndex, bigKnobTextIndex);
+    setActiveModules(receivedData[0], 0);
+    morseInitRead(receivedData[1]);
+    bigButtonInit(receivedData[2], receivedData[3]);
     wiresInit();
     passwordInit();
     memoryInit();
@@ -158,12 +177,7 @@ void loopSerialRead()
   }
   case 0x3: // Start
   {
-    while (Serial.available() < 2)
-    {
-    }
-    byte upperByte = Serial.read();
-    byte lowerByte = Serial.read();
-    unsigned short seconds = (upperByte << 8) + lowerByte;
+    unsigned short seconds = (receivedData[0] << 8) + receivedData[1];
 
     baseModuleInit(seconds);
     bigButtonStart();
@@ -177,62 +191,38 @@ void loopSerialRead()
   }
   case 0x4: // Set Tries
   {
-    while (Serial.available() < 1)
-    {
-    }
-    byte tries = Serial.read();
-    setTries(tries);
+    setTries(receivedData[0]);
     break;
   }
   case 0x5: // Set Solved
   {
-    while (Serial.available() < 1) // 2)
-    {
-    }
-    byte data0 = Serial.read();
-    // byte data1 = Serial.read();
-    setSolvedModules(data0, 0);
+    setSolvedModules(receivedData[0], 0);
     break;
   }
   case 0x6: // BigKnob Strip
   {
-    while (Serial.available() < 1)
-    {
-    }
-    byte colorIndex = Serial.read();
-    bigButtonSetStripColor(colorIndex);
+    bigButtonSetStripColor(receivedData[0]);
     break;
   }
   case 0x7: // Password Text
   {
-    while (Serial.available() < 5)
-    {
-    }
-    char passwordLetters[5];
-    Serial.readBytes(passwordLetters, 5);
+    char passwordLetters[] = {receivedData[0], receivedData[1], receivedData[2], receivedData[3], receivedData[4]};
     setPassword(passwordLetters);
     break;
   }
   case 0x8: // SimonSays
   {
-    while (Serial.available() < 2)
-    {
-    }
-    byte data[2];
-    Serial.readBytes(data, 2);
-    simonInit(data[0], data[1]);
+    simonInit(receivedData[0], receivedData[1]);
     break;
   }
   case 0x9: // Memory
   {
-    while (Serial.available() < 2)
-    {
-    }
-    byte data[2];
-    Serial.readBytes(data, 2);
-    memorySetNumber(data[0], data[1]);
+    memorySetNumber(receivedData[0], receivedData[1]);
     break;
   }
+  case 0xD:
+    bombSolved();
+    break;
   case 0xE: // Resend serial data
   {
     resendSerialData();
@@ -243,6 +233,8 @@ void loopSerialRead()
     explode();
     break;
   }
+  //default: // Type was out of expected range
+
   }
 }
 
@@ -256,6 +248,14 @@ void explode()
   {
     activeModules[i] = false;
   }
+}
+
+void bombSolved()
+{
+  timer.cancel();
+  loopLogicButtonCooldown = false;
+  loopSerialWriteCooldown = false;
+  bombStarted = false;
 }
 
 void resetAndPowerOffModules()

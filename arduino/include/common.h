@@ -41,8 +41,8 @@
 
 #define OUTPUT_Indicator_LED 41
 #define OUTPUT_Register_Data_Memory 42
-#define OUTPUT_Clock_Memory_Left 43
-#define OUTPUT_Clock_Memory_Right 44
+#define OUTPUT_Clock_Memory_Left 44
+#define OUTPUT_Clock_Memory_Right 43
 #define OUTPUT_Clock_Memory_Big 45
 #define OUTPUT_Clock_MemoryTriesIndicator 46
 #define OUTPUT_Register_Data_LED 47
@@ -71,6 +71,7 @@ extern bool bombStarted;
 
 extern bool loopLogicButtonCooldown;
 extern bool loopSerialWriteCooldown;
+extern byte receivedData[10];
 
 extern byte memoryTriesBuffer;
 
@@ -87,3 +88,5 @@ void sendSerialData(byte type, byte data);
 void sendSerialData(byte type, byte data0, byte data1);
 void sendSerialData(byte type, byte data0, byte data1, byte data2);
 void resendSerialData();
+
+bool receiveSerialData(byte type, byte length);

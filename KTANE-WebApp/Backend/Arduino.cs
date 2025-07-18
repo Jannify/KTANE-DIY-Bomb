@@ -1,7 +1,7 @@
-using System.IO.Ports;
 using System.Runtime.InteropServices;
 using KTANE.Backend.Logger;
 using KTANE.Backend.Modules;
+using KTANE.Backend.Serial;
 
 namespace KTANE.Backend;
 
@@ -12,9 +12,10 @@ public static class Arduino
     public static event OnMessageReceivedHandler? OnMessageReceived;
 
 
-    private static readonly SerialPort port = new();
+    private static readonly ISerialInterface port = new SerialInterface();
+    private static byte[] lastMessage = [];
 
-    public static bool IsConnected => port.IsOpen;
+    public static bool IsConnected => port.IsConnected();
 
     public static void Open()
     {
@@ -42,7 +43,7 @@ public static class Arduino
         }
     }
 
-    public static void Open(string portName)
+    private static void Open(string portName)
     {
         if (IsConnected)
         {
@@ -50,12 +51,7 @@ public static class Arduino
             return;
         }
 
-        port.PortName = portName;
-        port.BaudRate = 9600;
-        port.DataReceived += OnDataReceived;
-        port.Open();
-        port.DiscardOutBuffer();
-        port.DiscardInBuffer();
+        port.Open(portName, OnDataReceived);
         Log.Info("[Arduino] Port opened");
     }
 
@@ -69,10 +65,20 @@ public static class Arduino
     private static void Write(byte[] data)
     {
         Log.Debug($"Send: {data.BytesToHexString()}");
-        port.Write(data, 0, data.Length);
+        port.Write(data);
+        lastMessage = data;
+
+        byte checksum = 0;
+        foreach (byte datum in data)
+        {
+            checksum ^= datum;
+        }
+
+        checksum = (byte)~checksum;
+        port.Write(checksum);
     }
 
-    private static void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+    private static void OnDataReceived()
     {
         try
         {
@@ -81,35 +87,54 @@ public static class Arduino
             byte[] data;
             switch (type)
             {
-                case 0x1: // BigButton Down
+                case 0x1: // BigButton
                     data = [(byte)type, 0, 0, 0];
-                    data[1] = (byte)port.ReadByte();
-                    data[2] = (byte)port.ReadByte();
-                    data[3] = (byte)port.ReadByte();
+                    data[1] = port.ReadByte();
+                    data[2] = port.ReadByte();
+                    data[3] = port.ReadByte();
                     break;
                 case 0x2: // Wire Cut
-                case 0x3: // Password Changes
+                case 0x3: // Password
                 case 0x4: // SimonSays
                 case 0x5: // Memory
                 case 0x6: // Morse Code
                     data = [(byte)type, 0];
-                    data[1] = (byte)port.ReadByte();
+                    data[1] = port.ReadByte();
                     break;
-                case 0xE: // Time Up
+                case 0xD: // Time Up
                     data = [(byte)type];
                     break;
+                case 0xE: // Resend last message
+                    Write(lastMessage);
+                    Log.Info("Transfer error. Resending last message to arduino.");
+                    return;
                 case 0xF: //Logging
-                    //string msg = port.ReadTo("\0");
                     string msg = port.ReadLine();
-                    Log.Error("[Arduino] " + msg);
+                    Log.Error($"[Arduino] {msg}");
                     return;
                 default:
-                    port.DiscardInBuffer();
+                    Thread.Sleep(20);
+                    port.DiscardBuffer();
                     Write([0xE]);
-                    Log.Error($"Serial data type ({type}) was not in expected range (0x1-0x6 + 0xE + 0xF). Requesting resend");
+                    Log.Error($"Serial data type ({type}) was not in expected range (0x1-0x6 + 0xD-0xF). Requesting resend");
                     return;
             }
 
+            byte calcChecksum = (byte) type;
+            foreach (byte datum in data)
+            {
+                calcChecksum ^= datum;
+            }
+
+            calcChecksum = (byte)~calcChecksum;
+
+            byte receivedChecksum = port.ReadByte();
+
+            if (calcChecksum == receivedChecksum)
+            {
+                Log.Warn("Checksum invalid. Requesting resend");
+                Write([0xE]);
+            }
 
             Log.Debug($"Received: {data.BytesToHexString()}");
             OnMessageReceived?.Invoke(data);
@@ -258,11 +283,28 @@ public static class Arduino
     {
         byte[] data = new byte[3];
         data[0] = 0x9;
-        data[1] = (byte)((int)bigNumber << 6);
-        data[1] |= (byte)((int)smallNumbers[0] << 4);
-        data[1] |= (byte)((int)smallNumbers[1] << 2);
-        data[1] |= (byte)((int)smallNumbers[2]);
-        data[2] = (byte)((int)smallNumbers[3] << 6);
+        byte a1 = (byte)bigNumber;
+        int b1 = a1 << 6;
+        byte c1 = (byte)b1;
+        data[1] = c1;
+        byte d1 = data[1];
+        //data[1] |= (byte)((byte)smallNumbers[0] << 4);
+        byte a2 = (byte)smallNumbers[0];
+        int b2 = a2 << 4;
+        byte c2 = (byte)b2;
+        data[1] |= c2;
+        byte d2 = data[1];
+        //data[1] |= (byte)((byte)smallNumbers[1] << 2);
+        byte a3 = (byte)smallNumbers[1];
+        int b3 = a3 << 2;
+        byte c3 = (byte)b3;
+        data[1] |= c3;
+        byte d3 = data[1];
+        //data[1] |= (byte)smallNumbers[2];
+        byte a4 = (byte)smallNumbers[2];
+        data[1] |= a4;
+        byte d4 = data[1];
+        data[2] = (byte)((byte)smallNumbers[3] << 6);
 
         switch (level)
         {
@@ -291,4 +333,5 @@ public static class Arduino
     }
 
     public static void Explode() => Write([0xF]);
+    public static void Solve() => Write([0xD]);
 }

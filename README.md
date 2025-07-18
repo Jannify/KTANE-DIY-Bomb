@@ -20,7 +20,7 @@
 | A4        | Input Buttons  | Morse Send                                                            |
 | A5  - A6  | Input Buttons  | Morse Switch (left + right)                                           |
 | A7  - A10 | Buttons        | NumberMemory pressed (left to right)                                  |
-|(A11 - A15)| Wires          | Wire Input                                                            |
+| A11 - A15 | Wires          | Wire Input                                                            |
 |           |                |                                                                       |
 | D2        | WS2812         | BigButton Button Color                                                |
 | D3        | WS2812         | BigButton Strip Color                                                 |
@@ -35,7 +35,7 @@
 |           |                |                                                                       |
 | D41       | LED            | White LED for Indicator                                               |
 | D42       | Register Data  | Data line for Memory 7-Segment                                        |
-| D43 - D44 | Register Clock | 7Bit LEDs Memory Fourth to First Number                               |
+| D43 - D44 | Register Clock | 7Bit LEDs Memory First to Fourth Number                               |
 | D45       | Register Clock | 7Bit LEDs Memory Big Number                                           |
 | D46       | Register Clock | Memory Level LEDs (4x, bottom to top) + 2 XX + White LED Indicator    |
 | D47       | Register Data  | Data line for LED Controllers                                         |
@@ -60,18 +60,18 @@
 |:----:|:-------------------:|--------------------------------------------|:------:|-------------------------------------------------------------------------------|
 | 0x0  |        Reset        | Powers everything down                     |   0    |                                                                               |
 | 0x1  |      Init Bomb      | Init SerialNumber screen and Indicator     |   10   | [SN: 6 Letters] + [Indicator: LED + 3 Letters]                                |
-| 0x2  | Init static Modules | Init Morse BigButton                       |   4    | [ActiveModules: 1 Byte] + [Morse: Index] + [BigButton: ColorIndex, TextIndex] |
+| 0x2  | Init static Modules | Active Init Morse BigButton                |   4    | [ActiveModules: 1 Byte] + [Morse: Index] + [BigButton: ColorIndex, TextIndex] |
 | 0x3  |        Start        | Starts bomb with given time                |   2    | Timer in Seconds (ushort)                                                     |
 | 0x4  |      Set Tries      | On/Off X's LEDs                            |   1    | Number of Xs to display                                                       |
 | 0x5  |     Set Solved      | Updated green "Module Solved" LEDs         |   1    | Password -> BigButton (leading zero + 7Bit)                                   |
 | 0x6  |   BigButton Strip   | Sets color of BigButton Strip              |   1    | ColorIndex (Red, Blue, Yellow, White) values                                  |
 | 0x7  |    Password Text    | Sets Text of Password LCD                  |   5    | 5 Letters (all 0xFF for power off)                                            |
 | 0x8  |      SimonSays      | Runs SimonSays sequence (length 3-6)       |   2    | 4Bit Length + 6 * (2 Bit Button index)                                        |
-| 0x9  |       Memory        | Displays number on 7Bit segments and level |   2    | 2bits per number: BigNumber + 4*Buttons + 5bit LevelLED                       |
+| 0x9  |       Memory        | Displays number on 7Bit segments and level |   2    | 2bits per number: BigNumber + 4*Buttons + 5bit Level_Led                      |
 | 0xA  |                     |                                            |        |                                                                               |
 | 0xB  |                     |                                            |        |                                                                               |
 | 0xC  |                     |                                            |        |                                                                               |
-| 0xD  |                     |                                            |        |                                                                               |
+| 0xD  |     Bomb Solved     | Freezes Bomb state                         |   0    |                                                                               |
 | 0xE  |   Resend last msg   | Informs the arduino to resend the last msg |   0    |                                                                               |
 | 0xF  |       Explode       | Sets the bomb into a exploded state        |   0    |                                                                               |
 
@@ -92,6 +92,6 @@
 | 0xA  |                  |                                                           |        |                                                                 |
 | 0xB  |                  |                                                           |        |                                                                 |
 | 0xC  |                  |                                                           |        |                                                                 |
-| 0xD  |                  |                                                           |        |                                                                 |
-| 0xE  |     Time Up      | Send when the clock reached zero                          |        |                                                                 |
-| 0xF  |     Logging      | Writes a logging message to the pi                        |   X    | Message with line  ending                                       |
+| 0xD  |     Time Up      | Send when the clock reached zero                          |        |                                                                 |
+| 0xE  | Resend last msg  | Informs the pi to resend the last msg                     |        |                                                                 |
+| 0xF  |     Logging      | Writes a logging message to the pi                        |   X    | Message with line ending                                        |

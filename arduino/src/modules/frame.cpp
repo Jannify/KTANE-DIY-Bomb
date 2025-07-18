@@ -33,6 +33,7 @@ void setSerialNumber(char *txt)
   multiplexer.selectChannel(MULTIPLEXER_SerialNumber);
   serialNumberText.begin();
   serialNumberText.setFont(u8g2_font_inb16_mr);
+  serialNumberText.setDisplayRotation(U8G2_R3);
   serialNumberText.setPowerSave(1);
   serialNumberText.firstPage();
   do
@@ -42,7 +43,7 @@ void setSerialNumber(char *txt)
     serialNumberText.drawBox(0, 28, 128, 4);
     for (size_t i = 0; i < 6; i++)
     {
-      serialNumberText.drawGlyph(2 + 22 * i, 55, txt[i]);
+      serialNumberText.drawGlyph(1 + 18 * i, 55, txt[i]);
     }
   } while (serialNumberText.nextPage());
 }
