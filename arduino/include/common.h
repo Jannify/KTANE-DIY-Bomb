@@ -22,7 +22,7 @@
 #define INPUT_WIRE_5 A15
 
 #define OUTPUT_BigButton_Strip 2
-#define OUTPUT_BigButton_Color 3
+#define OUTPUT_BigButton_Color 2
 
 #define INPUT_Pass_1_Up 4
 #define INPUT_Pass_2_Up 5
@@ -33,8 +33,8 @@
 #define INPUT_Pass_2_Down 10
 #define INPUT_Pass_3_Down 11
 #define INPUT_Pass_4_Down 12
-#define INPUT_Pass_5_Down 13
-#define INPUT_Pass_Send 14
+#define INPUT_Pass_5_Down 3
+#define INPUT_Pass_Send 13
 #define INPUT_BigButton 15
 
 #define OUTPUT_Morse_LED A11
