@@ -12,7 +12,7 @@
 
 void setup()
 {
-  for (int i = 4; i <= 15; i++)
+  for (int i = 3; i <= 15; i++)
   {
     pinMode(i, INPUT_PULLUP);
   }
@@ -134,9 +134,9 @@ void loopSerialRead()
     case 0x7:
       length = 5;
       break;
-    // Length 10
+    // Length 12
     case 0x1:
-      length = 10;
+      length = 12;
       break;
   }
 
@@ -158,11 +158,9 @@ void loopSerialRead()
     break;
   case 0x1: // Init frame
   {
-    char serialNumber[] = {receivedData[0], receivedData[1], receivedData[2], receivedData[3], receivedData[4], receivedData[5]};
-    setSerialNumber(serialNumber);
-    setIndicatorLED(receivedData[6]);
-    char indicator[] = {receivedData[7], receivedData[8], receivedData[9]};
-    setIndicatorText(indicator);
+    setSerialNumber(reinterpret_cast<char*>(receivedData));
+    setIndicatorLED(receivedData[8]);
+    setIndicatorText(reinterpret_cast<char*>(receivedData+8));
     break;
   }
   case 0x2: // Init static modules

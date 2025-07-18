@@ -167,7 +167,8 @@ public static class Arduino
             (byte)serialNumber[3],
             (byte)serialNumber[4],
             (byte)serialNumber[5],
-
+            (byte)serialNumber[6],
+            (byte)serialNumber[7],
             (byte)(indicatorLight ? 1 : 0),
             (byte)indicatorText[0],
             (byte)indicatorText[1],

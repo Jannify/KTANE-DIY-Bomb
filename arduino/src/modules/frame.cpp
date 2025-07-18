@@ -41,9 +41,9 @@ void setSerialNumber(char *txt)
     serialNumberText.drawStr(0, 20, "Serien");
     serialNumberText.drawStr(90, 20, "Nr:");
     serialNumberText.drawBox(0, 28, 128, 4);
-    for (size_t i = 0; i < 6; i++)
+    for (size_t i = 0; i < 8; i++)
     {
-      serialNumberText.drawGlyph(1 + 18 * i, 55, txt[i]);
+      serialNumberText.drawGlyph(1 + 16 * i, 55, txt[i]);
     }
   } while (serialNumberText.nextPage());
 }

@@ -59,7 +59,7 @@
 | Data |        Title        | Description                                | Length | Payload Data                                                                  |
 |:----:|:-------------------:|--------------------------------------------|:------:|-------------------------------------------------------------------------------|
 | 0x0  |        Reset        | Powers everything down                     |   0    |                                                                               |
-| 0x1  |      Init Bomb      | Init SerialNumber screen and Indicator     |   10   | [SN: 6 Letters] + [Indicator: LED + 3 Letters]                                |
+| 0x1  |      Init Bomb      | Init SerialNumber screen and Indicator     |   12   | [SN: 8 Letters] + [Indicator: LED + 3 Letters]                                |
 | 0x2  | Init static Modules | Active Init Morse BigButton                |   4    | [ActiveModules: 1 Byte] + [Morse: Index] + [BigButton: ColorIndex, TextIndex] |
 | 0x3  |        Start        | Starts bomb with given time                |   2    | Timer in Seconds (ushort)                                                     |
 | 0x4  |      Set Tries      | On/Off X's LEDs                            |   1    | Number of Xs to display                                                       |

@@ -71,7 +71,7 @@ extern bool bombStarted;
 
 extern bool loopLogicButtonCooldown;
 extern bool loopSerialWriteCooldown;
-extern byte receivedData[10];
+extern byte receivedData[12];
 
 extern byte memoryTriesBuffer;
 

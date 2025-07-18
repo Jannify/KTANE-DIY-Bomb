@@ -15,7 +15,7 @@ byte memoryTriesBuffer = 0x00;
 byte lastSendLength = 0;
 byte lastSendData[4] = {0x0};
 
-byte receivedData[10] = {0xFF};
+byte receivedData[12] = {0xFF};
 
 void startBomb()
 {
